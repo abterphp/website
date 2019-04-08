@@ -21,11 +21,11 @@
   "repositories": [
     {
       "type": "vcs",
-      "url": "https://github.com/abtercms/framework"
+      "url": "https://github.com/abtercms/admin"
     }
   ],
   "require": {
-    "abtercms/framework": "dev-master"
+    "abtercms/admin": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.1",
