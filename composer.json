@@ -1,0 +1,39 @@
+{
+  "name": "abtercms/website",
+  "description": "Website module for AbterPHP",
+  "authors": [
+    {
+      "name": "Peter Aba",
+      "email": "peter@peteraba.com",
+      "role": "Engineer"
+    }
+  ],
+  "type": "project",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "AbterPhp\\Website\\": [
+        "src",
+        "tests"
+      ]
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/abtercms/framework"
+    }
+  ],
+  "require": {
+    "abtercms/framework": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.1",
+    "squizlabs/php_codesniffer": "^3.4",
+    "phpmd/phpmd": "^2.6",
+    "friendsofphp/php-cs-fixer": "^2.14"
+  },
+  "config": {
+    "prefer-install": "dist"
+  }
+}
