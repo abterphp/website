@@ -4,8 +4,57 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bd43e7c5c7524f611b2637ca721eeb9f",
+    "content-hash": "5edfba95cf760d75c4834f5c7420846b",
     "packages": [
+        {
+            "name": "abtercms/admin",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/abtercms/admin.git",
+                "reference": "8f9db5f7aee2a3548238289fbc40a8cfd92341a5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/abtercms/admin/zipball/8f9db5f7aee2a3548238289fbc40a8cfd92341a5",
+                "reference": "8f9db5f7aee2a3548238289fbc40a8cfd92341a5",
+                "shasum": ""
+            },
+            "require": {
+                "abtercms/framework": "dev-master"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "phpmd/phpmd": "^2.6",
+                "phpunit/phpunit": "^6.1",
+                "squizlabs/php_codesniffer": "^3.4"
+            },
+            "suggest": {
+                "ext-redis": "Allows better caching"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "AbterPhp\\Admin\\": [
+                        "src",
+                        "tests"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Peter Aba",
+                    "email": "peter@peteraba.com",
+                    "role": "Engineer"
+                }
+            ],
+            "description": "Admin module for AbterPHP",
+            "time": "2019-04-08T18:49:11+00:00"
+        },
         {
             "name": "abtercms/framework",
             "version": "dev-master",
@@ -55,6 +104,7 @@
                     ]
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -66,10 +116,6 @@
                 }
             ],
             "description": "Foundations for AbterPHP",
-            "support": {
-                "source": "https://github.com/abtercms/framework/tree/master",
-                "issues": "https://github.com/abtercms/framework/issues"
-            },
             "time": "2019-04-08T17:06:38+00:00"
         },
         {
@@ -4300,11 +4346,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": {
-        "abtercms/framework": 20
+        "abtercms/admin": 20
     },
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": []

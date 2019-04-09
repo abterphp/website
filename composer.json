@@ -18,12 +18,8 @@
       ]
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/abtercms/admin"
-    }
-  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "abtercms/admin": "dev-master"
   },
