@@ -1,5 +1,5 @@
 {
-  "name": "abtercms/website",
+  "name": "abterphp/website",
   "description": "Website module for AbterPHP",
   "authors": [
     {
@@ -21,7 +21,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "abtercms/admin": "dev-master"
+    "abterphp/admin": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.1",
