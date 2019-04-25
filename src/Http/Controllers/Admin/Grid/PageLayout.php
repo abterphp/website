@@ -14,7 +14,8 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class PageLayout extends GridAbstract
 {
-    const ENTITY_PLURAL = 'pageLayouts';
+    const ENTITY_PLURAL   = 'pageLayouts';
+    const ENTITY_SINGULAR = 'pageLayout';
 
     const ENTITY_TITLE_PLURAL = 'website:pageLayouts';
 

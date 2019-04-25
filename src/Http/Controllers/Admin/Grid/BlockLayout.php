@@ -14,7 +14,8 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class BlockLayout extends GridAbstract
 {
-    const ENTITY_PLURAL = 'blockLayouts';
+    const ENTITY_PLURAL   = 'blockLayouts';
+    const ENTITY_SINGULAR = 'blockLayout';
 
     const ENTITY_TITLE_PLURAL = 'website:blockLayouts';
 

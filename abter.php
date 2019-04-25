@@ -53,4 +53,7 @@ return [
         ],
     ],
     Module::RESOURCE_PATH      => realpath(__DIR__ . '/resources'),
+    Module::ASSETS_PATHS  => [
+        'website' => realpath(__DIR__ . '/resources/rawassets'),
+    ],
 ];
