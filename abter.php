@@ -1,10 +1,10 @@
 <?php
 
-namespace AbterPhp\Website;
-
 use AbterPhp\Framework\Constant\Event;
 use AbterPhp\Framework\Constant\Module;
 use AbterPhp\Framework\Constant\Priorities;
+use AbterPhp\Website\Bootstrappers;
+use AbterPhp\Website\Events;
 
 return [
     Module::IDENTIFIER         => 'AbterPhp\Website',
@@ -14,7 +14,7 @@ return [
         Bootstrappers\Orm\OrmBootstrapper::class,
         Bootstrappers\Validation\ValidatorBootstrapper::class,
     ],
-    Module::CLI_BOOTSTRAPPERS => [
+    Module::CLI_BOOTSTRAPPERS  => [
         Bootstrappers\Database\MigrationsBootstrapper::class,
     ],
     Module::HTTP_BOOTSTRAPPERS => [
@@ -24,19 +24,19 @@ return [
     Module::EVENTS             => [
         Event::TEMPLATE_ENGINE_READY => [
             /** @see \AbterPhp\Website\Events\Listeners\TemplateInitializer::handle */
-            sprintf('%s@handle', Events\Listeners\TemplateInitializer::class),
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\TemplateInitializer::class)],
         ],
         Event::NAVIGATION_READY      => [
             /** @see \AbterPhp\Website\Events\Listeners\NavigationBuilder::handle */
-            sprintf('%s@handle', Events\Listeners\NavigationBuilder::class),
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\NavigationBuilder::class)],
         ],
         Event::ENTITY_POST_CHANGE    => [
             /** @see \AbterPhp\Website\Events\Listeners\PageInvalidator::handle */
-            sprintf('%s@handle', Events\Listeners\PageInvalidator::class),
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\PageInvalidator::class)],
         ],
         Event::DASHBOARD_READY       => [
             /** @see \AbterPhp\Website\Events\Listeners\DashboardBuilder::handle */
-            sprintf('%s@handle', Events\Listeners\DashboardBuilder::class),
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\DashboardBuilder::class)],
         ],
     ],
     Module::ROUTE_PATHS        => [
@@ -53,7 +53,7 @@ return [
         ],
     ],
     Module::RESOURCE_PATH      => realpath(__DIR__ . '/resources'),
-    Module::ASSETS_PATHS  => [
+    Module::ASSETS_PATHS       => [
         'website' => realpath(__DIR__ . '/resources/rawassets'),
     ],
 ];
