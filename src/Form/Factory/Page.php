@@ -21,9 +21,11 @@ use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Form\Factory\Page\Assets as AssetsFactory;
 use AbterPhp\Website\Form\Factory\Page\Meta as MetaFactory;
+use AbterPhp\Website\Orm\PageCategoryRepo;
 use AbterPhp\Website\Orm\PageLayoutRepo;
 use Casbin\Enforcer;
 use Opulence\Orm\IEntity;
@@ -31,6 +33,9 @@ use Opulence\Sessions\ISession;
 
 class Page extends Base
 {
+    /** @var PageCategoryRepo */
+    protected $categoryRepo;
+
     /** @var PageLayoutRepo */
     protected $layoutRepo;
 
@@ -46,16 +51,18 @@ class Page extends Base
     /**
      * Page constructor.
      *
-     * @param ISession       $session
-     * @param ITranslator    $translator
-     * @param PageLayoutRepo $layoutRepo
-     * @param MetaFactory    $metaFactory
-     * @param AssetsFactory  $assetsFactory
-     * @param Enforcer       $enforcer
+     * @param ISession         $session
+     * @param ITranslator      $translator
+     * @param PageCategoryRepo $categoryRepo
+     * @param PageLayoutRepo   $layoutRepo
+     * @param MetaFactory      $metaFactory
+     * @param AssetsFactory    $assetsFactory
+     * @param Enforcer         $enforcer
      */
     public function __construct(
         ISession $session,
         ITranslator $translator,
+        PageCategoryRepo $categoryRepo,
         PageLayoutRepo $layoutRepo,
         MetaFactory $metaFactory,
         AssetsFactory $assetsFactory,
@@ -63,6 +70,7 @@ class Page extends Base
     ) {
         parent::__construct($session, $translator);
 
+        $this->categoryRepo  = $categoryRepo;
         $this->layoutRepo    = $layoutRepo;
         $this->metaFactory   = $metaFactory;
         $this->assetsFactory = $assetsFactory;
@@ -97,6 +105,7 @@ class Page extends Base
             ->addDescription($entity)
             ->addMeta($entity)
             ->addBody($entity)
+            ->addCategoryId($entity)
             ->addLayoutId($entity)
             ->addLayout($entity, $advancedAllowed)
             ->addAssets($entity, $advancedAllowed)
@@ -192,6 +201,76 @@ class Page extends Base
         $this->form[] = new FormGroup($input, $label);
 
         return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
+    protected function addCategoryId(Entity $entity): Page
+    {
+        $allCategories = $this->getAllCategories();
+        $categoryId    = $entity->getCategoryId();
+
+        $options = $this->createCategoryIdOptions($allCategories, $categoryId);
+
+        $this->form[] = new FormGroup(
+            $this->createCategoryIdSelect($options),
+            $this->createCategoryIdLabel()
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param Option[] $options
+     *
+     * @return Select
+     */
+    protected function createCategoryIdSelect(array $options): Select
+    {
+        $select = new Select('category_id', 'category_id');
+
+        foreach ($options as $option) {
+            $select[] = $option;
+        }
+
+        return $select;
+    }
+
+    /**
+     * @return Label
+     */
+    protected function createCategoryIdLabel(): Label
+    {
+        return new Label('category_id', 'website:pageCategoryIdLabel');
+    }
+
+    /**
+     * @return PageCategory[]
+     */
+    protected function getAllCategories(): array
+    {
+        return $this->categoryRepo->getAll();
+    }
+
+    /**
+     * @param PageCategory[] $allCategories
+     * @param string|null    $categoryId
+     *
+     * @return Option[]
+     */
+    protected function createCategoryIdOptions(array $allCategories, ?string $categoryId): array
+    {
+        $options   = [];
+        $options[] = new Option('', 'framework:none', false);
+        foreach ($allCategories as $category) {
+            $isSelected = $category->getId() === $categoryId;
+            $options[]  = new Option($category->getId(), $category->getIdentifier(), $isSelected);
+        }
+
+        return $options;
     }
 
     /**

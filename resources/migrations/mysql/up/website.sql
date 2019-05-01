@@ -6,7 +6,8 @@ INSERT INTO `admin_resources` (`id`, `identifier`)
 VALUES (UUID(), 'blocklayouts'),
        (UUID(), 'pagelayouts'),
        (UUID(), 'pages'),
-       (UUID(), 'blocks');
+       (UUID(), 'blocks'),
+       (UUID(), 'pagecategories');
 
 --
 -- Table data for table `casbin_rule`
@@ -75,6 +76,24 @@ CREATE TABLE `blocks`
   DEFAULT CHARSET = utf8;
 
 --
+-- Table structure and data for table `page_categories`
+--
+
+CREATE TABLE `page_categories`
+(
+    `id`         char(36)     NOT NULL,
+    `name`       varchar(120) NOT NULL,
+    `identifier` varchar(160) NOT NULL,
+    `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at` timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `deleted`    tinyint(1)   NOT NULL DEFAULT 0,
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `page_categories_identifier_uindex` (`identifier`),
+    KEY `page_categories_deleted_index` (`deleted`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+--
 -- Table structure and data for table `page_layouts`
 --
 
@@ -117,6 +136,7 @@ CREATE TABLE `pages`
   `meta_og_image`       varchar(255)        NOT NULL,
   `meta_og_description` mediumtext          NOT NULL,
   `body`                mediumtext          NOT NULL,
+  `category_id`         char(36)            NULL,
   `layout_id`           char(36)            NULL,
   `layout`              mediumtext          NOT NULL,
   `header`              mediumtext          NOT NULL,
@@ -130,16 +150,17 @@ CREATE TABLE `pages`
   UNIQUE KEY `identifier` (`identifier`),
   KEY `pages_deleted_index` (`deleted`),
   KEY `page_layouts_id_fk` (`layout_id`),
+  CONSTRAINT `pages_categories_id_fk` FOREIGN KEY (`category_id`) REFERENCES `page_categories` (`id`),
   CONSTRAINT `pages_layouts_id_fk` FOREIGN KEY (`layout_id`) REFERENCES `page_layouts` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
 INSERT INTO `pages` (id, identifier, title, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords,
-                     meta_og_title, meta_og_image, meta_og_description, body, layout_id, layout, header, footer,
-                     css_files, js_files)
+                     meta_og_title, meta_og_image, meta_og_description, body, category_id, layout_id, layout, header,
+                     footer, css_files, js_files)
 VALUES (UUID(), 'index', 'New AbterCMS installation',
         'AbterCMS is a security first, simple and flexible open source content management system for both educational and commercial usecases.',
-        '', '', '', 'cms, open source', '', '', '', 'Hello, World!', NULL, '<div class="container">{{var/body}}</div>',
+        '', '', '', 'cms, open source', '', '', '', 'Hello, World!', NULL, NULL, '<div class="container">{{var/body}}</div>',
         '', '', '', '');
 
 --

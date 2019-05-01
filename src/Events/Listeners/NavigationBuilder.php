@@ -43,6 +43,7 @@ class NavigationBuilder
 
         $dropdown   = new Dropdown();
         $dropdown[] = $this->createPageItem();
+        $dropdown[] = $this->createPageCategoryItem();
         $dropdown[] = $this->createPageLayoutItem();
         $dropdown[] = $this->createBlockItem();
         $dropdown[] = $this->createBlockLayoutItem();
@@ -63,7 +64,7 @@ class NavigationBuilder
     protected function createPageItem(): Item
     {
         $text = 'website:pages';
-        $icon = 'text_format';
+        $icon = 'bookmark_border';
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGES, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_PAGES);
@@ -78,10 +79,28 @@ class NavigationBuilder
      * @return Item
      * @throws \Opulence\Routing\Urls\UrlException
      */
+    protected function createPageCategoryItem(): Item
+    {
+        $text = 'website:pageCategories';
+        $icon = 'collections_bookmark';
+
+        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGE_CATEGORIES, [], $icon);
+        $resource = $this->getAdminResource(Routes::ROUTE_PAGE_CATEGORIES);
+
+        $item = new Item($button);
+        $item->setResource($resource);
+
+        return $item;
+    }
+
+    /**
+     * @return Item
+     * @throws \Opulence\Routing\Urls\UrlException
+     */
     protected function createPageLayoutItem(): Item
     {
         $text = 'website:pageLayouts';
-        $icon = 'view_quilt';
+        $icon = 'build';
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGE_LAYOUTS, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_PAGE_LAYOUTS);
@@ -117,7 +136,7 @@ class NavigationBuilder
     protected function createBlockLayoutItem(): Item
     {
         $text = 'website:blockLayouts';
-        $icon = 'view_quilt';
+        $icon = 'build';
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_BLOCK_LAYOUTS, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_BLOCK_LAYOUTS);

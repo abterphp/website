@@ -7,6 +7,9 @@ namespace AbterPhp\Website\Form\Factory;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\PageLayout;
+use AbterPhp\Website\Form\Factory\Page\Assets as AssetsFactory;
+use AbterPhp\Website\Form\Factory\Page\Meta as MetaFactory;
+use AbterPhp\Website\Orm\PageCategoryRepo;
 use AbterPhp\Website\Orm\PageLayoutRepo;
 use Casbin\Enforcer;
 use Opulence\Http\Requests\RequestMethods;
@@ -14,8 +17,6 @@ use Opulence\Sessions\ISession;
 use Opulence\Sessions\Session;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use AbterPhp\Website\Form\Factory\Page\Meta as MetaFactory;
-use AbterPhp\Website\Form\Factory\Page\Assets as AssetsFactory;
 
 class PageTest extends TestCase
 {
@@ -27,6 +28,9 @@ class PageTest extends TestCase
 
     /** @var ITranslator|MockObject */
     protected $translatorMock;
+
+    /** @var PageCategoryRepo|MockObject */
+    protected $categoryRepoMock;
 
     /** @var PageLayoutRepo|MockObject */
     protected $layoutRepoMock;
@@ -51,6 +55,11 @@ class PageTest extends TestCase
             ->setMethods(['translate', 'canTranslate'])
             ->getMock();
         $this->translatorMock->expects($this->any())->method('translate')->willReturnArgument(0);
+
+        $this->categoryRepoMock = $this->getMockBuilder(PageCategoryRepo::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getAll'])
+            ->getMock();
 
         $this->layoutRepoMock = $this->getMockBuilder(PageLayoutRepo::class)
             ->disableOriginalConstructor()
@@ -77,6 +86,7 @@ class PageTest extends TestCase
         $this->sut = new Page(
             $this->sessionMock,
             $this->translatorMock,
+            $this->categoryRepoMock,
             $this->layoutRepoMock,
             $this->metaFactoryMock,
             $this->assetsFactoryMock,
@@ -135,6 +145,7 @@ class PageTest extends TestCase
         $title       = 'Blah!';
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
         $body        = "Blah!\n\n...and more blah...";
+        $categoryId  = 'bb031692-7cb2-468b-9cfd-2a40136c5165';
         $layoutId    = '5131c135-185e-4342-9df2-969f57390287';
         $layout      = 'abc {{ var/body }} cba';
         $meta        = new Entity\Meta($description, '', '', '', '', '', '', '');
@@ -156,6 +167,7 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
+        $entityMock->expects($this->any())->method('getCategoryId')->willReturn($categoryId);
         $entityMock->expects($this->any())->method('getLayoutId')->willReturn($layoutId);
         $entityMock->expects($this->any())->method('getLayout')->willReturn($layout);
         $entityMock->expects($this->any())->method('getMeta')->willReturn($meta);
@@ -176,7 +188,18 @@ class PageTest extends TestCase
     {
         $entityMock = $this->getMockBuilder(Entity::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getIdentifier', 'getTitle', 'getBody', 'getLayoutId', 'getLayout', 'getMeta'])
+            ->setMethods(
+                [
+                    'getId',
+                    'getIdentifier',
+                    'getTitle',
+                    'getBody',
+                    'getCategoryId',
+                    'getLayoutId',
+                    'getLayout',
+                    'getMeta',
+                ]
+            )
             ->getMock();
 
         return $entityMock;

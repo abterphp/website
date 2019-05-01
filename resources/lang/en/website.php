@@ -14,7 +14,7 @@ return [
     'blockLayout'           => 'Block Layout',
     'blockLayoutBody'       => 'Body',
     'blockLayoutId'         => 'Id',
-    'blockLayouts'          => 'Block Layout',
+    'blockLayouts'          => 'Block Layouts',
     'blockLayoutIdentifier' => 'Identifier',
 
     'page'                  => 'Page',
@@ -52,6 +52,11 @@ return [
     'pageTitle'             => 'Title',
     'pages'                 => 'Pages',
 
+    'pageCategory'           => 'Page category',
+    'pageCategories'         => 'Page categories',
+    'pageCategoryIdentifier' => 'Identifier',
+    'pageCategoryName'       => 'Name',
+
     'pageLayout'             => 'Page Layout',
     'pageLayoutAssetsBtn'    => 'Assets (JS, CSS, etc)',
     'pageLayoutBody'         => 'Body',
@@ -64,6 +69,6 @@ return [
     'pageLayoutId'           => 'Id',
     'pageLayoutJsFiles'      => 'JS Files',
     'pageLayoutJsFilesHelp'  => 'Files listed will be compressed.<br>Each file must be on a new line.<br>Can be relative path or URL, but relative path should be prefixed with a forward slash (/).',
-    'pageLayouts'            => 'Page Layout',
+    'pageLayouts'            => 'Page Layouts',
     'pageLayoutIdentifier'   => 'Identifier',
 ];

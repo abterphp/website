@@ -188,12 +188,18 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             $layoutIdType = \PDO::PARAM_STR;
         }
 
+        $categoryIdType = \PDO::PARAM_NULL;
+        if ($entity->getCategoryId()) {
+            $categoryIdType = \PDO::PARAM_STR;
+        }
+
         $columnNamesToValues = [
-            'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
-            'title'      => [$entity->getTitle(), \PDO::PARAM_STR],
-            'body'       => [$entity->getBody(), \PDO::PARAM_STR],
-            'layout'     => [$entity->getLayout(), \PDO::PARAM_STR],
-            'layout_id'  => [$entity->getLayoutId(), $layoutIdType],
+            'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
+            'title'       => [$entity->getTitle(), \PDO::PARAM_STR],
+            'body'        => [$entity->getBody(), \PDO::PARAM_STR],
+            'category_id' => [$entity->getCategoryId(), $categoryIdType],
+            'layout'      => [$entity->getLayout(), \PDO::PARAM_STR],
+            'layout_id'   => [$entity->getLayoutId(), $layoutIdType],
         ];
 
         if ($create) {
@@ -265,17 +271,19 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     protected function loadEntity(array $hash)
     {
-        $meta     = $this->loadMeta($hash);
-        $assets   = $this->loadAssets($hash);
-        $body     = empty($hash['body']) ? '' : $hash['body'];
-        $layout   = empty($hash['layout']) ? '' : $hash['layout'];
-        $layoutId = empty($hash['layout_id']) ? null : $hash['layout_id'];
+        $meta       = $this->loadMeta($hash);
+        $assets     = $this->loadAssets($hash);
+        $body       = empty($hash['body']) ? '' : $hash['body'];
+        $categoryId = empty($hash['category_id']) ? null : $hash['category_id'];
+        $layout     = empty($hash['layout']) ? '' : $hash['layout'];
+        $layoutId   = empty($hash['layout_id']) ? null : $hash['layout_id'];
 
         return new Entity(
             $hash['id'],
             $hash['identifier'],
             $hash['title'],
             $body,
+            $categoryId,
             $layout,
             $layoutId,
             $meta,
@@ -374,6 +382,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.category_id',
                 'pages.layout_id'
             )
             ->from('pages')
@@ -394,6 +403,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.identifier',
                 'pages.title',
                 'pages.body',
+                'pages.category_id',
                 'pages.layout_id',
                 'pages.layout',
                 'pages.meta_description',
@@ -427,6 +437,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.identifier',
                 'pages.title',
                 'pages.body',
+                'pages.category_id',
                 'pages.layout_id',
                 'COALESCE(layouts.body, pages.layout) AS layout',
                 'pages.meta_description',

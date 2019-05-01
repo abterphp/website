@@ -53,4 +53,13 @@ class Routes
     const PATH_PAGE_LAYOUTS_NEW     = '/pagelayout/new';
     const PATH_PAGE_LAYOUTS_EDIT    = '/pagelayout/:id/edit';
     const PATH_PAGE_LAYOUTS_DELETE  = '/pagelayout/:id/delete';
+
+    const ROUTE_PAGE_CATEGORIES        = 'pagecategories';
+    const ROUTE_PAGE_CATEGORIES_NEW    = 'pagecategories-new';
+    const ROUTE_PAGE_CATEGORIES_EDIT   = 'pagecategories-edit';
+    const ROUTE_PAGE_CATEGORIES_DELETE = 'pagecategories-delete';
+    const PATH_PAGE_CATEGORIES         = '/pagecategory';
+    const PATH_PAGE_CATEGORIES_NEW     = '/pagecategory/new';
+    const PATH_PAGE_CATEGORIES_EDIT    = '/pagecategory/:id/edit';
+    const PATH_PAGE_CATEGORIES_DELETE  = '/pagecategory/:id/delete';
 }

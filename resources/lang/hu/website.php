@@ -14,7 +14,7 @@ return [
     'blockLayout'           => 'Blokk szerkezet',
     'blockLayoutBody'       => 'Tartalom',
     'blockLayoutId'         => 'Id',
-    'blockLayouts'          => 'Szerkezetek',
+    'blockLayouts'          => 'Blokk szerkezetek',
     'blockLayoutIdentifier' => 'Azonosító',
 
     'page'                  => 'Oldal',
@@ -38,6 +38,7 @@ return [
     'pageJsFilesHelp'       => 'A megadott fájlok tömörítve lesznek.<br>Minden fájlt új sorban kell megadni.<br>Mind relatív elérési út, mind teljes URL megadható, de a relatív utakat per-jellel kell kezdeni (/).',
     'pageKeywords'          => 'Kulcsszavak',
     'pageKeywordsHelp'      => 'Jelszóval elválasztott kifejezések listája. A Google teljesen figyelmen kívül hagyja az itt megadottakat, más keresőmotorok néha használják. (pl. Baidu)',
+    'pageCategoryIdLabel'   => 'Kategória',
     'pageLayoutLabel'       => 'Egyedi szerkezet',
     'pageLayoutIdLabel'     => 'Létező szerkezet',
     'pageMetaBtn'           => 'Meta adatok',
@@ -52,6 +53,11 @@ return [
     'pageTitle'             => 'Cím',
     'pages'                 => 'Oldalak',
 
+    'pageCategory'           => 'Oldal kategória',
+    'pageCategories'         => 'Oldal kategóriák',
+    'pageCategoryIdentifier' => 'Azonosító',
+    'pageCategoryName'       => 'Név',
+
     'pageLayout'             => 'Oldal szerkezet',
     'pageLayoutAssetsBtn'    => 'Kiegeszitők (JS, CSS, stb)',
     'pageLayoutBody'         => 'Tartalom',
@@ -64,6 +70,6 @@ return [
     'pageLayoutId'           => 'Id',
     'pageLayoutJsFiles'      => 'JS fájlok',
     'pageLayoutJsFilesHelp'  => 'A megadott fájlok tömörítve lesznek.<br>Minden fájlt új sorban kell megadni.<br>Mind relatív elérési út, mind teljes URL megadható, de a relatív utakat per-jellel kell kezdeni (/).',
-    'pageLayouts'            => 'Szerkezetek',
+    'pageLayouts'            => 'Oldal szerkezetek',
     'pageLayoutIdentifier'   => 'Azonosító',
 ];

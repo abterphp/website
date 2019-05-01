@@ -22,6 +22,9 @@ class Page implements IStringerEntity
     /** @var string */
     protected $body;
 
+    /** @var string|null */
+    protected $categoryId;
+
     /** @var string */
     protected $layout;
 
@@ -41,6 +44,7 @@ class Page implements IStringerEntity
      * @param string      $identifier
      * @param string      $title
      * @param string      $body
+     * @param string|null $categoryId
      * @param string      $layout
      * @param string|null $layoutId
      * @param Meta|null   $meta
@@ -51,6 +55,7 @@ class Page implements IStringerEntity
         string $identifier,
         string $title,
         string $body,
+        ?string $categoryId = null,
         string $layout,
         ?string $layoutId = null,
         ?Meta $meta = null,
@@ -60,6 +65,7 @@ class Page implements IStringerEntity
         $this->identifier = $identifier;
         $this->title      = $title;
         $this->body       = $body;
+        $this->categoryId = $categoryId ? $categoryId : null;
         $this->layout     = $layout;
         $this->layoutId   = $layoutId ? $layoutId : null;
         $this->meta       = $meta ?: new Meta('', '', '', '', '', '', '', '');
@@ -138,6 +144,30 @@ class Page implements IStringerEntity
     public function setBody(string $body): Page
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCategoryId(): ?string
+    {
+        return $this->categoryId;
+    }
+
+    /**
+     * @param string|null $categoryId
+     *
+     * @return $this
+     */
+    public function setCategoryId(?string $categoryId): Page
+    {
+        if ($categoryId === '') {
+            $categoryId = null;
+        }
+
+        $this->categoryId = $categoryId;
 
         return $this;
     }

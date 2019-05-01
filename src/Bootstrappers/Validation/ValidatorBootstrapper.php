@@ -8,10 +8,11 @@ use AbterPhp\Framework\Constant\Env;
 use AbterPhp\Framework\Validation\Rules\AtLeastOne;
 use AbterPhp\Framework\Validation\Rules\Uuid;
 use AbterPhp\Website\Validation\Factory\Block;
+use AbterPhp\Website\Validation\Factory\BlockLayout;
 use AbterPhp\Website\Validation\Factory\Page;
+use AbterPhp\Website\Validation\Factory\PageCategory;
 use AbterPhp\Website\Validation\Factory\PageLayout;
 use InvalidArgumentException;
-use Opulence\Framework\Configuration\Config;
 use Opulence\Framework\Validation\Bootstrappers\ValidatorBootstrapper as BaseBootstrapper;
 use Opulence\Ioc\IContainer;
 use Opulence\Validation\Rules\Errors\ErrorTemplateRegistry;
@@ -26,8 +27,10 @@ class ValidatorBootstrapper extends BaseBootstrapper
      * @var array
      */
     protected $validatorFactories = [
+        BlockLayout::class,
         Block::class,
         PageLayout::class,
+        PageCategory::class,
         Page::class,
     ];
 
@@ -63,13 +66,20 @@ class ValidatorBootstrapper extends BaseBootstrapper
      */
     protected function registerErrorTemplates(ErrorTemplateRegistry $errorTemplateRegistry)
     {
-        $config = require sprintf(
-            '%s/%s/validation.php',
-            Config::get('paths', 'resources.lang'),
-            getenv(Env::DEFAULT_LANGUAGE)
-        );
+        global $abterModuleManager;
 
-        $errorTemplateRegistry->registerErrorTemplatesFromConfig($config);
+        $lang = getenv(Env::DEFAULT_LANGUAGE);
+
+        foreach ($abterModuleManager->getResourcePaths() as $path) {
+            $fullPath = realpath(sprintf('%s/lang/%s/validation.php', $path, $lang));
+            if (!$fullPath || !is_file($fullPath)) {
+                continue;
+            }
+
+            $config = require $fullPath;
+
+            $errorTemplateRegistry->registerErrorTemplatesFromConfig($config);
+        }
     }
 
     /**
