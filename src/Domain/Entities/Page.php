@@ -56,7 +56,7 @@ class Page implements IStringerEntity
         string $title,
         string $body,
         ?string $categoryId = null,
-        string $layout,
+        string $layout = '',
         ?string $layoutId = null,
         ?Meta $meta = null,
         ?Assets $assets = null
