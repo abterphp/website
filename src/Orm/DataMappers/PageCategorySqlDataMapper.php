@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMappers;
 
+use AbterPhp\Admin\Domain\Entities\UserGroup;
+use AbterPhp\Framework\Orm\DataMappers\IdGeneratorUserTrait;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -11,6 +14,10 @@ use Opulence\QueryBuilders\MySql\SelectQuery;
 
 class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDataMapper
 {
+    const USER_GROUP_IDS = 'user_group_ids';
+
+    use IdGeneratorUserTrait;
+
     /**
      * @param Entity $entity
      */
@@ -29,6 +36,8 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         $statement = $this->writeConnection->prepare($sql);
         $statement->bindValues($params);
         $statement->execute();
+
+        $this->addUserGroups($entity);
     }
 
     /**
@@ -51,6 +60,8 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         $statement = $this->writeConnection->prepare($sql);
         $statement->bindValues($params);
         $statement->execute();
+
+        $this->deleteUserGroups($entity);
     }
 
     /**
@@ -101,7 +112,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      */
     public function getById($id)
     {
-        $query = $this->getBaseQuery()->andWhere('page_categories.id = :category_id');
+        $query = $this->getBaseQuery()->andWhere('pc.id = :category_id');
 
         $sql    = $query->getSql();
         $params = [
@@ -153,6 +164,9 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         $statement = $this->writeConnection->prepare($sql);
         $statement->bindValues($params);
         $statement->execute();
+
+        $this->deleteUserGroups($entity);
+        $this->addUserGroups($entity);
     }
 
     /**
@@ -176,17 +190,86 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
     }
 
     /**
+     * @param PageCategory $entity
+     */
+    protected function deleteUserGroups(Entity $entity)
+    {
+        $query = (new QueryBuilder())
+            ->delete('user_groups_page_categories')
+            ->where('page_category_id = ?')
+            ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
+
+        $sql = $query->getSql();
+
+        $statement = $this->writeConnection->prepare($sql);
+        $statement->bindValues($query->getParameters());
+        $statement->execute();
+    }
+
+    /**
+     * @param Entity $entity
+     */
+    protected function addUserGroups(Entity $entity)
+    {
+        $idGenerator = $this->getIdGenerator();
+
+        foreach ($entity->getUserGroups() as $userGroup) {
+            $query = (new QueryBuilder())
+                ->insert(
+                    'user_groups_page_categories',
+                    [
+                        'id'               => [$idGenerator->generate($userGroup), \PDO::PARAM_STR],
+                        'user_group_id'    => [$userGroup->getId(), \PDO::PARAM_STR],
+                        'page_category_id' => [$entity->getId(), \PDO::PARAM_STR],
+                    ]
+                );
+
+            $sql = $query->getSql();
+
+            $statement = $this->writeConnection->prepare($sql);
+            $statement->bindValues($query->getParameters());
+            $statement->execute();
+        }
+    }
+
+    /**
      * @param array $hash
      *
      * @return Entity
      */
     protected function loadEntity(array $hash)
     {
+        $userGroups = $this->getUserGroups($hash);
+
         return new Entity(
             $hash['id'],
             $hash['name'],
-            $hash['identifier']
+            $hash['identifier'],
+            $userGroups
         );
+    }
+
+    /**
+     * @param array $hash
+     *
+     * @return array
+     */
+    private function getUserGroups(array $hash): array
+    {
+        if (empty($hash[static::USER_GROUP_IDS])) {
+            return [];
+        }
+
+        if (is_array($hash[static::USER_GROUP_IDS])) {
+            return $hash[static::USER_GROUP_IDS];
+        }
+
+        $userGroups = [];
+        foreach (explode(',', $hash[static::USER_GROUP_IDS]) as $id) {
+            $userGroups[] = new UserGroup((string)$id, '', '');
+        }
+
+        return $userGroups;
     }
 
     /**
@@ -197,12 +280,14 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         /** @var SelectQuery $query */
         $query = (new QueryBuilder())
             ->select(
-                'page_categories.id',
-                'page_categories.name',
-                'page_categories.identifier'
+                'pc.id',
+                'pc.name',
+                'pc.identifier',
+                'GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids'
             )
-            ->from('page_categories')
-            ->where('page_categories.deleted = 0');
+            ->from('page_categories', 'pc')
+            ->leftJoin('user_groups_page_categories', 'ugpc', 'ugpc.page_category_id = pc.id')
+            ->where('pc.deleted = 0');
 
         return $query;
     }

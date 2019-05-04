@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
+use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
@@ -58,15 +59,25 @@ class PageCategory extends RepoServiceAbstract
      */
     protected function fillEntity(IStringerEntity $entity, array $data): IStringerEntity
     {
-        if (empty($data['identifier'])) {
-            $data['identifier'] = $data['name'];
-        }
+        $name = (string)$data['name'];
 
+        $identifier = (string)$data['identifier'];
+        if (empty($identifier)) {
+            $identifier = $name;
+        }
         $identifier = $this->slugify->slugify((string)$data['identifier']);
 
+        $userGroups = [];
+        if (array_key_exists('user_group_ids', $data)) {
+            foreach ($data['user_group_ids'] as $id) {
+                $userGroups[] = new UserGroup((string)$id, '', '');
+            }
+        }
+
         $entity
+            ->setName($name)
             ->setIdentifier($identifier)
-            ->setName((string)$data['name'])
+            ->setUserGroups($userGroups)
         ;
 
         return $entity;

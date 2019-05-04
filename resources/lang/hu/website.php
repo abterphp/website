@@ -53,10 +53,12 @@ return [
     'pageTitle'             => 'Cím',
     'pages'                 => 'Oldalak',
 
-    'pageCategory'           => 'Oldal kategória',
+    'pagecategories'         => 'Oldal kategóriák',
     'pageCategories'         => 'Oldal kategóriák',
+    'pageCategory'           => 'Oldal kategória',
     'pageCategoryIdentifier' => 'Azonosító',
     'pageCategoryName'       => 'Név',
+    'pageCategoryUserGroups' => 'Felhasználói csoportok',
 
     'pageLayout'             => 'Oldal szerkezet',
     'pageLayoutAssetsBtn'    => 'Kiegeszitők (JS, CSS, stb)',
@@ -72,4 +74,6 @@ return [
     'pageLayoutJsFilesHelp'  => 'A megadott fájlok tömörítve lesznek.<br>Minden fájlt új sorban kell megadni.<br>Mind relatív elérési út, mind teljes URL megadható, de a relatív utakat per-jellel kell kezdeni (/).',
     'pageLayouts'            => 'Oldal szerkezetek',
     'pageLayoutIdentifier'   => 'Azonosító',
+
+    'usergroups_pagecategories' => 'Felhasználói csoportok oldal kategóriái',
 ];

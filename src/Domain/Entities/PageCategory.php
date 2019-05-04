@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Domain\Entities;
 
+use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 
 class PageCategory implements IStringerEntity
@@ -17,18 +18,23 @@ class PageCategory implements IStringerEntity
     /** @var string */
     protected $identifier;
 
+    /** @var UserGroup[] */
+    protected $userGroups;
+
     /**
      * PageCategory constructor.
      *
-     * @param string $id
-     * @param string $name
-     * @param string $identifier
+     * @param string      $id
+     * @param string      $name
+     * @param string      $identifier
+     * @param UserGroup[] $userGroups
      */
-    public function __construct(string $id, string $name, string $identifier)
+    public function __construct(string $id, string $name, string $identifier, array $userGroups = [])
     {
         $this->id         = $id;
         $this->name       = $name;
         $this->identifier = $identifier;
+        $this->userGroups = $userGroups;
     }
 
     /**
@@ -83,6 +89,26 @@ class PageCategory implements IStringerEntity
     public function setIdentifier(string $identifier): PageCategory
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * @return UserGroup[]
+     */
+    public function getUserGroups(): array
+    {
+        return $this->userGroups;
+    }
+
+    /**
+     * @param UserGroup[] $userGroups
+     *
+     * @return $this
+     */
+    public function setUserGroups(array $userGroups): PageCategory
+    {
+        $this->userGroups = $userGroups;
 
         return $this;
     }
