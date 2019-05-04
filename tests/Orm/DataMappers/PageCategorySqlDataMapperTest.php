@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMapper;
 
+use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
+use AbterPhp\Framework\Orm\MockIdGeneratorFactory;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
 
@@ -43,11 +45,15 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql    = 'UPDATE page_categories AS page_categories SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
+        $sql0   = 'UPDATE page_categories AS page_categories SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
         $values = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values), 0);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new PageCategory($id, $name, $identifier);
+
+        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1 = [[$id, \PDO::PARAM_STR]];
+        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
 
         $this->sut->delete($entity);
     }
@@ -58,7 +64,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT page_categories.id, page_categories.name, page_categories.identifier FROM page_categories WHERE (page_categories.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -81,7 +87,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT page_categories.id, page_categories.name, page_categories.identifier FROM page_categories WHERE (page_categories.deleted = 0) AND (page_categories.id = :category_id)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id)'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -104,7 +110,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT page_categories.id, page_categories.name, page_categories.identifier FROM page_categories WHERE (page_categories.deleted = 0) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
@@ -121,21 +127,76 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $this->assertEntity($expectedData[0], $actualResult);
     }
 
-    public function testUpdate()
+    public function testUpdateWithoutUserGroup()
     {
-        $id         = 'e62dd68b-c72c-464e-8e03-6ee86f26f592';
-        $identifier = 'foo';
-        $name       = 'bar';
+        $id         = 'de8f969e-381e-4655-89db-46c8a7793bb3';
+        $identifier = 'bar';
+        $name       = 'foo';
 
-        $sql    = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql0    = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values0 = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
+        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values0), 0);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new PageCategory($id, $name, $identifier);
+
+        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1 = [
+            [$id, \PDO::PARAM_STR],
+        ];
+        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
+
+        $this->sut->update($entity);
+    }
+
+    public function testUpdateWithUserGroup()
+    {
+        $id         = 'a441487b-0bee-4137-8f76-c2a2b8d8c058';
+        $identifier = 'bar';
+        $name       = 'foo';
+        $ugpc0      = '6ac51550-d682-44b3-906e-0a8dac6f555f';
+        $ugpc1      = '5791b3e6-18ce-4132-9ec1-d31a26a22c3d';
+        $userGroups = [
+            new UserGroup('4206761a-00f9-4285-8721-da7d2a1677bf', '', ''),
+            new UserGroup('15e94e76-dc94-47fa-87f4-db97995d195e', '', ''),
+        ];
+
+        $this->sut->setIdGenerator(MockIdGeneratorFactory::create($this, $ugpc0, $ugpc1));
+
+        $sql0    = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values0 = [
+            [$name, \PDO::PARAM_STR],
+            [$identifier, \PDO::PARAM_STR],
+            [$id, \PDO::PARAM_STR],
+        ];
+        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values0), 0);
+
+        $entity = new PageCategory($id, $name, $identifier, $userGroups);
+
+        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1 = [
+            [$id, \PDO::PARAM_STR],
+        ];
+        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
+
+        $sql2    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values2 = [
+            [$ugpc0, \PDO::PARAM_STR],
+            [$userGroups[0]->getId(), \PDO::PARAM_STR],
+            [$id, \PDO::PARAM_STR],
+        ];
+        $this->prepare($this->writeConnectionMock, $sql2, $this->createWriteStatement($values2), 2);
+
+        $sql3    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values3 = [
+            [$ugpc1, \PDO::PARAM_STR],
+            [$userGroups[1]->getId(), \PDO::PARAM_STR],
+            [$id, \PDO::PARAM_STR],
+        ];
+        $this->prepare($this->writeConnectionMock, $sql3, $this->createWriteStatement($values3), 3);
 
         $this->sut->update($entity);
     }
