@@ -27,6 +27,10 @@ class Page extends ValidatorFactory
             ->field('title')
             ->required();
 
+        $validator
+            ->field('category_id')
+            ->uuid();
+
         // Body must not be empty if layout and layout ID are both empty
         $validator
             ->field('body')

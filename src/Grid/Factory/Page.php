@@ -11,6 +11,7 @@ use AbterPhp\Framework\Grid\Factory\BaseFactory;
 use AbterPhp\Framework\Grid\Factory\GridFactory;
 use AbterPhp\Framework\Grid\Factory\PaginationFactory as PaginationFactory;
 use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Grid\Factory\Table\Page as Table;
 use AbterPhp\Website\Grid\Filters\Page as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
@@ -20,10 +21,12 @@ class Page extends BaseFactory
     const GROUP_ID         = 'page-id';
     const GROUP_IDENTIFIER = 'page-identifier';
     const GROUP_TITLE      = 'page-title';
+    const GROUP_CATEGORY   = 'page-category';
 
     const GETTER_ID         = 'getId';
     const GETTER_IDENTIFIER = 'getIdentifier';
     const GETTER_TITLE      = 'getTitle';
+    const GETTER_CATEGORY   = 'getCategory';
 
     /**
      * Page constructor.
@@ -53,7 +56,22 @@ class Page extends BaseFactory
             static::GROUP_ID         => static::GETTER_ID,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
             static::GROUP_TITLE      => static::GETTER_TITLE,
+            static::GROUP_CATEGORY   => [$this, 'getCategoryName'],
         ];
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return string
+     */
+    public function getCategoryName(Entity $entity): string
+    {
+        if ($entity->getCategory()) {
+            return $entity->getCategory()->getName();
+        }
+
+        return '';
     }
 
     /**
@@ -64,10 +82,10 @@ class Page extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF  => Routes::ROUTE_PAGES_EDIT,
+            Html5::ATTR_HREF => Routes::ROUTE_PAGES_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF  => Routes::ROUTE_PAGES_DELETE,
+            Html5::ATTR_HREF => Routes::ROUTE_PAGES_DELETE,
         ];
 
         $cellActions   = new Actions();

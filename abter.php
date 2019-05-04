@@ -22,6 +22,10 @@ return [
         Bootstrappers\Http\Views\BuildersBootstrapper::class,
     ],
     Module::EVENTS             => [
+        Event::AUTH_READY            => [
+            /** @see \AbterPhp\Website\Events\Listeners\AuthInitializer::handle */
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\AuthInitializer::class)],
+        ],
         Event::TEMPLATE_ENGINE_READY => [
             /** @see \AbterPhp\Website\Events\Listeners\TemplateInitializer::handle */
             Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\TemplateInitializer::class)],

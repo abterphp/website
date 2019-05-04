@@ -211,7 +211,7 @@ class Page extends Base
     protected function addCategoryId(Entity $entity): Page
     {
         $allCategories = $this->getAllCategories();
-        $categoryId    = $entity->getCategoryId();
+        $categoryId    = $entity->getCategory() ? $entity->getCategory()->getId() : null;
 
         $options = $this->createCategoryIdOptions($allCategories, $categoryId);
 

@@ -21,7 +21,7 @@ class PageCategoryRepo extends Repository implements IGridRepo
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
-        /** @see PageLayoutSqlDataMapper::getPage() */
+        /** @see PageCategorySqlDataMapper::getPage() */
         return $this->getFromDataMapper('getPage', [$limitFrom, $pageSize, $orders, $conditions, $params]);
     }
 
@@ -33,7 +33,7 @@ class PageCategoryRepo extends Repository implements IGridRepo
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
-        /** @see PageLayoutSqlDataMapper::getByIdentifier() */
+        /** @see PageCategorySqlDataMapper::getByIdentifier() */
         return $this->getFromDataMapper('getByIdentifier', [$identifier]);
     }
 }

@@ -6,5 +6,5 @@ DROP TABLE IF EXISTS `block_layouts`;
 DROP TABLE IF EXISTS `pages`;
 DROP TABLE IF EXISTS `page_layouts`;
 DROP TABLE IF EXISTS `page_categories`;
-DROP TABLE IF EXISTS `user_groups_pages`;
+DROP TABLE IF EXISTS `user_groups_page_categories`;
 SET FOREIGN_KEY_CHECKS = true;

@@ -6,6 +6,7 @@ namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
 use AbterPhp\Website\Domain\Entities\Page;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
 
 class PageSqlDataMapperTest extends SqlTestCase
@@ -34,10 +35,11 @@ class PageSqlDataMapperTest extends SqlTestCase
         string $layout = 'qux',
         ?string $layoutId = null
     ): Page {
-        $meta   = new Page\Meta('m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8');
-        $assets = new Page\Assets('foo', 'baz', 'yak', ['zar'], ['boi'], null);
+        $meta     = new Page\Meta('m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8');
+        $assets   = new Page\Assets('foo', 'baz', 'yak', ['zar'], ['boi'], null);
+        $category = $categoryId ? new PageCategory($categoryId, '', '') : null;
 
-        return new Page($id, 'foo', 'bar', 'baz', $categoryId, $layout, $layoutId, $meta, $assets);
+        return new Page($id, 'foo', 'bar', 'baz', $category, $layout, $layoutId, $meta, $assets);
     }
 
     public function testAddSimple()
@@ -54,7 +56,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_NULL],
+            [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -93,7 +95,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_NULL],
+            [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_STR],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -132,7 +134,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_STR],
+            [$entity->getCategory()->getId(), \PDO::PARAM_STR],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -182,7 +184,7 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'id'          => $entity->getId(),
                 'identifier'  => $entity->getIdentifier(),
                 'title'       => $entity->getTitle(),
-                'category_id' => $entity->getCategoryId(),
+                'category_id' => null,
                 'layout_id'   => $entity->getLayoutId(),
             ],
         ];
@@ -209,7 +211,7 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'identifier'          => $entity->getIdentifier(),
                 'title'               => $entity->getTitle(),
                 'body'                => $entity->getBody(),
-                'category_id'         => $entity->getCategoryId(),
+                'category_id'         => null,
                 'layout'              => $entity->getLayout(),
                 'layout_id'           => $entity->getLayoutId(),
                 'meta_description'    => $meta->getDescription(),
@@ -249,7 +251,7 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'identifier'          => $entity->getIdentifier(),
                 'title'               => $entity->getTitle(),
                 'body'                => $entity->getBody(),
-                'category_id'         => $entity->getCategoryId(),
+                'category_id'         => null,
                 'layout'              => $entity->getLayout(),
                 'layout_id'           => $entity->getLayoutId(),
                 'meta_description'    => $meta->getDescription(),
@@ -286,7 +288,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_NULL],
+            [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -322,7 +324,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_NULL],
+            [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_STR],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -358,7 +360,7 @@ class PageSqlDataMapperTest extends SqlTestCase
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
-            [$entity->getCategoryId(), \PDO::PARAM_STR],
+            [$entity->getCategory()->getId(), \PDO::PARAM_STR],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
             [$meta->getDescription(), \PDO::PARAM_STR],
@@ -387,11 +389,13 @@ class PageSqlDataMapperTest extends SqlTestCase
      */
     protected function assertEntity(array $expectedData, $entity)
     {
+        $categoryId = $entity->getCategory() ? $entity->getCategory()->getId() : null;
+
         $this->assertInstanceOf(Page::class, $entity);
         $this->assertSame($expectedData['id'], $entity->getId());
         $this->assertSame($expectedData['identifier'], $entity->getIdentifier());
         $this->assertSame($expectedData['title'], $entity->getTitle());
-        $this->assertSame($expectedData['category_id'], $entity->getCategoryId());
+        $this->assertSame($expectedData['category_id'], $categoryId);
         $this->assertSame($expectedData['layout_id'], $entity->getLayoutId());
 
         $this->assertEntityAssets($expectedData, $entity);

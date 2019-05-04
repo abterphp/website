@@ -9,6 +9,7 @@ use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\PageRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Page as ValidatorFactory;
 use Cocur\Slugify\Slugify;
@@ -48,7 +49,7 @@ class Page extends RepoServiceAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', '', '', null);
+        return new Entity($entityId, '', '', '');
     }
 
     /**
@@ -62,8 +63,6 @@ class Page extends RepoServiceAbstract
         if (!($entity instanceof Entity)) {
             throw new \InvalidArgumentException('Not a page...');
         }
-
-        $body  = (string)$data['body'];
         $title = (string)$data['title'];
 
         $identifier = (string)$data['identifier'];
@@ -72,24 +71,31 @@ class Page extends RepoServiceAbstract
         }
         $identifier = $this->slugify->slugify($identifier);
 
+        $category = null;
+        if (!empty($data['category_id'])) {
+            $category = new PageCategory((string)$data['category_id'], '', '');
+        }
+
+        $body = (string)$data['body'];
+
         $layoutId = null;
         $layout   = (string)$data['layout'];
         if (!$layout) {
             $layoutId = (string)$data['layout_id'];
         }
 
-        $meta = $this->getMeta($data);
+        $meta   = $this->getMeta($data);
         $assets = $this->getAssets($data);
 
         $entity
             ->setIdentifier($identifier)
             ->setTitle($title)
+            ->setCategory($category)
             ->setBody($body)
             ->setLayoutId($layoutId)
             ->setLayout($layout)
             ->setMeta($meta)
-            ->setAssets($assets)
-        ;
+            ->setAssets($assets);
 
         return $entity;
     }

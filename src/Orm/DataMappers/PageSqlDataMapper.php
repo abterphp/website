@@ -6,6 +6,7 @@ namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\Page\Assets as PageAssets;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -79,7 +80,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
-        $query = $this->getBaseQuery()
+        $query = $this->getGridQuery()
             ->limit($pageSize)
             ->offset($limitFrom);
 
@@ -188,16 +189,18 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             $layoutIdType = \PDO::PARAM_STR;
         }
 
+        $categoryId     = null;
         $categoryIdType = \PDO::PARAM_NULL;
-        if ($entity->getCategoryId()) {
+        if ($entity->getCategory()) {
             $categoryIdType = \PDO::PARAM_STR;
+            $categoryId     = $entity->getCategory()->getId();
         }
 
         $columnNamesToValues = [
             'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
             'title'       => [$entity->getTitle(), \PDO::PARAM_STR],
             'body'        => [$entity->getBody(), \PDO::PARAM_STR],
-            'category_id' => [$entity->getCategoryId(), $categoryIdType],
+            'category_id' => [$categoryId, $categoryIdType],
             'layout'      => [$entity->getLayout(), \PDO::PARAM_STR],
             'layout_id'   => [$entity->getLayoutId(), $layoutIdType],
         ];
@@ -271,19 +274,19 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     protected function loadEntity(array $hash)
     {
-        $meta       = $this->loadMeta($hash);
-        $assets     = $this->loadAssets($hash);
-        $body       = empty($hash['body']) ? '' : $hash['body'];
-        $categoryId = empty($hash['category_id']) ? null : $hash['category_id'];
-        $layout     = empty($hash['layout']) ? '' : $hash['layout'];
-        $layoutId   = empty($hash['layout_id']) ? null : $hash['layout_id'];
+        $meta     = $this->loadMeta($hash);
+        $assets   = $this->loadAssets($hash);
+        $body     = empty($hash['body']) ? '' : $hash['body'];
+        $category = $this->loadCategory($hash);
+        $layout   = empty($hash['layout']) ? '' : $hash['layout'];
+        $layoutId = empty($hash['layout_id']) ? null : $hash['layout_id'];
 
         return new Entity(
             $hash['id'],
             $hash['identifier'],
             $hash['title'],
             $body,
-            $categoryId,
+            $category,
             $layout,
             $layoutId,
             $meta,
@@ -340,6 +343,24 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     /**
      * @param array $hash
      *
+     * @return PageCategory|null
+     */
+    protected function loadCategory(array $hash): ?PageCategory
+    {
+        $id         = isset($hash['category_id']) ? $hash['category_id'] : '';
+        $name       = isset($hash['category_name']) ? $hash['category_name'] : '';
+        $identifier = isset($hash['category_identifier']) ? $hash['category_identifier'] : '';
+
+        if (!$id && !$name && !$identifier) {
+            return null;
+        }
+
+        return new PageCategory($id, $name, $identifier);
+    }
+
+    /**
+     * @param array $hash
+     *
      * @return LayoutAssets|null
      */
     protected function loadLayoutAssets(array $hash): ?LayoutAssets
@@ -386,6 +407,26 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.layout_id'
             )
             ->from('pages')
+            ->where('pages.deleted = 0');
+
+        return $query;
+    }
+
+    /**
+     * @return SelectQuery
+     */
+    private function getGridQuery(): SelectQuery
+    {
+        /** @var SelectQuery $query */
+        $query = (new QueryBuilder())
+            ->select(
+                'pages.id',
+                'pages.identifier',
+                'pages.title',
+                'categories.name AS category_name'
+            )
+            ->from('pages')
+            ->leftJoin('page_categories', 'categories', 'categories.id = pages.category_id')
             ->where('pages.deleted = 0');
 
         return $query;

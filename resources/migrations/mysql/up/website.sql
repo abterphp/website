@@ -164,29 +164,29 @@ VALUES (UUID(), 'index', 'New AbterCMS installation',
         '', '', '', '');
 
 --
--- Table structure and data for table `user_groups_pages`
+-- Table structure and data for table `user_groups_page_categories`
 --
 
-CREATE TABLE `user_groups_pages`
+CREATE TABLE `user_groups_page_categories`
 (
-  `id`            char(36)  NOT NULL,
-  `user_group_id` char(36)  NOT NULL,
-  `page_id`       char(36)  NOT NULL,
-  `created_at`    timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at`    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `user_group_id` (`user_group_id`),
-  KEY `page_id` (`page_id`),
-  CONSTRAINT `ugp_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `pages` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `ugp_ibfk_2` FOREIGN KEY (`user_group_id`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE
+    `id`               char(36)  NOT NULL,
+    `user_group_id`    char(36)  NOT NULL,
+    `page_category_id` char(36)  NOT NULL,
+    `created_at`       timestamp NOT NULL DEFAULT current_timestamp(),
+    `updated_at`       timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    PRIMARY KEY (`id`),
+    KEY `user_group_id` (`user_group_id`),
+    KEY `page_category_id` (`page_category_id`),
+    CONSTRAINT `ugpc_ibfk_1` FOREIGN KEY (`user_group_id`) REFERENCES `user_groups` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `ugpc_ibfk_2` FOREIGN KEY (`page_category_id`) REFERENCES `page_categories` (`id`) ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
--- Provide admins, content editors and layouts access to all pages
-INSERT INTO `user_groups_pages` (`id`, `user_group_id`, `page_id`)
-SELECT UUID(), `user_groups`.`id` AS `user_group_id`, `pages`.`id` AS `file_category_id`
+-- Provide admins, content editors and layouts access to all page categories
+INSERT INTO `user_groups_page_categories` (`id`, `user_group_id`, `page_category_id`)
+SELECT UUID(), `user_groups`.`id` AS `user_group_id`, `page_categories`.`id` AS `page_category_id`
 FROM `user_groups`
-       INNER JOIN `pages` ON 1
+       INNER JOIN `page_categories` ON 1
 WHERE `user_groups`.`identifier` IN ('admin', 'content-editor', 'layout-editor');
 
 -- Provide access to relevant pages for layout editors

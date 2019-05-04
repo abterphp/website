@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Form\Factory;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\PageLayout;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Form\Factory\Page\Assets as AssetsFactory;
 use AbterPhp\Website\Form\Factory\Page\Meta as MetaFactory;
 use AbterPhp\Website\Orm\PageCategoryRepo;
@@ -145,7 +146,7 @@ class PageTest extends TestCase
         $title       = 'Blah!';
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
         $body        = "Blah!\n\n...and more blah...";
-        $categoryId  = 'bb031692-7cb2-468b-9cfd-2a40136c5165';
+        $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
         $layoutId    = '5131c135-185e-4342-9df2-969f57390287';
         $layout      = 'abc {{ var/body }} cba';
         $meta        = new Entity\Meta($description, '', '', '', '', '', '', '');
@@ -167,7 +168,7 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
-        $entityMock->expects($this->any())->method('getCategoryId')->willReturn($categoryId);
+        $entityMock->expects($this->any())->method('getCategory')->willReturn($category);
         $entityMock->expects($this->any())->method('getLayoutId')->willReturn($layoutId);
         $entityMock->expects($this->any())->method('getLayout')->willReturn($layout);
         $entityMock->expects($this->any())->method('getMeta')->willReturn($meta);
@@ -194,7 +195,7 @@ class PageTest extends TestCase
                     'getIdentifier',
                     'getTitle',
                     'getBody',
-                    'getCategoryId',
+                    'getCategory',
                     'getLayoutId',
                     'getLayout',
                     'getMeta',
