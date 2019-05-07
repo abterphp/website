@@ -163,10 +163,6 @@ class Block implements IStringerEntity
      */
     public function setLayoutId(?string $layoutId): Block
     {
-        if ($layoutId < 1) {
-            $layoutId = null;
-        }
-
         $this->layoutId = $layoutId;
 
         return $this;

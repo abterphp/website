@@ -173,7 +173,7 @@ class Block extends Base
     protected function createLayoutIdOptions(array $allLayouts, ?string $layoutId): array
     {
         $options   = [];
-        $options[] = new Option('', 'form:none', false);
+        $options[] = new Option('', 'framework:none', false);
         foreach ($allLayouts as $layout) {
             $isSelected = $layout->getId() === $layoutId;
             $options[]  = new Option($layout->getId(), $layout->getIdentifier(), $isSelected);

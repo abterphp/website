@@ -66,10 +66,11 @@ class Block extends RepoServiceAbstract
         }
         $identifier = $this->slugify->slugify($identifier);
 
-        $layoutId = null;
-        $layout   = (string)$data['layout'];
-        if (!$layout) {
-            $layoutId = (string)$data['layout_id'];
+        $layoutId = (string)$data['layout_id'];
+        $layout   = '';
+        if (!$layoutId) {
+            $layoutId = null;
+            $layout   = (string)$data['layout'];
         }
 
         $entity

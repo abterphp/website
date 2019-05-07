@@ -78,10 +78,11 @@ class Page extends RepoServiceAbstract
 
         $body = (string)$data['body'];
 
-        $layoutId = null;
-        $layout   = (string)$data['layout'];
-        if (!$layout) {
-            $layoutId = (string)$data['layout_id'];
+        $layoutId = (string)$data['layout_id'];
+        $layout   = '';
+        if (!$layoutId) {
+            $layoutId = null;
+            $layout   = (string)$data['layout'];
         }
 
         $meta   = $this->getMeta($data);
