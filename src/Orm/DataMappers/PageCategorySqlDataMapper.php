@@ -6,7 +6,6 @@ namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Framework\Orm\DataMappers\IdGeneratorUserTrait;
-use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -190,7 +189,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
     }
 
     /**
-     * @param PageCategory $entity
+     * @param Entity $entity
      */
     protected function deleteUserGroups(Entity $entity)
     {
@@ -287,7 +286,8 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
             )
             ->from('page_categories', 'pc')
             ->leftJoin('user_groups_page_categories', 'ugpc', 'ugpc.page_category_id = pc.id')
-            ->where('pc.deleted = 0');
+            ->where('pc.deleted = 0')
+            ->groupBy('pc.id');
 
         return $query;
     }
