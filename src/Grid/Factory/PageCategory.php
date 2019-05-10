@@ -17,11 +17,9 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class PageCategory extends BaseFactory
 {
-    const GROUP_ID         = 'pageCategory-id';
     const GROUP_IDENTIFIER = 'pageCategory-identifier';
     const GROUP_NAME       = 'pageCategory-name';
 
-    const GETTER_ID         = 'getId';
     const GETTER_IDENTIFIER = 'getIdentifier';
 
     /**
@@ -49,7 +47,6 @@ class PageCategory extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_ID         => static::GETTER_ID,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }

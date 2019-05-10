@@ -17,11 +17,9 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class Block extends BaseFactory
 {
-    const GROUP_ID         = 'block-id';
     const GROUP_IDENTIFIER = 'block-identifier';
     const GROUP_TITLE      = 'block-title';
 
-    const GETTER_ID         = 'getId';
     const GETTER_IDENTIFIER = 'getIdentifier';
     const GETTER_TITLE      = 'getTitle';
 
@@ -50,7 +48,6 @@ class Block extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_ID         => static::GETTER_ID,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
             static::GROUP_TITLE      => static::GETTER_TITLE,
         ];

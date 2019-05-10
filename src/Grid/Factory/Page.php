@@ -18,12 +18,10 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class Page extends BaseFactory
 {
-    const GROUP_ID         = 'page-id';
     const GROUP_IDENTIFIER = 'page-identifier';
     const GROUP_TITLE      = 'page-title';
     const GROUP_CATEGORY   = 'page-category';
 
-    const GETTER_ID         = 'getId';
     const GETTER_IDENTIFIER = 'getIdentifier';
     const GETTER_TITLE      = 'getTitle';
     const GETTER_CATEGORY   = 'getCategory';
@@ -53,7 +51,6 @@ class Page extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_ID         => static::GETTER_ID,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
             static::GROUP_TITLE      => static::GETTER_TITLE,
             static::GROUP_CATEGORY   => [$this, 'getCategoryName'],

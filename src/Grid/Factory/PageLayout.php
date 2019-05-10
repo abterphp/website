@@ -17,11 +17,9 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class PageLayout extends BaseFactory
 {
-    const GROUP_ID         = 'pageLayout-id';
     const GROUP_IDENTIFIER = 'pageLayout-identifier';
     const GROUP_TITLE      = 'pageLayout-title';
 
-    const GETTER_ID         = 'getId';
     const GETTER_IDENTIFIER = 'getIdentifier';
 
     /**
@@ -49,7 +47,6 @@ class PageLayout extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_ID         => static::GETTER_ID,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }
