@@ -64,7 +64,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) GROUP BY pc.id'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -87,7 +87,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -110,7 +110,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (identifier = :identifier) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
