@@ -100,7 +100,7 @@ class NavigationBuilder
     protected function createPageLayoutItem(): Item
     {
         $text = 'website:pageLayouts';
-        $icon = 'build';
+        $icon = 'view_compact';
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGE_LAYOUTS, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_PAGE_LAYOUTS);
@@ -136,7 +136,7 @@ class NavigationBuilder
     protected function createBlockLayoutItem(): Item
     {
         $text = 'website:blockLayouts';
-        $icon = 'build';
+        $icon = 'view_compact';
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_BLOCK_LAYOUTS, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_BLOCK_LAYOUTS);
