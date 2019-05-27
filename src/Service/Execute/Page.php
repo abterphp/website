@@ -14,6 +14,7 @@ use AbterPhp\Website\Orm\PageRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Page as ValidatorFactory;
 use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
+use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
 
 class Page extends RepoServiceAbstract
@@ -53,40 +54,43 @@ class Page extends RepoServiceAbstract
     }
 
     /**
-     * @param Entity $entity
-     * @param array  $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity         $entity
+     * @param array          $postData
+     * @param UploadedFile[] $fileData
      *
      * @return Entity
      */
-    protected function fillEntity(IStringerEntity $entity, array $data): IStringerEntity
+    protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
         if (!($entity instanceof Entity)) {
             throw new \InvalidArgumentException('Not a page...');
         }
-        $title = (string)$data['title'];
+        $title = (string)$postData['title'];
 
-        $identifier = (string)$data['identifier'];
+        $identifier = (string)$postData['identifier'];
         if (empty($identifier)) {
             $identifier = $title;
         }
         $identifier = $this->slugify->slugify($identifier);
 
         $category = null;
-        if (!empty($data['category_id'])) {
-            $category = new PageCategory((string)$data['category_id'], '', '');
+        if (!empty($postData['category_id'])) {
+            $category = new PageCategory((string)$postData['category_id'], '', '');
         }
 
-        $body = (string)$data['body'];
+        $body = (string)$postData['body'];
 
-        $layoutId = (string)$data['layout_id'];
+        $layoutId = (string)$postData['layout_id'];
         $layout   = '';
         if (!$layoutId) {
             $layoutId = null;
-            $layout   = (string)$data['layout'];
+            $layout   = (string)$postData['layout'];
         }
 
-        $meta   = $this->getMeta($data);
-        $assets = $this->getAssets($data);
+        $meta   = $this->getMeta($postData);
+        $assets = $this->getAssets($postData);
 
         $entity
             ->setIdentifier($identifier)
@@ -102,39 +106,39 @@ class Page extends RepoServiceAbstract
     }
 
     /**
-     * @param array $data
+     * @param array $postData
      *
      * @return Meta
      */
-    protected function getMeta(array $data): Meta
+    protected function getMeta(array $postData): Meta
     {
         $entity = new Meta(
-            $data['description'],
-            $data['robots'],
-            $data['author'],
-            $data['copyright'],
-            $data['keywords'],
-            $data['og-title'],
-            $data['og-image'],
-            $data['og-description']
+            $postData['description'],
+            $postData['robots'],
+            $postData['author'],
+            $postData['copyright'],
+            $postData['keywords'],
+            $postData['og-title'],
+            $postData['og-image'],
+            $postData['og-description']
         );
 
         return $entity;
     }
 
     /**
-     * @param array $data
+     * @param array $postData
      *
      * @return Assets
      */
-    protected function getAssets(array $data): Assets
+    protected function getAssets(array $postData): Assets
     {
         $entity = new Assets(
-            $data['identifier'],
-            $data['header'],
-            $data['footer'],
-            explode('\r\n', $data['css-files']),
-            explode('\r\n', $data['js-files']),
+            $postData['identifier'],
+            $postData['header'],
+            $postData['footer'],
+            explode('\r\n', $postData['css-files']),
+            explode('\r\n', $postData['js-files']),
             null
         );
 

@@ -11,6 +11,7 @@ use AbterPhp\Website\Orm\BlockRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Block as ValidatorFactory;
 use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
+use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
 
 class Block extends RepoServiceAbstract
@@ -50,27 +51,30 @@ class Block extends RepoServiceAbstract
     }
 
     /**
-     * @param Entity $entity
-     * @param array  $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity         $entity
+     * @param array          $postData
+     * @param UploadedFile[] $fileData
      *
      * @return Entity
      */
-    protected function fillEntity(IStringerEntity $entity, array $data): IStringerEntity
+    protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        $body  = (string)$data['body'];
-        $title = (string)$data['title'];
+        $body  = (string)$postData['body'];
+        $title = (string)$postData['title'];
 
-        $identifier = (string)$data['identifier'];
+        $identifier = (string)$postData['identifier'];
         if (empty($identifier)) {
             $identifier = $title;
         }
         $identifier = $this->slugify->slugify($identifier);
 
-        $layoutId = (string)$data['layout_id'];
+        $layoutId = (string)$postData['layout_id'];
         $layout   = '';
         if (!$layoutId) {
             $layoutId = null;
-            $layout   = (string)$data['layout'];
+            $layout   = (string)$postData['layout'];
         }
 
         $entity

@@ -11,6 +11,7 @@ use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Service\RepoGrid\BlockLayout as RepoGrid;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
+use Psr\Log\LoggerInterface;
 
 class BlockLayout extends GridAbstract
 {
@@ -31,11 +32,13 @@ class BlockLayout extends GridAbstract
      * @param AssetManager     $assets
      * @param RepoGrid         $repoGrid
      * @param IEventDispatcher $eventDispatcher
+     * @param LoggerInterface  $logger
      */
     public function __construct(
         FlashService $flashService,
         ITranslator $translator,
         UrlGenerator $urlGenerator,
+        LoggerInterface $logger,
         AssetManager $assets,
         RepoGrid $repoGrid,
         IEventDispatcher $eventDispatcher
@@ -44,6 +47,7 @@ class BlockLayout extends GridAbstract
             $flashService,
             $translator,
             $urlGenerator,
+            $logger,
             $assets,
             $repoGrid,
             $eventDispatcher

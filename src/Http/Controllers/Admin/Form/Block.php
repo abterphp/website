@@ -16,6 +16,7 @@ use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Orm\OrmException;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
+use Psr\Log\LoggerInterface;
 
 class Block extends FormAbstract
 {
@@ -37,23 +38,34 @@ class Block extends FormAbstract
      * @param FlashService     $flashService
      * @param ITranslator      $translator
      * @param UrlGenerator     $urlGenerator
+     * @param LoggerInterface  $logger
      * @param Repo             $repo
      * @param ISession         $session
+     * @param IEventDispatcher $eventDispatcher
      * @param FormFactory      $formFactory
      * @param AssetManager     $assetManager
-     * @param IEventDispatcher $eventDispatcher
      */
     public function __construct(
         FlashService $flashService,
         ITranslator $translator,
         UrlGenerator $urlGenerator,
+        LoggerInterface $logger,
         Repo $repo,
         ISession $session,
+        IEventDispatcher $eventDispatcher,
         FormFactory $formFactory,
-        AssetManager $assetManager,
-        IEventDispatcher $eventDispatcher
+        AssetManager $assetManager
     ) {
-        parent::__construct($flashService, $translator, $urlGenerator, $repo, $session, $formFactory, $eventDispatcher);
+        parent::__construct(
+            $flashService,
+            $translator,
+            $urlGenerator,
+            $logger,
+            $repo,
+            $session,
+            $formFactory,
+            $eventDispatcher
+        );
 
         $this->formFactory = $formFactory;
         $this->assets      = $assetManager;

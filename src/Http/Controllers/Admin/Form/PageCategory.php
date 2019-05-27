@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
-use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\I18n\ITranslator;
@@ -15,6 +14,7 @@ use AbterPhp\Website\Orm\PageCategoryRepo as Repo;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
+use Psr\Log\LoggerInterface;
 
 class PageCategory extends FormAbstract
 {
@@ -33,6 +33,7 @@ class PageCategory extends FormAbstract
      * @param FlashService     $flashService
      * @param ITranslator      $translator
      * @param UrlGenerator     $urlGenerator
+     * @param LoggerInterface  $logger
      * @param Repo             $repo
      * @param ISession         $session
      * @param FormFactory      $formFactory
@@ -42,12 +43,22 @@ class PageCategory extends FormAbstract
         FlashService $flashService,
         ITranslator $translator,
         UrlGenerator $urlGenerator,
+        LoggerInterface $logger,
         Repo $repo,
         ISession $session,
         FormFactory $formFactory,
         IEventDispatcher $eventDispatcher
     ) {
-        parent::__construct($flashService, $translator, $urlGenerator, $repo, $session, $formFactory, $eventDispatcher);
+        parent::__construct(
+            $flashService,
+            $translator,
+            $urlGenerator,
+            $logger,
+            $repo,
+            $session,
+            $formFactory,
+            $eventDispatcher
+        );
     }
 
     /**

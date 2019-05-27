@@ -12,6 +12,7 @@ use AbterPhp\Website\Orm\PageCategoryRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\PageCategory as ValidatorFactory;
 use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
+use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
 
 class PageCategory extends RepoServiceAbstract
@@ -52,24 +53,27 @@ class PageCategory extends RepoServiceAbstract
     }
 
     /**
-     * @param Entity $entity
-     * @param array  $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity         $entity
+     * @param array          $postData
+     * @param UploadedFile[] $fileData
      *
      * @return Entity
      */
-    protected function fillEntity(IStringerEntity $entity, array $data): IStringerEntity
+    protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        $name = (string)$data['name'];
+        $name = (string)$postData['name'];
 
-        $identifier = (string)$data['identifier'];
+        $identifier = (string)$postData['identifier'];
         if (empty($identifier)) {
             $identifier = $name;
         }
-        $identifier = $this->slugify->slugify((string)$data['identifier']);
+        $identifier = $this->slugify->slugify($identifier);
 
         $userGroups = [];
-        if (array_key_exists('user_group_ids', $data)) {
-            foreach ($data['user_group_ids'] as $id) {
+        if (array_key_exists('user_group_ids', $postData)) {
+            foreach ($postData['user_group_ids'] as $id) {
                 $userGroups[] = new UserGroup((string)$id, '', '');
             }
         }
