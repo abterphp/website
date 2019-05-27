@@ -120,4 +120,32 @@ class PageLayout implements IStringerEntity
     {
         return $this->getIdentifier();
     }
+
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        $assetsData = null;
+        if ($this->getAssets()) {
+            $assets = $this->getAssets();
+
+            $assetsData = [
+                'key'       => $assets->getKey(),
+                'header'    => $assets->getHeader(),
+                'footer'    => $assets->getFooter(),
+                'css_files' => $assets->getCssFiles(),
+                'js_files'  => $assets->getJsFiles(),
+            ];
+        }
+
+        return json_encode(
+            [
+                'id'         => $this->getId(),
+                'identifier' => $this->getIdentifier(),
+                'body'       => $this->getBody(),
+                'assets'     => $assetsData,
+            ]
+        );
+    }
 }

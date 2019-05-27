@@ -40,15 +40,15 @@ class Page implements IStringerEntity
     /**
      * Page constructor.
      *
-     * @param string      $id
-     * @param string      $identifier
-     * @param string      $title
-     * @param string      $body
+     * @param string            $id
+     * @param string            $identifier
+     * @param string            $title
+     * @param string            $body
      * @param PageCategory|null $category
-     * @param string      $layout
-     * @param string|null $layoutId
-     * @param Meta|null   $meta
-     * @param Assets|null $assets
+     * @param string            $layout
+     * @param string|null       $layoutId
+     * @param Meta|null         $meta
+     * @param Assets|null       $assets
      */
     public function __construct(
         string $id,
@@ -65,7 +65,7 @@ class Page implements IStringerEntity
         $this->identifier = $identifier;
         $this->title      = $title;
         $this->body       = $body;
-        $this->category = $category;
+        $this->category   = $category;
         $this->layout     = $layout;
         $this->layoutId   = $layoutId ? $layoutId : null;
         $this->meta       = $meta ?: new Meta('', '', '', '', '', '', '', '');
@@ -258,5 +258,46 @@ class Page implements IStringerEntity
     public function __toString(): string
     {
         return $this->getIdentifier();
+    }
+
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        $meta   = $this->getMeta();
+        $assets = $this->getAssets();
+
+        return json_encode(
+            [
+                'id'         => $this->getId(),
+                'identifier' => $this->getIdentifier(),
+                'title'      => $this->getTitle(),
+                'body'       => $this->getBody(),
+                'category'   => [
+                    'id' => $this->getCategory()->getId(),
+                ],
+                'layout'     => $this->getLayout(),
+                'layout_id'  => $this->getLayoutId(),
+                'meta'       => [
+                    'description'   => $meta->getDescription(),
+                    'robots'        => $meta->getRobots(),
+                    'author'        => $meta->getAuthor(),
+                    'copyright'     => $meta->getCopyright(),
+                    'keywords'      => $meta->getKeywords(),
+                    'og_title'      => $meta->getOGTitle(),
+                    'og_image'      => $meta->getOGImage(),
+                    'og_escription' => $meta->getOGDescription(),
+                ],
+                'assets'     => [
+                    'key'       => $assets->getKey(),
+                    'header'    => $assets->getHeader(),
+                    'footer'    => $assets->getFooter(),
+                    'css_files' => $assets->getCssFiles(),
+                    'js_files'  => $assets->getJsFiles(),
+                ],
+                'layout_id'  => $this->getLayoutId(),
+            ]
+        );
     }
 }

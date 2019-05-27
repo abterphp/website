@@ -46,7 +46,7 @@ class BlockLayout extends RepoServiceAbstract
      *
      * @return Entity
      */
-    protected function createEntity(string $entityId): IStringerEntity
+    public function createEntity(string $entityId): IStringerEntity
     {
         return new Entity($entityId, '', '');
     }
