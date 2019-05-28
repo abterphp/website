@@ -46,6 +46,7 @@ return [
     Module::ROUTE_PATHS        => [
         Priorities::NORMAL       => [
             __DIR__ . '/admin-routes.php',
+            __DIR__ . '/api-routes.php',
         ],
         Priorities::BELOW_NORMAL => [
             __DIR__ . '/website-routes.php',

@@ -268,26 +268,31 @@ class Page implements IStringerEntity
         $meta   = $this->getMeta();
         $assets = $this->getAssets();
 
+        $category = null;
+        if ($this->getCategory()) {
+            $category = [
+                'id' => $this->getCategory()->getId(),
+            ];
+        }
+
         return json_encode(
             [
                 'id'         => $this->getId(),
                 'identifier' => $this->getIdentifier(),
                 'title'      => $this->getTitle(),
                 'body'       => $this->getBody(),
-                'category'   => [
-                    'id' => $this->getCategory()->getId(),
-                ],
+                'category'   => $category,
                 'layout'     => $this->getLayout(),
                 'layout_id'  => $this->getLayoutId(),
                 'meta'       => [
-                    'description'   => $meta->getDescription(),
-                    'robots'        => $meta->getRobots(),
-                    'author'        => $meta->getAuthor(),
-                    'copyright'     => $meta->getCopyright(),
-                    'keywords'      => $meta->getKeywords(),
-                    'og_title'      => $meta->getOGTitle(),
-                    'og_image'      => $meta->getOGImage(),
-                    'og_escription' => $meta->getOGDescription(),
+                    'description'    => $meta->getDescription(),
+                    'robots'         => $meta->getRobots(),
+                    'author'         => $meta->getAuthor(),
+                    'copyright'      => $meta->getCopyright(),
+                    'keywords'       => $meta->getKeywords(),
+                    'og_title'       => $meta->getOGTitle(),
+                    'og_image'       => $meta->getOGImage(),
+                    'og_description' => $meta->getOGDescription(),
                 ],
                 'assets'     => [
                     'key'       => $assets->getKey(),
@@ -296,7 +301,6 @@ class Page implements IStringerEntity
                     'css_files' => $assets->getCssFiles(),
                     'js_files'  => $assets->getJsFiles(),
                 ],
-                'layout_id'  => $this->getLayoutId(),
             ]
         );
     }

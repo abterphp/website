@@ -113,7 +113,7 @@ class Assets
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getCssFiles(): array
     {
@@ -121,7 +121,7 @@ class Assets
     }
 
     /**
-     * @param array $cssFiles
+     * @param string[] $cssFiles
      *
      * @return $this
      */
@@ -162,9 +162,13 @@ class Assets
 
     /**
      * @param LayoutAssets|null $layoutAssets
+     *
+     * @return $this
      */
-    public function setLayoutAssets(?LayoutAssets $layoutAssets): void
+    public function setLayoutAssets(?LayoutAssets $layoutAssets): Assets
     {
         $this->layoutAssets = $layoutAssets;
+
+        return $this;
     }
 }

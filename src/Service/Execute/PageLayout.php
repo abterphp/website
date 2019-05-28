@@ -65,13 +65,7 @@ class PageLayout extends RepoServiceAbstract
     {
         $identifier = $this->slugify->slugify((string)$postData['identifier']);
 
-        $assets = new Assets(
-            $postData['identifier'],
-            $postData['header'],
-            $postData['footer'],
-            explode('\r\n', $postData['css-files']),
-            explode('\r\n', $postData['js-files'])
-        );
+        $assets = $this->createAssets($postData);
 
         $entity
             ->setIdentifier($identifier)
@@ -80,5 +74,29 @@ class PageLayout extends RepoServiceAbstract
         ;
 
         return $entity;
+    }
+
+    /**
+     * @param array $postData
+     *
+     * @return Assets
+     */
+    protected function createAssets(array $postData): Assets
+    {
+        if (is_string($postData['css-files'])) {
+            $postData['css-files'] = explode('\r\n', $postData['css-files']);
+        }
+
+        if (is_string($postData['js-files'])) {
+            $postData['js-files'] = explode('\r\n', $postData['js-files']);
+        }
+
+        return new Assets(
+            $postData['identifier'],
+            $postData['header'],
+            $postData['footer'],
+            $postData['css-files'],
+            $postData['js-files']
+        );
     }
 }

@@ -133,12 +133,19 @@ class Page extends RepoServiceAbstract
      */
     protected function getAssets(array $postData): Assets
     {
+        if (is_string($postData['css-files'])) {
+            $postData['css-files'] = explode('\r\n', $postData['css-files']);
+        }
+        if (is_string($postData['js-files'])) {
+            $postData['js-files'] = explode('\r\n', $postData['js-files']);
+        }
+
         $entity = new Assets(
             $postData['identifier'],
             $postData['header'],
             $postData['footer'],
-            explode('\r\n', $postData['css-files']),
-            explode('\r\n', $postData['js-files']),
+            $postData['css-files'],
+            $postData['js-files'],
             null
         );
 

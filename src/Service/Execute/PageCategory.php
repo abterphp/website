@@ -81,8 +81,7 @@ class PageCategory extends RepoServiceAbstract
         $entity
             ->setName($name)
             ->setIdentifier($identifier)
-            ->setUserGroups($userGroups)
-        ;
+            ->setUserGroups($userGroups);
 
         return $entity;
     }
