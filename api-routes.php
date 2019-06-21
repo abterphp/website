@@ -32,6 +32,26 @@ $router->group(
                 ];
 
                 foreach ($entities as $route => $controllerName) {
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::get() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::get() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::get() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::get() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::get() */
+                    $router->get(
+                        "/${route}/:entityId",
+                        "Api\\${controllerName}@get"
+                    );
+
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::list() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::list() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::list() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::list() */
+                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::list() */
+                    $router->get(
+                        "/${route}",
+                        "Api\\${controllerName}@list"
+                    );
+
                     /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::create() */
                     /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::create() */
                     /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::create() */

@@ -275,6 +275,17 @@ class Page implements IStringerEntity
             ];
         }
 
+        $assetsData = null;
+        if ($assets) {
+            $assetsData = [
+                'key'       => $assets->getKey(),
+                'header'    => $assets->getHeader(),
+                'footer'    => $assets->getFooter(),
+                'css_files' => $assets->getCssFiles(),
+                'js_files'  => $assets->getJsFiles(),
+            ];
+        }
+
         return json_encode(
             [
                 'id'         => $this->getId(),
@@ -294,13 +305,7 @@ class Page implements IStringerEntity
                     'og_image'       => $meta->getOGImage(),
                     'og_description' => $meta->getOGDescription(),
                 ],
-                'assets'     => [
-                    'key'       => $assets->getKey(),
-                    'header'    => $assets->getHeader(),
-                    'footer'    => $assets->getFooter(),
-                    'css_files' => $assets->getCssFiles(),
-                    'js_files'  => $assets->getJsFiles(),
-                ],
+                'assets'     => $assetsData,
             ]
         );
     }
