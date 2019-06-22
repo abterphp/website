@@ -22,6 +22,9 @@ class Page implements IStringerEntity
     /** @var string */
     protected $body;
 
+    /** @var string|null */
+    protected $renderedBody;
+
     /** @var PageCategory|null */
     protected $category;
 
@@ -49,6 +52,7 @@ class Page implements IStringerEntity
      * @param string|null       $layoutId
      * @param Meta|null         $meta
      * @param Assets|null       $assets
+     * @param string|null       $renderedBody
      */
     public function __construct(
         string $id,
@@ -59,17 +63,19 @@ class Page implements IStringerEntity
         string $layout = '',
         ?string $layoutId = null,
         ?Meta $meta = null,
-        ?Assets $assets = null
+        ?Assets $assets = null,
+        ?string $renderedBody = null
     ) {
-        $this->id         = $id;
-        $this->identifier = $identifier;
-        $this->title      = $title;
-        $this->body       = $body;
-        $this->category   = $category;
-        $this->layout     = $layout;
-        $this->layoutId   = $layoutId ? $layoutId : null;
-        $this->meta       = $meta ?: new Meta('', '', '', '', '', '', '', '');
-        $this->assets     = $assets;
+        $this->id           = $id;
+        $this->identifier   = $identifier;
+        $this->title        = $title;
+        $this->body         = $body;
+        $this->category     = $category;
+        $this->layout       = $layout;
+        $this->layoutId     = $layoutId ? $layoutId : null;
+        $this->meta         = $meta ?: new Meta('', '', '', '', '', '', '', '');
+        $this->assets       = $assets;
+        $this->renderedBody = $renderedBody;
     }
 
     /**
@@ -144,6 +150,34 @@ class Page implements IStringerEntity
     public function setBody(string $body): Page
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasRenderedBody(): bool
+    {
+        return !($this->renderedBody === null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRenderedBody(): ?string
+    {
+        return $this->renderedBody;
+    }
+
+    /**
+     * @param string|null $renderedBody
+     *
+     * @return $this
+     */
+    public function setRenderedBody(?string $renderedBody): Page
+    {
+        $this->renderedBody = $renderedBody;
 
         return $this;
     }
@@ -286,8 +320,7 @@ class Page implements IStringerEntity
             ];
         }
 
-        return json_encode(
-            [
+        $data = [
                 'id'         => $this->getId(),
                 'identifier' => $this->getIdentifier(),
                 'title'      => $this->getTitle(),
@@ -306,7 +339,12 @@ class Page implements IStringerEntity
                     'og_description' => $meta->getOGDescription(),
                 ],
                 'assets'     => $assetsData,
-            ]
-        );
+            ];
+
+        if ($this->hasRenderedBody()) {
+            $data['rendered'] = $this->getRenderedBody();
+        }
+
+        return json_encode($data);
     }
 }

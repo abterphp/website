@@ -151,4 +151,20 @@ class Page extends RepoServiceAbstract
 
         return $entity;
     }
+
+    /**
+     * @param string $entityId
+     *
+     * @return IStringerEntity
+     * @throws OrmException
+     */
+    public function retrieveEntityWithLayout(string $entityId): IStringerEntity
+    {
+        /** @var IStringerEntity $entity */
+        $entity = $this->repo->getById($entityId);
+
+        $entity = $this->repo->getWithLayout($entity->getIdentifier());
+
+        return $entity;
+    }
 }
