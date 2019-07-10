@@ -32,51 +32,51 @@ $router->group(
                 ];
 
                 foreach ($entities as $route => $controllerName) {
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::get() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::get() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::get() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::get() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::get() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Page::get() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageLayout::get() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageCategory::get() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Block::get() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\BlockLayout::get() */
                     $router->get(
                         "/${route}/:entityId",
                         "Api\\${controllerName}@get"
                     );
 
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::list() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::list() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::list() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::list() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::list() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Page::list() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageLayout::list() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageCategory::list() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Block::list() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\BlockLayout::list() */
                     $router->get(
                         "/${route}",
                         "Api\\${controllerName}@list"
                     );
 
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::create() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::create() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::create() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::create() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Page::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageLayout::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageCategory::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Block::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\BlockLayout::create() */
                     $router->post(
                         "/${route}",
                         "Api\\${controllerName}@create"
                     );
 
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::update() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::update() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::update() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::update() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Page::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageLayout::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageCategory::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Block::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\BlockLayout::update() */
                     $router->put(
                         "/${route}/:entityId",
                         "Api\\${controllerName}@update"
                     );
 
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Page::delete() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageLayout::delete() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\PageCategory::delete() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\Block::delete() */
-                    /** @see \AbterPhp\Admin\Http\Controllers\Api\BlockLayout::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Page::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageLayout::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\PageCategory::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\Block::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Api\BlockLayout::delete() */
                     $router->delete(
                         "/${route}/:entityId",
                         "Api\\${controllerName}@delete"
