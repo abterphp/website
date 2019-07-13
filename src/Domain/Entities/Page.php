@@ -8,6 +8,9 @@ use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
 class Page implements IStringerEntity
 {
     /** @var string */
