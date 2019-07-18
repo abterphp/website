@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Bootstrappers\Validation;
 use AbterPhp\Framework\Constant\Env;
 use AbterPhp\Framework\Validation\Rules\AtLeastOne;
 use AbterPhp\Framework\Validation\Rules\Base64;
+use AbterPhp\Framework\Validation\Rules\Url;
 use AbterPhp\Framework\Validation\Rules\Uuid;
 use AbterPhp\Website\Validation\Factory\Block;
 use AbterPhp\Website\Validation\Factory\BlockLayout;
@@ -93,5 +94,6 @@ class ValidatorBootstrapper extends BaseBootstrapper
         $ruleExtensionRegistry->registerRuleExtension(new AtLeastOne());
         $ruleExtensionRegistry->registerRuleExtension(new Uuid());
         $ruleExtensionRegistry->registerRuleExtension(new Base64());
+        $ruleExtensionRegistry->registerRuleExtension(new Url());
     }
 }
