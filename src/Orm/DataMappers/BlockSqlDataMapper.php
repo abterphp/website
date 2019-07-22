@@ -149,8 +149,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
         }
 
         $conditions = new ConditionFactory();
-        $query      = $this->getWithLayoutQuery()
-            ->andWhere($conditions->in('blocks.identifier', $identifiers));
+        $query      = $this->getWithLayoutQuery()->andWhere($conditions->in('blocks.identifier', $identifiers));
 
         return $this->read($query->getSql(), $query->getParameters(), self::VALUE_TYPE_ARRAY);
     }

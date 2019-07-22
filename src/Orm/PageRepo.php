@@ -49,4 +49,15 @@ class PageRepo extends Repository implements IGridRepo
         /** @see PageSqlDataMapper::getWithLayout() */
         return $this->getFromDataMapper('getWithLayout', [$identifier]);
     }
+
+    /**
+     * @param array $identifiers
+     *
+     * @return Entity[]
+     */
+    public function getByCategoryIdentifiers(array $identifiers): array
+    {
+        /** @see PageSqlDataMapper::getByCategoryIdentifiers() */
+        return $this->getFromDataMapper('getByCategoryIdentifiers', [$identifiers]);
+    }
 }

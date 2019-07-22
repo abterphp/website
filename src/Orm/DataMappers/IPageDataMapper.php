@@ -33,4 +33,11 @@ interface IPageDataMapper extends IDataMapper
      * @return Entity[]
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $filters, array $params): array;
+
+    /**
+     * @param array $identifiers
+     *
+     * @return Entity[]
+     */
+    public function getByCategoryIdentifiers(array $identifiers): array;
 }

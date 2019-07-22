@@ -5,24 +5,30 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Events\Listeners;
 
 use AbterPhp\Framework\Events\TemplateEngineReady;
-use AbterPhp\Framework\Template\ILoader;
-use AbterPhp\Website\Template\BlockLoader as Loader;
+use AbterPhp\Website\Template\BlockLoader;
+use AbterPhp\Website\Template\PageCategoryLoader;
 
 class TemplateInitializer
 {
-    const TEMPLATE_TYPE = 'block';
+    const TEMPLATE_TYPE_BLOCK         = 'block';
+    const TEMPLATE_TYPE_PAGE_CATEGORY = 'pagecategory';
 
-    /** @var ILoader */
-    protected $loader;
+    /** @var BlockLoader */
+    protected $blockLoader;
+
+    /** @var PageCategoryLoader */
+    protected $pageCategoryLoader;
 
     /**
-     * TemplateRegistrar constructor.
+     * TemplateInitializer constructor.
      *
-     * @param Loader $loader
+     * @param BlockLoader        $blockLoader
+     * @param PageCategoryLoader $pageCategoryLoader
      */
-    public function __construct(Loader $loader)
+    public function __construct(BlockLoader $blockLoader, PageCategoryLoader $pageCategoryLoader)
     {
-        $this->loader = $loader;
+        $this->blockLoader        = $blockLoader;
+        $this->pageCategoryLoader = $pageCategoryLoader;
     }
 
     /**
@@ -30,6 +36,9 @@ class TemplateInitializer
      */
     public function handle(TemplateEngineReady $event)
     {
-        $event->getEngine()->getRenderer()->addLoader(static::TEMPLATE_TYPE, $this->loader);
+        $event->getEngine()
+            ->getRenderer()
+            ->addLoader(static::TEMPLATE_TYPE_BLOCK, $this->blockLoader)
+            ->addLoader(static::TEMPLATE_TYPE_PAGE_CATEGORY, $this->pageCategoryLoader);
     }
 }

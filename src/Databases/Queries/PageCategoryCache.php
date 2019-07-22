@@ -8,13 +8,13 @@ use Opulence\Databases\ConnectionPools\ConnectionPool;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 
-class BlockCache
+class PageCategoryCache
 {
     /** @var ConnectionPool */
     protected $connectionPool;
 
     /**
-     * BlockCache constructor.
+     * PageCategoryCache constructor.
      *
      * @param ConnectionPool $connectionPool
      */
@@ -35,12 +35,11 @@ class BlockCache
         $conditions = new ConditionFactory();
         $query      = (new QueryBuilder())
             ->select('COUNT(*) AS count')
-            ->from('blocks')
-            ->leftJoin('block_layouts', 'block_layouts', 'block_layouts.id = blocks.layout_id')
-            ->where('blocks.deleted = 0')
-            ->andWhere($conditions->in('blocks.identifier', $identifiers))
-            ->andWhere('blocks.updated_at > ? OR block_layouts.updated_at > ?')
-            ->addUnnamedPlaceholderValue($cacheTime, \PDO::PARAM_STR)
+            ->from('pages')
+            ->leftJoin('page_categories', 'page_categories', 'page_categories.id = pages.category_id')
+            ->where('pages.deleted = 0')
+            ->andWhere($conditions->in('page_categories.identifier', $identifiers))
+            ->andWhere('pages.updated_at > ?')
             ->addUnnamedPlaceholderValue($cacheTime, \PDO::PARAM_STR)
         ;
 

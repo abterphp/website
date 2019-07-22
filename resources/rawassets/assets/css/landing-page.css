@@ -125,3 +125,13 @@ footer .copyright {
         width: 100%;
     }
 }
+
+.page-category {
+    text-align: left;
+}
+.page-category > ul {
+
+}
+.page-category > ul > li {
+
+}

@@ -9,6 +9,7 @@ use AbterPhp\Website\Domain\Entities\Page\Assets as PageAssets;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
@@ -132,6 +133,27 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
         ];
 
         return $this->read($sql, $params, self::VALUE_TYPE_ENTITY, true);
+    }
+
+    /**
+     * @param array $identifiers
+     *
+     * @return Entity[]
+     */
+    public function getByCategoryIdentifiers(array $identifiers): array
+    {
+        if (count($identifiers) === 0) {
+            return [];
+        }
+
+        $conditions = new ConditionFactory();
+        $query      = $this->getSimplifiedQuery()
+            ->andWhere($conditions->in('page_categories.identifier', $identifiers));
+
+        $sql    = $query->getSql();
+        $params = $query->getParameters();
+
+        return $this->read($sql, $params, self::VALUE_TYPE_ARRAY);
     }
 
     /**
@@ -407,6 +429,48 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.layout_id'
             )
             ->from('pages')
+            ->where('pages.deleted = 0');
+
+        return $query;
+    }
+
+    /**
+     * @return SelectQuery
+     */
+    private function getSimplifiedQuery(): SelectQuery
+    {
+        /** @var SelectQuery $query */
+        $query = (new QueryBuilder())
+            ->select(
+                'pages.id',
+                'pages.identifier',
+                'pages.title',
+                '\'\' AS body',
+                'page_categories.id AS category_id',
+                'page_categories.identifier AS category_identifier',
+                'page_categories.name AS category_name',
+                '\'\' AS layout_id',
+                '\'\' AS layout',
+                '\'\' AS meta_description',
+                '\'\' AS meta_robots',
+                '\'\' AS meta_author',
+                '\'\' AS meta_copyright',
+                '\'\' AS meta_keywords',
+                '\'\' AS meta_og_title',
+                '\'\' AS meta_og_image',
+                '\'\' AS meta_og_description',
+                '\'\' AS header',
+                '\'\' AS footer',
+                '\'\' AS css_files',
+                '\'\' AS js_files',
+                '\'\' AS layout_identifier',
+                '\'\' AS layout_header',
+                '\'\' AS layout_footer',
+                '\'\' AS layout_css_files',
+                '\'\' AS layout_js_files'
+            )
+            ->from('pages')
+            ->innerJoin('page_categories', 'page_categories', 'page_categories.id = pages.category_id')
             ->where('pages.deleted = 0');
 
         return $query;
