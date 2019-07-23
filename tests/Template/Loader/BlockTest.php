@@ -2,50 +2,49 @@
 
 declare(strict_types=1);
 
-namespace AbterPhp\Website\Template;
+namespace AbterPhp\Website\Template\Loader;
 
-use AbterPhp\Website\Databases\Queries\BlockCache;
-use AbterPhp\Website\Domain\Entities\Block;
-use AbterPhp\Website\Orm\BlockRepo;
-use AbterPhp\Website\Template\BlockLoader;
+use AbterPhp\Website\Databases\Queries\BlockCache as Cache;
+use AbterPhp\Website\Domain\Entities\Block as Entity;
+use AbterPhp\Website\Orm\BlockRepo as Repo;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
-class BlockLoaderTest extends \PHPUnit\Framework\TestCase
+class BlockTest extends \PHPUnit\Framework\TestCase
 {
-    /** @var BlockLoader */
+    /** @var Block */
     protected $sut;
 
-    /** @var BlockRepo|MockObject */
-    protected $blockRepo;
+    /** @var Repo|MockObject */
+    protected $repo;
 
-    /** @var BlockCache|MockObject */
-    protected $blockCache;
+    /** @var Cache|MockObject */
+    protected $cache;
 
     public function setUp()
     {
-        $this->blockRepo = $this->getMockBuilder(BlockRepo::class)
+        $this->repo = $this->getMockBuilder(Repo::class)
             ->disableOriginalConstructor()
             ->setMethods(['getWithLayoutByIdentifiers'])
             ->getMock();
 
-        $this->blockCache = $this->getMockBuilder(BlockCache::class)
+        $this->cache = $this->getMockBuilder(Cache::class)
             ->disableOriginalConstructor()
             ->setMethods(['hasAnyChangedSince'])
             ->getMock();
 
-        $this->sut = new BlockLoader($this->blockRepo, $this->blockCache);
+        $this->sut = new Block($this->repo, $this->cache);
     }
 
     public function testLoadOne()
     {
         $blockIdentifier = 'block-1';
 
-        $block = new Block('', $blockIdentifier, '', '', '');
+        $entity = new Entity('', $blockIdentifier, '', '', '');
 
-        $this->blockRepo
+        $this->repo
             ->expects($this->any())
             ->method('getWithLayoutByIdentifiers')
-            ->willReturn([$block]);
+            ->willReturn([$entity]);
 
         $templateDataCollection = $this->sut->load([$blockIdentifier]);
 

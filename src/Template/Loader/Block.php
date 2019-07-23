@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Template\Loader;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ILoader;
 use AbterPhp\Framework\Template\Data;
+use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Databases\Queries\BlockCache;
 use AbterPhp\Website\Orm\BlockRepo;
 
@@ -35,12 +36,14 @@ class Block implements ILoader
     }
 
     /**
-     * @param string[] $identifiers
+     * @param ParsedTemplate[][] $parsedTemplates
      *
      * @return IData[]
      */
-    public function load(array $identifiers): array
+    public function load(array $parsedTemplates): array
     {
+        $identifiers = array_keys($parsedTemplates);
+
         $blocks = $this->blockRepo->getWithLayoutByIdentifiers($identifiers);
 
         $templateData = [];

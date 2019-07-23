@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Template\Loader;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ILoader;
+use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Databases\Queries\PageCategoryCache;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Orm\PageRepo;
@@ -43,12 +44,14 @@ class PageCategory implements ILoader
     }
 
     /**
-     * @param string[] $identifiers
+     * @param ParsedTemplate[] $parsedTemplates
      *
      * @return IData[]
      */
-    public function load(array $identifiers): array
+    public function load(array $parsedTemplates): array
     {
+        $identifiers = array_keys($parsedTemplates);
+
         $pages = $this->pageRepo->getByCategoryIdentifiers($identifiers);
 
         $titlesByCategories = $this->groupPages($pages);
