@@ -57,7 +57,7 @@ class PageCategory implements ILoader
         $titlesByCategories = $this->groupPages($pages);
 
         $templateData = [];
-        foreach ($titlesByCategories as $category => $pages) {
+        foreach ($titlesByCategories as $pages) {
             $templateData[] = $this->builder->build($pages);
         }
 
