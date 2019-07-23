@@ -6,15 +6,15 @@ namespace AbterPhp\Website\Constant;
 
 class Routes
 {
-    const ROUTE_HOME       = 'home';
-    const ROUTE_PAGE_OTHER = 'other-page';
-    const ROUTE_NOPE       = 'nope';
-    const ROUTE_404        = '404';
+    const ROUTE_INDEX    = 'index';
+    const ROUTE_FALLBACK = 'fallback';
+    const ROUTE_NOPE     = 'nope';
+    const ROUTE_404      = '404';
 
-    const PATH_HOME = '/';
-    const PATH_PAGE = '/:identifier';
-    const PATH_NOPE = '/nope';
-    const PATH_404  = '/:anything';
+    const PATH_INDEX    = '/';
+    const PATH_FALLBACK = '/:identifier';
+    const PATH_NOPE     = '/nope';
+    const PATH_404      = '/:anything';
 
     const VAR_ANYTHING = 'anything';
 

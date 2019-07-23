@@ -74,9 +74,9 @@ class Index extends ControllerAbstract
      *
      * @return Response The response
      */
-    public function homePage(): Response
+    public function index(): Response
     {
-        return $this->otherPage('index');
+        return $this->fallback('index');
     }
 
     /**
@@ -84,7 +84,7 @@ class Index extends ControllerAbstract
      *
      * @return Response The response
      */
-    public function otherPage(string $identifier): Response
+    public function fallback(string $identifier): Response
     {
         $this->view = $this->viewFactory->createView('contents/frontend/page');
 
@@ -102,8 +102,8 @@ class Index extends ControllerAbstract
 
         $body = $this->templateEngine->run('page', $page->getIdentifier(), $templates, $vars);
 
-        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_PAGE_OTHER, $identifier);
-        $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_HOME);
+        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $identifier);
+        $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_INDEX);
 
         $this->view->setVar('body', $body);
         $this->view->setVar('siteTitle', $this->siteTitle);

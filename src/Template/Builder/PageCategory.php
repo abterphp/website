@@ -73,7 +73,7 @@ class PageCategory implements IBuilder
 
         $list = new Component(null, [], [], Html5::TAG_UL);
         foreach ($pages as $page) {
-            $url   = $this->urlGenerator->createFromName(Routes::ROUTE_PAGE_OTHER, $page->getIdentifier());
+            $url   = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
             $title = $page->getTitle();
 
             $a = new Component($title, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
@@ -81,7 +81,7 @@ class PageCategory implements IBuilder
             $list[] = new Component($a, [], [], Html5::TAG_LI);
         }
 
-        $container[] = new Component($pages[0]->getCategory()->getName(), [], [], Html5::TAG_H2);
+        $container[] = new Component($categoryName, [], [], Html5::TAG_H2);
         $container[] = $list;
 
         return $container;
