@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AbterPhp\Website\Template;
+namespace AbterPhp\Website\Template\Loader;
 
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
@@ -11,7 +11,7 @@ use AbterPhp\Website\Databases\Queries\PageCategoryCache;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Orm\PageRepo;
 
-class PageCategoryLoader implements ILoader
+class PageCategory implements ILoader
 {
     /**
      * @var PageRepo

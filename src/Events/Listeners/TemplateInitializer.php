@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Events\Listeners;
 
 use AbterPhp\Framework\Events\TemplateEngineReady;
-use AbterPhp\Website\Template\BlockLoader;
-use AbterPhp\Website\Template\PageCategoryLoader;
+use AbterPhp\Website\Template\Loader\Block as BlockLoader;
+use AbterPhp\Website\Template\Loader\PageCategory as PageCategoryLoader;
 
 class TemplateInitializer
 {

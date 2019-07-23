@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace AbterPhp\Website\Template;
+namespace AbterPhp\Website\Template\Loader;
 
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ILoader;
@@ -10,7 +10,7 @@ use AbterPhp\Framework\Template\Data;
 use AbterPhp\Website\Databases\Queries\BlockCache;
 use AbterPhp\Website\Orm\BlockRepo;
 
-class BlockLoader implements ILoader
+class Block implements ILoader
 {
     /**
      * @var BlockRepo

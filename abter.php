@@ -20,7 +20,7 @@ return [
     Module::HTTP_BOOTSTRAPPERS => [
         Bootstrappers\Http\Controllers\Website\IndexBootstrapper::class,
         Bootstrappers\Http\Views\BuildersBootstrapper::class,
-        Bootstrappers\Template\PageCategoryLoaderBootstrapper::class,
+        Bootstrappers\Template\Loader\PageCategoryBootstrapper::class,
     ],
     Module::EVENTS             => [
         Event::AUTH_READY            => [
