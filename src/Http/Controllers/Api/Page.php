@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Api;
 
-use AbterPhp\Framework\Config\Provider as ConfigProvider;
+use AbterPhp\Framework\Config\EnvReader;
 use AbterPhp\Framework\Databases\Queries\FoundRows;
 use AbterPhp\Framework\Http\Controllers\ApiAbstract;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
@@ -28,17 +28,17 @@ class Page extends ApiAbstract
      * @param LoggerInterface $logger
      * @param RepoService     $repoService
      * @param FoundRows       $foundRows
-     * @param ConfigProvider  $configProvider
+     * @param EnvReader       $envReader
      * @param IndexService    $indexService
      */
     public function __construct(
         LoggerInterface $logger,
         RepoService $repoService,
         FoundRows $foundRows,
-        ConfigProvider $configProvider,
+        EnvReader $envReader,
         IndexService $indexService
     ) {
-        parent::__construct($logger, $repoService, $foundRows, $configProvider);
+        parent::__construct($logger, $repoService, $foundRows, $envReader);
 
         $this->indexService = $indexService;
     }

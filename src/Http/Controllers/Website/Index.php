@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Http\Controllers\Website;
 
 use AbterPhp\Framework\Assets\AssetManager;
-use AbterPhp\Framework\Config\Config;
+use AbterPhp\Framework\Config\EnvReader;
 use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Http\Controllers\ControllerAbstract;
 use AbterPhp\Framework\Session\FlashService;
@@ -48,7 +48,7 @@ class Index extends ControllerAbstract
      * @param IndexService $indexService
      * @param UrlGenerator $urlGenerator
      * @param AssetManager $assetManager
-     * @param Config       $config
+     * @param EnvReader    $envReader
      */
     public function __construct(
         FlashService $flashService,
@@ -56,15 +56,15 @@ class Index extends ControllerAbstract
         IndexService $indexService,
         UrlGenerator $urlGenerator,
         AssetManager $assetManager,
-        Config $config
+        EnvReader $envReader
     ) {
         $this->session      = $session;
         $this->indexService = $indexService;
         $this->urlGenerator = $urlGenerator;
         $this->assetManager = $assetManager;
 
-        $this->baseUrl   = $config->get(Env::WEBSITE_BASE_URL);
-        $this->siteTitle = $config->get(Env::WEBSITE_SITE_TITLE);
+        $this->baseUrl   = $envReader->get(Env::WEBSITE_BASE_URL);
+        $this->siteTitle = $envReader->get(Env::WEBSITE_SITE_TITLE);
 
         parent::__construct($flashService);
     }

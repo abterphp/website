@@ -15,6 +15,7 @@ use AbterPhp\Website\Validation\Factory\Page;
 use AbterPhp\Website\Validation\Factory\PageCategory;
 use AbterPhp\Website\Validation\Factory\PageLayout;
 use InvalidArgumentException;
+use Opulence\Environments\Environment;
 use Opulence\Framework\Validation\Bootstrappers\ValidatorBootstrapper as BaseBootstrapper;
 use Opulence\Ioc\IContainer;
 use Opulence\Validation\Rules\Errors\ErrorTemplateRegistry;
@@ -70,7 +71,7 @@ class ValidatorBootstrapper extends BaseBootstrapper
     {
         global $abterModuleManager;
 
-        $lang = getenv(Env::DEFAULT_LANGUAGE);
+        $lang = Environment::getVar(Env::DEFAULT_LANGUAGE);
 
         foreach ($abterModuleManager->getResourcePaths() as $path) {
             $fullPath = realpath(sprintf('%s/lang/%s/validation.php', $path, $lang));
