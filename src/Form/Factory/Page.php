@@ -35,6 +35,9 @@ use Casbin\Enforcer;
 use Opulence\Orm\IEntity;
 use Opulence\Sessions\ISession;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Page extends Base
 {
     const BTN_CONTENT_PUBLISH_AND_EDIT       = 'website:publishAndEdit';
@@ -121,7 +124,7 @@ class Page extends Base
             ->addLayout($entity, $advancedAllowed)
             ->addAssets($entity, $advancedAllowed)
             ->addIsDraft($entity)
-            ->addCustomButtons($entity, $showUrl);
+            ->addCustomButtons($showUrl);
 
         $form = $this->form;
 
@@ -467,12 +470,11 @@ class Page extends Base
     }
 
     /**
-     * @param Entity $entity
      * @param string $showUrl
      *
      * @return Base
      */
-    protected function addCustomButtons(Entity $entity, string $showUrl): Base
+    protected function addCustomButtons(string $showUrl): Base
     {
         $buttons = new DefaultButtons();
 

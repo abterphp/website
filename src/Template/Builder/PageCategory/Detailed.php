@@ -117,7 +117,7 @@ class Detailed implements IBuilder
 
         $item[] = $this->buildPageTitle($page, $url);
         $item[] = $this->buildPageLead($page);
-        $item[] = $this->buildPageButtons($page, $url);
+        $item[] = $this->buildPageButtons($url);
 
         return $item;
     }
@@ -155,12 +155,11 @@ class Detailed implements IBuilder
     }
 
     /**
-     * @param Entity $page
      * @param string $url
      *
      * @return Component
      */
-    protected function buildPageButtons(Entity $page, string $url): Component
+    protected function buildPageButtons(string $url): Component
     {
         $iconHtml = '<i class="fas fa-angle-right"></i>';
         $aContent = sprintf('%s&nbsp;%s', $this->translator->translate('website:more'), $iconHtml);
