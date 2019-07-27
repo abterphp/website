@@ -50,7 +50,7 @@ class Page extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '');
+        return new Entity($entityId, '', '', '', '', false);
     }
 
     /**
@@ -75,12 +75,18 @@ class Page extends RepoServiceAbstract
         }
         $identifier = $this->slugify->slugify($identifier);
 
+        $lead    = (string)$postData['lead'];
+        $body    = (string)$postData['body'];
+
+        $isDraft = false;
+        if (!empty($postData['is_draft'])) {
+            $isDraft = (bool)$postData['is_draft'];
+        }
+
         $category = null;
         if (!empty($postData['category_id'])) {
             $category = new PageCategory((string)$postData['category_id'], '', '');
         }
-
-        $body = (string)$postData['body'];
 
         $layoutId = (string)$postData['layout_id'];
         $layout   = '';
@@ -95,8 +101,10 @@ class Page extends RepoServiceAbstract
         $entity
             ->setIdentifier($identifier)
             ->setTitle($title)
-            ->setCategory($category)
+            ->setLead($lead)
             ->setBody($body)
+            ->setIsDraft($isDraft)
+            ->setCategory($category)
             ->setLayoutId($layoutId)
             ->setLayout($layout)
             ->setMeta($meta)

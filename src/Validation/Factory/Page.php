@@ -28,13 +28,19 @@ class Page extends ValidatorFactory
             ->required();
 
         $validator
-            ->field('category_id')
-            ->uuid();
+            ->field('lead');
 
         // Body must not be empty if layout and layout ID are both empty
         $validator
             ->field('body')
             ->atLeastOne('layout_id', 'layout');
+
+        $validator
+            ->field('is_draft');
+
+        $validator
+            ->field('category_id')
+            ->uuid();
 
         $validator
             ->field('layout_id')

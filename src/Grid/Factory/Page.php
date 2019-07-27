@@ -18,13 +18,15 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class Page extends BaseFactory
 {
-    const GROUP_IDENTIFIER = 'page-identifier';
-    const GROUP_TITLE      = 'page-title';
-    const GROUP_CATEGORY   = 'page-category';
+    const GROUP_IDENTIFIER   = 'page-identifier';
+    const GROUP_TITLE        = 'page-title';
+    const GROUP_CATEGORY     = 'page-category';
+    const GROUP_IS_PUBLISHED = 'page-isPublished';
 
-    const GETTER_IDENTIFIER = 'getIdentifier';
-    const GETTER_TITLE      = 'getTitle';
-    const GETTER_CATEGORY   = 'getCategory';
+    const GETTER_IDENTIFIER   = 'getIdentifier';
+    const GETTER_TITLE        = 'getTitle';
+    const GETTER_CATEGORY     = 'getCategory';
+    const GETTER_IS_PUBLISHED = 'pageIsPublished';
 
     /**
      * Page constructor.
@@ -51,9 +53,10 @@ class Page extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
-            static::GROUP_TITLE      => static::GETTER_TITLE,
-            static::GROUP_CATEGORY   => [$this, 'getCategoryName'],
+            static::GROUP_IDENTIFIER   => static::GETTER_IDENTIFIER,
+            static::GROUP_TITLE        => static::GETTER_TITLE,
+            static::GROUP_CATEGORY     => [$this, 'getCategoryName'],
+            static::GROUP_IS_PUBLISHED => [$this, 'isPublished'],
         ];
     }
 
@@ -69,6 +72,20 @@ class Page extends BaseFactory
         }
 
         return '';
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return string
+     */
+    public function isPublished(Entity $entity): string
+    {
+        if ($entity->isDraft()) {
+            return '<i class="material-icons pmd-md is-danger">warning</i>';
+        }
+
+        return '<i class="material-icons pmd-md is-success">check circle</i>';
     }
 
     /**

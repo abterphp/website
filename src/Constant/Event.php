@@ -9,4 +9,6 @@ class Event
     const WEBSITE_READY = 'website.ready';
 
     const PAGE_CATEGORY_READY = 'page-category.ready';
+
+    const PAGE_VIEWED = 'page.viewed';
 }

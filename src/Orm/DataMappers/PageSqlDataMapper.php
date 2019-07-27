@@ -148,7 +148,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 
         $conditions = new ConditionFactory();
         $query      = $this->getSimplifiedQuery()
-            ->andWhere($conditions->in('page_categories.identifier', $identifiers));
+            ->andWhere($conditions->in('page_categories.identifier', $identifiers))
+            ->andWhere('pages.is_draft = 0');
 
         $sql    = $query->getSql();
         $params = $query->getParameters();
@@ -163,7 +164,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     public function getWithLayout(string $identifier): ?Entity
     {
-        $query = $this->getWithLayoutQuery()->andWhere('pages.identifier = :identifier');
+        $query = $this->getWithLayoutQuery()
+            ->andWhere('(pages.identifier = :identifier OR pages.id = :identifier)');
 
         $sql    = $query->getSql();
         $params = [
@@ -221,7 +223,9 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
         $columnNamesToValues = [
             'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
             'title'       => [$entity->getTitle(), \PDO::PARAM_STR],
+            'lead'        => [$entity->getLead(), \PDO::PARAM_STR],
             'body'        => [$entity->getBody(), \PDO::PARAM_STR],
+            'is_draft'    => [$entity->isDraft(), \PDO::PARAM_BOOL],
             'category_id' => [$categoryId, $categoryIdType],
             'layout'      => [$entity->getLayout(), \PDO::PARAM_STR],
             'layout_id'   => [$entity->getLayoutId(), $layoutIdType],
@@ -298,6 +302,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     {
         $meta     = $this->loadMeta($hash);
         $assets   = $this->loadAssets($hash);
+        $lead     = empty($hash['lead']) ? '' : $hash['lead'];
         $body     = empty($hash['body']) ? '' : $hash['body'];
         $category = $this->loadCategory($hash);
         $layout   = empty($hash['layout']) ? '' : $hash['layout'];
@@ -307,7 +312,9 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             $hash['id'],
             $hash['identifier'],
             $hash['title'],
+            $lead,
             $body,
+            (bool)$hash['is_draft'],
             $category,
             $layout,
             $layoutId,
@@ -425,6 +432,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.is_draft',
                 'pages.category_id',
                 'pages.layout_id'
             )
@@ -445,29 +453,11 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
-                '\'\' AS body',
+                'pages.lead',
+                'pages.is_draft',
                 'page_categories.id AS category_id',
                 'page_categories.identifier AS category_identifier',
-                'page_categories.name AS category_name',
-                '\'\' AS layout_id',
-                '\'\' AS layout',
-                '\'\' AS meta_description',
-                '\'\' AS meta_robots',
-                '\'\' AS meta_author',
-                '\'\' AS meta_copyright',
-                '\'\' AS meta_keywords',
-                '\'\' AS meta_og_title',
-                '\'\' AS meta_og_image',
-                '\'\' AS meta_og_description',
-                '\'\' AS header',
-                '\'\' AS footer',
-                '\'\' AS css_files',
-                '\'\' AS js_files',
-                '\'\' AS layout_identifier',
-                '\'\' AS layout_header',
-                '\'\' AS layout_footer',
-                '\'\' AS layout_css_files',
-                '\'\' AS layout_js_files'
+                'page_categories.name AS category_name'
             )
             ->from('pages')
             ->innerJoin('page_categories', 'page_categories', 'page_categories.id = pages.category_id')
@@ -487,6 +477,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.is_draft',
                 'categories.name AS category_name'
             )
             ->from('pages')
@@ -507,7 +498,9 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.lead',
                 'pages.body',
+                'pages.is_draft',
                 'pages.category_id',
                 'pages.layout_id',
                 'pages.layout',
@@ -541,7 +534,9 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.lead',
                 'pages.body',
+                'pages.is_draft',
                 'pages.category_id',
                 'pages.layout_id',
                 'COALESCE(layouts.body, pages.layout) AS layout',

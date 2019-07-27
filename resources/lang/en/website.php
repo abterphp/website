@@ -17,22 +17,29 @@ return [
     'blockLayouts'          => 'Block Layouts',
     'blockLayoutIdentifier' => 'Identifier',
 
+    'more' => 'More',
+
     'page'                  => 'Page',
     'pageAuthor'            => 'Author',
     'pageAuthorHelp'        => 'Author meta tag has limited use, but can be used to clearly state who the author of the content is.',
     'pageAssetsBtn'         => 'Assets (JS, CSS, etc)',
     'pageBody'              => 'Body',
+    'pageCategoryIdLabel'   => 'Category',
     'pageCopyright'         => 'Copyright',
     'pageCopyrightHelp'     => 'Copyright meta tag has limited use, but can be used to signal ownership of the intellectual property.',
     'pageCssFiles'          => 'CSS Files',
     'pageCssFilesHelp'      => 'Files listed will be compressed.<br>Each file must be on a new line.<br>Can be relative path or URL, but relative path should be prefixed with a forward slash (/)',
     'pageDescription'       => 'Description',
     'pageDescriptionHelp'   => 'The description, also known as the meta description, offers room for a brief summary of the page content. Since search engines present this meta tag as a snippet in the SERPs, careful editing is absolutely imperative for any content that’s displayed here. Due to its significant influence on web users’ click behavior, the description is one of the most important HTML meta tags for search engine optimization. However, it is important for website owners to remember to limit the description to 160 characters (including spaces). Any text after this point is cut off and an incomplete description will appear in the search results.',
+    'pageDraftAllowedBody'  => '<div class="alert alert-danger" role="alert">This page is a <a href="javascript:void(0);" class="alert-link">draft</a>. It will not be publicly accessable before you publish it.</div>',
+    'pageDraftAllowedTitle' => 'DRAFT',
     'pageFooter'            => 'Footer',
     'pageFooterHelp'        => 'Valid list of HTML tags that will be inserted into the header as is. No need for separation of tags in any way.',
     'pageHeader'            => 'Header',
     'pageHeaderHelp'        => 'Valid list of HTML tags that will be inserted into the bottom of the body. No need for separation of tags in any way.',
     'pageId'                => 'Id',
+    'pageIsDraft'           => 'Draft',
+    'pageIsPublished'       => 'Published',
     'pageIdentifier'        => 'Identifier',
     'pageJsFiles'           => 'JS Files',
     'pageJsFilesHelp'       => 'Files listed will be compressed.<br>Each file must be on a new line.<br>Can be relative path or URL, but relative path should be prefixed with a forward slash (/).',
@@ -40,6 +47,8 @@ return [
     'pageKeywordsHelp'      => 'Comma separated expressions. Google ignores this option completely. Other search engines might still use it.',
     'pageLayoutLabel'       => 'Custom Layout',
     'pageLayoutIdLabel'     => 'Existing Layout',
+    'pageLead'              => 'Lead',
+    'pageLeadHelp'          => 'It\'s displayed on list pages, in RSS feeds and before the body in bold.',
     'pageMetaBtn'           => 'Show Advanced Options',
     'pageOGDescription'     => 'OG Description',
     'pageOGDescriptionHelp' => 'Description used when sharing the page in various social media sites.',
@@ -52,10 +61,12 @@ return [
     'pageTitle'             => 'Title',
     'pages'                 => 'Pages',
 
-    'pageCategory'           => 'Page category',
+    'pagecategories'         => 'Page categories',
     'pageCategories'         => 'Page categories',
+    'pageCategory'           => 'Page category',
     'pageCategoryIdentifier' => 'Identifier',
     'pageCategoryName'       => 'Name',
+    'pageCategoryUserGroups' => 'User groups',
 
     'pageLayout'             => 'Page Layout',
     'pageLayoutAssetsBtn'    => 'Assets (JS, CSS, etc)',
@@ -71,4 +82,10 @@ return [
     'pageLayoutJsFilesHelp'  => 'Files listed will be compressed.<br>Each file must be on a new line.<br>Can be relative path or URL, but relative path should be prefixed with a forward slash (/).',
     'pageLayouts'            => 'Page Layouts',
     'pageLayoutIdentifier'   => 'Identifier',
+
+    'publishAndEdit' => 'Publish and Edit',
+
+    'usergroups_pagecategories' => 'Page categories of user groups',
+
+    'saveAsDraftAndEdit' => 'Save as Draft and Edit',
 ];

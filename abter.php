@@ -4,6 +4,7 @@ use AbterPhp\Framework\Constant\Event;
 use AbterPhp\Framework\Constant\Module;
 use AbterPhp\Framework\Constant\Priorities;
 use AbterPhp\Website\Bootstrappers;
+use AbterPhp\Website\Constant\Event as WebsiteEvent;
 use AbterPhp\Website\Events;
 
 return [
@@ -18,7 +19,6 @@ return [
         Bootstrappers\Database\MigrationsBootstrapper::class,
     ],
     Module::HTTP_BOOTSTRAPPERS => [
-        Bootstrappers\Http\Controllers\Website\IndexBootstrapper::class,
         Bootstrappers\Http\Views\BuildersBootstrapper::class,
         Bootstrappers\Template\Loader\PageCategoryBootstrapper::class,
     ],
@@ -43,6 +43,10 @@ return [
             /** @see \AbterPhp\Website\Events\Listeners\DashboardBuilder::handle */
             Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\DashboardBuilder::class)],
         ],
+        WebsiteEvent::PAGE_VIEWED    => [
+            /** @see \AbterPhp\Website\Events\Listeners\DraftPageChecker::handle */
+            Priorities::NORMAL => [sprintf('%s@handle', Events\Listeners\DraftPageChecker::class)],
+        ],
     ],
     Module::ROUTE_PATHS        => [
         Priorities::NORMAL       => [
@@ -60,7 +64,8 @@ return [
     ],
     Module::RESOURCE_PATH      => realpath(__DIR__ . '/resources'),
     Module::ASSETS_PATHS       => [
-        'root'    => realpath(__DIR__ . '/resources/rawassets'),
-        'website' => realpath(__DIR__ . '/resources/rawassets'),
+        'root'         => realpath(__DIR__ . '/resources/rawassets'),
+        'website'      => realpath(__DIR__ . '/resources/rawassets'),
+        'admin-assets' => realpath(__DIR__ . '/resources/rawassets'),
     ],
 ];

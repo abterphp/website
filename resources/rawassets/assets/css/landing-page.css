@@ -5,7 +5,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
 }
 
@@ -34,14 +34,14 @@ h6 {
 
 .intro-message > h1 {
     margin: 0;
-    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
     font-size: 5em;
 }
 
 .intro-divider {
     width: 400px;
     border-top: 1px solid #f8f8f8;
-    border-bottom: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
 .intro-message a {
@@ -102,7 +102,7 @@ footer .copyright {
     box-shadow: 5px 5px 10px #c0c0c0;
 }
 
-@media(max-width:767px) {
+@media (max-width: 767px) {
     .intro-message {
         padding-bottom: 15%;
     }
@@ -129,9 +129,18 @@ footer .copyright {
 .page-category {
     text-align: left;
 }
+
 .page-category > ul {
 
 }
+
 .page-category > ul > li {
 
+}
+
+.page-container {
+    margin: 2em;
+}
+.page-container article {
+    margin: 2em;
 }

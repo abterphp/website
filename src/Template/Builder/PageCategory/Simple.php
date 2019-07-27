@@ -1,6 +1,6 @@
 <?php
 
-namespace AbterPhp\Website\Template\Builder;
+namespace AbterPhp\Website\Template\Builder\PageCategory;
 
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Html\Component;
@@ -13,8 +13,10 @@ use AbterPhp\Website\Domain\Entities\Page as Entity;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
 
-class PageCategory implements IBuilder
+class Simple implements IBuilder
 {
+    const IDENTIFIER = 'simple';
+
     const LIST_ITEM_TEMPLATE      = '<li><a href="%s">%s</a></li>';
     const LIST_TEMPLATE           = '<ul>%s</ul>';
     const LIST_CONTAINER_TEMPLATE = '<div class="page-categories"><h2>%s</h2>%s</div>';
@@ -38,6 +40,14 @@ class PageCategory implements IBuilder
     }
 
     /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return static::IDENTIFIER;
+    }
+
+    /**
      * @param Entity[] $pages
      *
      * @return Data
@@ -46,7 +56,7 @@ class PageCategory implements IBuilder
     {
         $category = $pages[0]->getCategory();
 
-        $body = $this->getCategoryHtml($pages, $category->getName());
+        $body = $this->getCategoryHtml($pages, $category->getName(), $category->getIdentifier());
 
         $this->dispatcher->dispatch(Event::PAGE_CATEGORY_READY, $body);
 
@@ -60,10 +70,11 @@ class PageCategory implements IBuilder
     /**
      * @param Entity[] $pages
      * @param string   $categoryName
+     * @param string   $categoryIdentifier
      *
      * @return Component
      */
-    protected function getCategoryHtml(array $pages, string $categoryName): Component
+    protected function getCategoryHtml(array $pages, string $categoryName, string $categoryIdentifier): Component
     {
         $container = new Component(null, [], [Html5::ATTR_CLASS => 'page-category'], Html5::TAG_DIV);
 
@@ -73,15 +84,16 @@ class PageCategory implements IBuilder
 
         $list = new Component(null, [], [], Html5::TAG_UL);
         foreach ($pages as $page) {
-            $url   = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
-            $title = $page->getTitle();
-
-            $a = new Component($title, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
+            $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
+            $a   = new Component($page->getTitle(), [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
             $list[] = new Component($a, [], [], Html5::TAG_LI);
         }
 
-        $container[] = new Component($categoryName, [], [], Html5::TAG_H2);
+        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $categoryIdentifier);
+        $a   = new Component($categoryName, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
+
+        $container[] = new Component($a, [], [], Html5::TAG_H2);
         $container[] = $list;
 
         return $container;

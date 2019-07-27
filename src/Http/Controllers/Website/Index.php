@@ -5,26 +5,28 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Http\Controllers\Website;
 
 use AbterPhp\Framework\Assets\AssetManager;
+use AbterPhp\Framework\Config\Config;
+use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Http\Controllers\ControllerAbstract;
 use AbterPhp\Framework\Session\FlashService;
-use AbterPhp\Framework\Template\Engine;
+use AbterPhp\Website\Constant\Env;
 use AbterPhp\Website\Constant\Routes;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
-use AbterPhp\Website\Orm\PageRepo;
+use AbterPhp\Website\Service\Website\Index as IndexService;
 use Opulence\Http\Responses\Response;
 use Opulence\Http\Responses\ResponseHeaders;
-use Opulence\Orm\OrmException;
 use Opulence\Routing\Urls\UrlGenerator;
+use Opulence\Sessions\ISession;
 
 class Index extends ControllerAbstract
 {
-    /** @var Engine */
-    protected $templateEngine;
+    /** @var ISession */
+    protected $indexService;
 
-    /** @var PageRepo */
-    protected $pageRepo;
+    /** @var IndexService */
+    protected $session;
 
     /** @var UrlGenerator */
     protected $urlGenerator;
@@ -32,7 +34,7 @@ class Index extends ControllerAbstract
     /** @var AssetManager */
     protected $assetManager;
 
-    /** @var string|null */
+    /** @var string */
     protected $baseUrl;
 
     /** @var string */
@@ -42,29 +44,27 @@ class Index extends ControllerAbstract
      * Index constructor.
      *
      * @param FlashService $flashService
-     * @param Engine       $templateEngine
-     * @param PageRepo     $pageRepo
+     * @param ISession     $session
+     * @param IndexService $indexService
      * @param UrlGenerator $urlGenerator
      * @param AssetManager $assetManager
-     * @param string|null  $baseUrl
-     * @param string       $siteTitle
+     * @param Config       $config
      */
     public function __construct(
         FlashService $flashService,
-        Engine $templateEngine,
-        PageRepo $pageRepo,
+        ISession $session,
+        IndexService $indexService,
         UrlGenerator $urlGenerator,
         AssetManager $assetManager,
-        ?string $baseUrl,
-        string $siteTitle
+        Config $config
     ) {
-        $this->templateEngine = $templateEngine;
-        $this->pageRepo       = $pageRepo;
-        $this->urlGenerator   = $urlGenerator;
-        $this->assetManager   = $assetManager;
+        $this->session      = $session;
+        $this->indexService = $indexService;
+        $this->urlGenerator = $urlGenerator;
+        $this->assetManager = $assetManager;
 
-        $this->baseUrl   = $baseUrl;
-        $this->siteTitle = $siteTitle;
+        $this->baseUrl   = $config->get(Env::WEBSITE_BASE_URL);
+        $this->siteTitle = $config->get(Env::WEBSITE_SITE_TITLE);
 
         parent::__construct($flashService);
     }
@@ -88,24 +88,15 @@ class Index extends ControllerAbstract
     {
         $this->view = $this->viewFactory->createView('contents/frontend/page');
 
-        try {
-            $page = $this->pageRepo->getWithLayout($identifier);
-        } catch (OrmException $exc) {
+        $page = $this->indexService->getRenderedPage($identifier, $this->getUserGroupIdentifiers());
+        if (null === $page) {
             return $this->notFound();
         }
-
-        $vars      = ['title' => $page->getTitle()];
-        $templates = [
-            'body'   => $page->getBody(),
-            'layout' => $page->getLayout(),
-        ];
-
-        $body = $this->templateEngine->run('page', $page->getIdentifier(), $templates, $vars);
 
         $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $identifier);
         $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_INDEX);
 
-        $this->view->setVar('body', $body);
+        $this->view->setVar('body', $page->getRenderedBody());
         $this->view->setVar('siteTitle', $this->siteTitle);
         $this->view->setVar('pageUrl', $pageUrl);
         $this->view->setVar('homepageUrl', $homepageUrl);
@@ -114,6 +105,21 @@ class Index extends ControllerAbstract
         $this->setAssetsVars($page->getAssets());
 
         return $this->createResponse($page->getTitle());
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getUserGroupIdentifiers(): array
+    {
+        $username = $this->session->get(Session::USERNAME, '');
+        if (!$username) {
+            return [];
+        }
+
+        $userGroupIdentifiers = $this->indexService->getUserGroupIdentifiers($username);
+
+        return $userGroupIdentifiers;
     }
 
     /**

@@ -145,7 +145,9 @@ class PageTest extends TestCase
         $identifier  = 'blah';
         $title       = 'Blah!';
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
+        $lead        = "blah tldr;";
         $body        = "Blah!\n\n...and more blah...";
+        $isDraft     = false;
         $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
         $layoutId    = '5131c135-185e-4342-9df2-969f57390287';
         $layout      = 'abc {{ var/body }} cba';
@@ -167,7 +169,9 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
+        $entityMock->expects($this->any())->method('getLead')->willReturn($lead);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
+        $entityMock->expects($this->any())->method('isDraft')->willReturn($isDraft);
         $entityMock->expects($this->any())->method('getCategory')->willReturn($category);
         $entityMock->expects($this->any())->method('getLayoutId')->willReturn($layoutId);
         $entityMock->expects($this->any())->method('getLayout')->willReturn($layout);
@@ -194,7 +198,9 @@ class PageTest extends TestCase
                     'getId',
                     'getIdentifier',
                     'getTitle',
+                    'getLead',
                     'getBody',
+                    'isDraft',
                     'getCategory',
                     'getLayoutId',
                     'getLayout',

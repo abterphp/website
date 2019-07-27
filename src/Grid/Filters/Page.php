@@ -24,5 +24,9 @@ class Page extends Filters
         $this->nodes[] = new ExactFilter('identifier', 'website:pageIdentifier');
 
         $this->nodes[] = new LikeFilter('title', 'website:pageTitle');
+
+        $this->nodes[] = new LikeFilter('lead', 'website:pageLead');
+
+        $this->nodes[] = new LikeFilter('body', 'website:pageBody');
     }
 }

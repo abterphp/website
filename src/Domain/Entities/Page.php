@@ -23,10 +23,13 @@ class Page implements IStringerEntity
     protected $title;
 
     /** @var string */
+    protected $lead;
+
+    /** @var string */
     protected $body;
 
-    /** @var string|null */
-    protected $renderedBody;
+    /** @var bool */
+    protected $markedAsDraft;
 
     /** @var PageCategory|null */
     protected $category;
@@ -43,12 +46,16 @@ class Page implements IStringerEntity
     /** @var Assets|null */
     protected $assets;
 
+    /** @var string|null */
+    protected $renderedBody;
+
     /**
      * Page constructor.
      *
      * @param string            $id
      * @param string            $identifier
      * @param string            $title
+     * @param string            $lead
      * @param string            $body
      * @param PageCategory|null $category
      * @param string            $layout
@@ -61,7 +68,9 @@ class Page implements IStringerEntity
         string $id,
         string $identifier,
         string $title,
+        string $lead,
         string $body,
+        bool $isDraft,
         ?PageCategory $category = null,
         string $layout = '',
         ?string $layoutId = null,
@@ -69,16 +78,18 @@ class Page implements IStringerEntity
         ?Assets $assets = null,
         ?string $renderedBody = null
     ) {
-        $this->id           = $id;
-        $this->identifier   = $identifier;
-        $this->title        = $title;
-        $this->body         = $body;
-        $this->category     = $category;
-        $this->layout       = $layout;
-        $this->layoutId     = $layoutId ? $layoutId : null;
-        $this->meta         = $meta ?: new Meta('', '', '', '', '', '', '', '');
-        $this->assets       = $assets;
-        $this->renderedBody = $renderedBody;
+        $this->id            = $id;
+        $this->identifier    = $identifier;
+        $this->title         = $title;
+        $this->lead          = $lead;
+        $this->body          = $body;
+        $this->markedAsDraft = $isDraft;
+        $this->category      = $category;
+        $this->layout        = $layout;
+        $this->layoutId      = $layoutId ? $layoutId : null;
+        $this->meta          = $meta ?: new Meta('', '', '', '', '', '', '', '');
+        $this->assets        = $assets;
+        $this->renderedBody  = $renderedBody;
     }
 
     /**
@@ -140,6 +151,24 @@ class Page implements IStringerEntity
     /**
      * @return string
      */
+    public function getLead(): string
+    {
+        return $this->lead;
+    }
+
+    /**
+     * @param string $lead
+     */
+    public function setLead(string $lead): Page
+    {
+        $this->lead = $lead;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getBody(): string
     {
         return $this->body;
@@ -153,6 +182,26 @@ class Page implements IStringerEntity
     public function setBody(string $body): Page
     {
         $this->body = $body;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDraft(): bool
+    {
+        return $this->markedAsDraft;
+    }
+
+    /**
+     * @param string $isDraft
+     *
+     * @return $this
+     */
+    public function setIsDraft(bool $isDraft): Page
+    {
+        $this->markedAsDraft = $isDraft;
 
         return $this;
     }
@@ -323,26 +372,30 @@ class Page implements IStringerEntity
             ];
         }
 
+        $meta = [
+            'description'    => $meta->getDescription(),
+            'robots'         => $meta->getRobots(),
+            'author'         => $meta->getAuthor(),
+            'copyright'      => $meta->getCopyright(),
+            'keywords'       => $meta->getKeywords(),
+            'og_title'       => $meta->getOGTitle(),
+            'og_image'       => $meta->getOGImage(),
+            'og_description' => $meta->getOGDescription(),
+        ];
+
         $data = [
-                'id'         => $this->getId(),
-                'identifier' => $this->getIdentifier(),
-                'title'      => $this->getTitle(),
-                'body'       => $this->getBody(),
-                'category'   => $category,
-                'layout'     => $this->getLayout(),
-                'layout_id'  => $this->getLayoutId(),
-                'meta'       => [
-                    'description'    => $meta->getDescription(),
-                    'robots'         => $meta->getRobots(),
-                    'author'         => $meta->getAuthor(),
-                    'copyright'      => $meta->getCopyright(),
-                    'keywords'       => $meta->getKeywords(),
-                    'og_title'       => $meta->getOGTitle(),
-                    'og_image'       => $meta->getOGImage(),
-                    'og_description' => $meta->getOGDescription(),
-                ],
-                'assets'     => $assetsData,
-            ];
+            'id'         => $this->getId(),
+            'identifier' => $this->getIdentifier(),
+            'title'      => $this->getTitle(),
+            'lead'       => $this->getLead(),
+            'body'       => $this->getBody(),
+            'is_draft'   => $this->isDraft(),
+            'category'   => $category,
+            'layout'     => $this->getLayout(),
+            'layout_id'  => $this->getLayoutId(),
+            'meta'       => $meta,
+            'assets'     => $assetsData,
+        ];
 
         if ($this->hasRenderedBody()) {
             $data['rendered'] = $this->getRenderedBody();

@@ -7,10 +7,11 @@ namespace AbterPhp\Website\Http\Controllers\Api;
 use AbterPhp\Framework\Config\Provider as ConfigProvider;
 use AbterPhp\Framework\Databases\Queries\FoundRows;
 use AbterPhp\Framework\Http\Controllers\ApiAbstract;
-use AbterPhp\Framework\Template\Engine as TemplateEngine;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Service\Execute\Page as RepoService;
+use AbterPhp\Website\Service\Website\Index as IndexService;
 use Opulence\Http\Responses\Response;
+use Opulence\Orm\OrmException;
 use Psr\Log\LoggerInterface;
 
 class Page extends ApiAbstract
@@ -18,8 +19,8 @@ class Page extends ApiAbstract
     const ENTITY_SINGULAR = 'page';
     const ENTITY_PLURAL   = 'pages';
 
-    /** @var TemplateEngine */
-    protected $templateEngine;
+    /** @var IndexService */
+    protected $indexService;
 
     /**
      * Page constructor.
@@ -28,18 +29,18 @@ class Page extends ApiAbstract
      * @param RepoService     $repoService
      * @param FoundRows       $foundRows
      * @param ConfigProvider  $configProvider
-     * @param TemplateEngine  $templateEngine
+     * @param IndexService    $indexService
      */
     public function __construct(
         LoggerInterface $logger,
         RepoService $repoService,
         FoundRows $foundRows,
         ConfigProvider $configProvider,
-        TemplateEngine $templateEngine
+        IndexService $indexService
     ) {
         parent::__construct($logger, $repoService, $foundRows, $configProvider);
 
-        $this->templateEngine = $templateEngine;
+        $this->indexService = $indexService;
     }
 
     /**
@@ -64,25 +65,27 @@ class Page extends ApiAbstract
     public function getWithRendered(string $entityId): Response
     {
         try {
+            $userGroupIdentifiers = $this->indexService->getUserGroupIdentifiers($this->getUserIdentifier());
+
             /** @var Entity $entity */
-            $entity = $this->repoService->retrieveEntityWithLayout($entityId);
-
-            $vars      = ['title' => $entity->getTitle()];
-            $templates = [
-                'body'   => $entity->getBody(),
-                'layout' => $entity->getLayout(),
-            ];
-
-            $renderedBody = $this->templateEngine->run('page', $entity->getIdentifier(), $templates, $vars);
-
-            $entity->setRenderedBody($renderedBody);
+            $entity = $this->indexService->getRenderedPage($entityId, $userGroupIdentifiers);
         } catch (\Exception $e) {
             $msg = sprintf(static::LOG_MSG_GET_FAILURE, static::ENTITY_SINGULAR, $entityId);
 
             return $this->handleException($msg, $e);
         }
 
-        return $this->handleGetSuccess($entity);
+        if ($entity) {
+            return $this->handleGetSuccess($entity);
+        }
+
+        try {
+            $this->repoService->retrieveEntity($entityId);
+        } catch (OrmException $e) {
+            return $this->handleNotFound();
+        }
+
+        return $this->handleUnauthorized();
     }
 
     /**

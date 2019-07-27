@@ -77,7 +77,7 @@ class Page extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity((string)$entityId, '', '', '');
+        return new Entity((string)$entityId, '', '', '', '', false);
     }
 
     /**
@@ -103,5 +103,6 @@ class Page extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/js/countable-textarea.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/layout-or-id.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/page.js');
     }
 }

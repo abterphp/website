@@ -7,17 +7,21 @@ namespace AbterPhp\Website\Form\Factory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Form\Component\Option;
+use AbterPhp\Framework\Form\Container\CheckboxGroup;
 use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Container\Hideable;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Select;
 use AbterPhp\Framework\Form\Element\Textarea;
+use AbterPhp\Framework\Form\Extra\DefaultButtons;
 use AbterPhp\Framework\Form\Extra\Help;
 use AbterPhp\Framework\Form\Factory\Base;
 use AbterPhp\Framework\Form\Factory\IFormFactory;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Countable;
 use AbterPhp\Framework\Form\Label\Label;
+use AbterPhp\Framework\Html\Component;
+use AbterPhp\Framework\Html\Component\Button;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
@@ -33,6 +37,12 @@ use Opulence\Sessions\ISession;
 
 class Page extends Base
 {
+    const BTN_CONTENT_PUBLISH_AND_EDIT       = 'website:publishAndEdit';
+    const BTN_CONTENT_SAVE_AS_DRAFT_AND_EDIT = 'website:saveAsDraftAndEdit';
+
+    const BTN_ID_DRAFT   = 'draft-btn';
+    const BTN_ID_PUBLISH = 'publish-btn';
+
     /** @var PageCategoryRepo */
     protected $categoryRepo;
 
@@ -104,12 +114,14 @@ class Page extends Base
             ->addTitle($entity)
             ->addDescription($entity)
             ->addMeta($entity)
+            ->addLead($entity)
             ->addBody($entity)
             ->addCategoryId($entity)
             ->addLayoutId($entity)
             ->addLayout($entity, $advancedAllowed)
             ->addAssets($entity, $advancedAllowed)
-            ->addDefaultButtons($showUrl);
+            ->addIsDraft($entity)
+            ->addCustomButtons($entity, $showUrl);
 
         $form = $this->form;
 
@@ -183,6 +195,23 @@ class Page extends Base
         }
 
         $this->form[] = $hideable;
+
+        return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
+    protected function addLead(Entity $entity): Page
+    {
+        $attribs = [Html5::ATTR_ROWS => '10'];
+        $input   = new Textarea('lead', 'lead', $entity->getLead(), [], $attribs);
+        $label   = new Label('lead', 'website:pageLead');
+        $help    = new Help('website:pageLeadHelp');
+
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }
@@ -409,5 +438,103 @@ class Page extends Base
         $this->form[] = $hideable;
 
         return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
+    protected function addIsDraft(Entity $entity): Page
+    {
+        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
+        if ($entity->isDraft()) {
+            $attributes[Html5::ATTR_CHECKED] = null;
+        }
+        $input = new Input(
+            'is_draft',
+            'is_draft',
+            '1',
+            [],
+            $attributes
+        );
+        $label = new Label('is_draft', 'website:pageIsDraft');
+        $help  = new Component('website:pageIsDraft');
+
+        $this->form[] = new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'is-draft-container']);
+
+        return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param string $showUrl
+     *
+     * @return Base
+     */
+    protected function addCustomButtons(Entity $entity, string $showUrl): Base
+    {
+        $buttons = new DefaultButtons();
+
+        $this->addPublishAndEdit($buttons);
+
+        $buttons
+            ->addSaveAndBack()
+            ->addBackToGrid($showUrl);
+
+        $this->addSaveAsDraftAndBack($buttons);
+
+        $buttons->addSaveAndEdit()->addSaveAndCreate();
+
+        $this->form[] = $buttons;
+
+        return $this;
+    }
+
+
+    /**
+     * @param DefaultButtons $buttons
+     *
+     * @return DefaultButtons
+     */
+    public function addPublishAndEdit(DefaultButtons $buttons): DefaultButtons
+    {
+        $attributes = [
+            Html5::ATTR_NAME  => [DefaultButtons::BTN_NAME_NEXT],
+            Html5::ATTR_TYPE  => [Button::TYPE_SUBMIT],
+            Html5::ATTR_VALUE => [DefaultButtons::BTN_VALUE_NEXT_EDIT],
+            Html5::ATTR_ID    => [static::BTN_ID_PUBLISH],
+        ];
+
+        $buttons[] = new Button(
+            static::BTN_CONTENT_PUBLISH_AND_EDIT,
+            [Button::INTENT_SUCCESS, Button::INTENT_FORM, Button::INTENT_LARGE, Button::INTENT_HIDDEN],
+            $attributes
+        );
+
+        return $buttons;
+    }
+
+    /**
+     * @param DefaultButtons $buttons
+     *
+     * @return DefaultButtons
+     */
+    public function addSaveAsDraftAndBack(DefaultButtons $buttons): DefaultButtons
+    {
+        $attributes = [
+            Html5::ATTR_NAME  => [DefaultButtons::BTN_NAME_NEXT],
+            Html5::ATTR_TYPE  => [Button::TYPE_SUBMIT],
+            Html5::ATTR_VALUE => [DefaultButtons::BTN_VALUE_NEXT_EDIT],
+            Html5::ATTR_ID    => [static::BTN_ID_DRAFT],
+        ];
+
+        $buttons[] = new Button(
+            static::BTN_CONTENT_SAVE_AS_DRAFT_AND_EDIT,
+            [Button::INTENT_WARNING, Button::INTENT_FORM, Button::INTENT_HIDDEN],
+            $attributes
+        );
+
+        return $buttons;
     }
 }

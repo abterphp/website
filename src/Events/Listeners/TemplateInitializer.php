@@ -11,7 +11,7 @@ use AbterPhp\Website\Template\Loader\PageCategory as PageCategoryLoader;
 class TemplateInitializer
 {
     const TEMPLATE_TYPE_BLOCK         = 'block';
-    const TEMPLATE_TYPE_PAGE_CATEGORY = 'pagecategory';
+    const TEMPLATE_TYPE_PAGE_CATEGORY = 'page-category';
 
     /** @var BlockLoader */
     protected $blockLoader;

@@ -25,26 +25,26 @@ class PageCategory implements ILoader
     protected $pageCategoryCache;
 
     /**
-     * @var IBuilder
+     * @var IBuilder[]
      */
-    protected $builder;
+    protected $builders;
 
     /**
      * PageCategoryLoader constructor.
      *
      * @param PageRepo          $pageRepo
      * @param PageCategoryCache $blockCache
-     * @param IBuilder          $builder
+     * @param IBuilder[]        $builders
      */
-    public function __construct(PageRepo $pageRepo, PageCategoryCache $pageCategoryCache, IBuilder $builder)
+    public function __construct(PageRepo $pageRepo, PageCategoryCache $pageCategoryCache, array $builders)
     {
         $this->pageRepo          = $pageRepo;
         $this->pageCategoryCache = $pageCategoryCache;
-        $this->builder           = $builder;
+        $this->builders          = $builders;
     }
 
     /**
-     * @param ParsedTemplate[] $parsedTemplates
+     * @param ParsedTemplate[][] $parsedTemplates
      *
      * @return IData[]
      */
@@ -54,11 +54,41 @@ class PageCategory implements ILoader
 
         $pages = $this->pageRepo->getByCategoryIdentifiers($identifiers);
 
-        $titlesByCategories = $this->groupPages($pages);
+        $groupedPages = $this->groupPages($pages);
 
+        $templateData = $this->createTemplateData($parsedTemplates, $groupedPages);
+
+        return $templateData;
+    }
+
+    /**
+     * @param ParsedTemplate[][] $parsedTemplates
+     * @param Page[][]           $groupedPages
+     *
+     * @return array
+     */
+    protected function createTemplateData(array $parsedTemplates, array $groupedPages): array
+    {
         $templateData = [];
-        foreach ($titlesByCategories as $pages) {
-            $templateData[] = $this->builder->build($pages);
+        foreach ($parsedTemplates as $identifier => $identifierTemplates) {
+            foreach ($identifierTemplates as $parsedTemplate) {
+                if (!array_key_exists($identifier, $groupedPages)) {
+                    continue;
+                }
+
+                $pages = $groupedPages[$identifier];
+
+                $builderName = $parsedTemplate->getAttribute('builder');
+                if ($builderName && array_key_exists($builderName, $this->builders)) {
+                    $templateData[] = $this->builders[$builderName]->build($pages);
+
+                    continue;
+                }
+
+                $builder = reset($this->builders);
+
+                $templateData[] = $builder->build($pages);
+            }
         }
 
         return $templateData;
@@ -71,12 +101,12 @@ class PageCategory implements ILoader
      */
     protected function groupPages(array $pages): array
     {
-        $titlesByCategories = [];
+        $groupedPages = [];
         foreach ($pages as $page) {
-            $titlesByCategories[$page->getCategory()->getIdentifier()][] = $page;
+            $groupedPages[$page->getCategory()->getIdentifier()][] = $page;
         }
 
-        return $titlesByCategories;
+        return $groupedPages;
     }
 
     /**

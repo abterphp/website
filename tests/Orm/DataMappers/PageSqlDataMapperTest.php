@@ -39,7 +39,7 @@ class PageSqlDataMapperTest extends SqlTestCase
         $assets   = new Page\Assets('foo', 'baz', 'yak', ['zar'], ['boi'], null);
         $category = $categoryId ? new PageCategory($categoryId, '', '') : null;
 
-        return new Page($id, 'foo', 'bar', 'baz', $category, $layout, $layoutId, $meta, $assets);
+        return new Page($id, 'foo', 'bar', 'baz', 'quix', false, $category, $layout, $layoutId, $meta, $assets);
     }
 
     public function testAddSimple()
@@ -50,12 +50,14 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, body, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
         $values = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
@@ -89,12 +91,14 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, body, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
         $values = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_STR],
@@ -128,12 +132,14 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, body, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
         $values = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [$entity->getCategory()->getId(), \PDO::PARAM_STR],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
@@ -177,13 +183,14 @@ class PageSqlDataMapperTest extends SqlTestCase
         $entity   = $this->getEntity($id);
         $layoutId = null;
 
-        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.category_id, pages.layout_id FROM pages WHERE (pages.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.is_draft, pages.category_id, pages.layout_id FROM pages WHERE (pages.deleted = 0)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
                 'id'          => $entity->getId(),
                 'identifier'  => $entity->getIdentifier(),
                 'title'       => $entity->getTitle(),
+                'is_draft'    => $entity->isDraft(),
                 'category_id' => null,
                 'layout_id'   => $entity->getLayoutId(),
             ],
@@ -203,14 +210,16 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.body, pages.category_id, pages.layout_id, pages.layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header, pages.footer, pages.css_files, pages.js_files FROM pages WHERE (pages.deleted = 0) AND (pages.id = :page_id)'; // phpcs:ignore
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, pages.layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header, pages.footer, pages.css_files, pages.js_files FROM pages WHERE (pages.deleted = 0) AND (pages.id = :page_id)'; // phpcs:ignore
         $values       = ['page_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
                 'id'                  => $entity->getId(),
                 'identifier'          => $entity->getIdentifier(),
                 'title'               => $entity->getTitle(),
+                'lead'                => $entity->getLead(),
                 'body'                => $entity->getBody(),
+                'is_draft'            => $entity->isDraft(),
                 'category_id'         => null,
                 'layout'              => $entity->getLayout(),
                 'layout_id'           => $entity->getLayoutId(),
@@ -243,14 +252,17 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.body, pages.category_id, pages.layout_id, pages.layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header, pages.footer, pages.css_files, pages.js_files FROM pages WHERE (pages.deleted = 0) AND (pages.identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, pages.layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header, pages.footer, pages.css_files, pages.js_files FROM pages WHERE (pages.deleted = 0) AND (pages.identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR]];
         $expectedData = [
             [
                 'id'                  => $entity->getId(),
                 'identifier'          => $entity->getIdentifier(),
                 'title'               => $entity->getTitle(),
+                'lead'                => $entity->getLead(),
                 'body'                => $entity->getBody(),
+                'is_draft'            => $entity->isDraft(),
+                'is_draft'            => (string)$entity->isDraft(),
                 'category_id'         => null,
                 'layout'              => $entity->getLayout(),
                 'layout_id'           => $entity->getLayoutId(),
@@ -283,11 +295,13 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, body = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
         $values = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
@@ -319,11 +333,13 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta     = $entity->getMeta();
         $assets   = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, body = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
         $values = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [null, \PDO::PARAM_NULL],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_STR],
@@ -355,11 +371,13 @@ class PageSqlDataMapperTest extends SqlTestCase
         $meta       = $entity->getMeta();
         $assets     = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, body = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
         $values = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
             [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
             [$entity->getCategory()->getId(), \PDO::PARAM_STR],
             [$entity->getLayout(), \PDO::PARAM_STR],
             [$entity->getLayoutId(), \PDO::PARAM_NULL],
