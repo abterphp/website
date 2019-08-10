@@ -21,7 +21,8 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "abterphp/admin": "dev-master"
+    "abterphp/admin": "dev-master",
+    "abterphp/framework": "dev-master"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.1",
