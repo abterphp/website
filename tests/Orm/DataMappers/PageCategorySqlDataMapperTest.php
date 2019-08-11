@@ -15,7 +15,7 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
     /** @var PageCategorySqlDataMapper */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -6,7 +6,7 @@ namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
-use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper;
+use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
 class BlockRepo extends Repository implements IGridRepo
@@ -19,6 +19,7 @@ class BlockRepo extends Repository implements IGridRepo
      * @param array    $params
      *
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
@@ -30,6 +31,7 @@ class BlockRepo extends Repository implements IGridRepo
      * @param string $identifier
      *
      * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
@@ -40,7 +42,8 @@ class BlockRepo extends Repository implements IGridRepo
     /**
      * @param array $identifiers
      *
-     * @return Entity[]
+     * @return array
+     * @throws \Opulence\Orm\OrmException
      */
     public function getWithLayoutByIdentifiers(array $identifiers): array
     {

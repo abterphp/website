@@ -9,6 +9,8 @@ use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
+/** @phan-file-suppress PhanTypeMismatchArgument */
+
 class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMapper
 {
     /**
@@ -30,6 +32,8 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function delete($entity)
     {
@@ -49,6 +53,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
 
     /**
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getAll(): array
     {
@@ -65,6 +70,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
      * @param array    $params
      *
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
@@ -92,6 +98,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
      * @param int|string $id
      *
      * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getById($id)
     {
@@ -123,6 +130,8 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function update($entity)
     {

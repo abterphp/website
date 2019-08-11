@@ -21,6 +21,9 @@ class Index
     /** @var PageRepo */
     protected $pageRepo;
 
+    /** @var UserRepo */
+    protected $userRepo;
+
     /** @var IEventDispatcher */
     protected $eventDispatcher;
 
@@ -81,7 +84,6 @@ class Index
     }
 
     /**
-     * @param string      $identifier
      * @param string|null $visitorUsername
      *
      * @return string[]

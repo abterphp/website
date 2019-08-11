@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\Domain\Entities\UserGroup;
-use AbterPhp\Framework\Orm\DataMappers\IdGeneratorUserTrait;
+use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
+
+/** @phan-file-suppress PhanTypeMismatchArgument */
 
 class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDataMapper
 {

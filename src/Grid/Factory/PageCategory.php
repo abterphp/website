@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Grid\Factory;
 
+use AbterPhp\Admin\Grid\Factory\BaseFactory;
+use AbterPhp\Admin\Grid\Factory\GridFactory;
+use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Framework\Grid\Factory\BaseFactory;
-use AbterPhp\Framework\Grid\Factory\GridFactory;
-use AbterPhp\Framework\Grid\Factory\PaginationFactory as PaginationFactory;
 use AbterPhp\Website\Constant\Routes;
-use AbterPhp\Website\Grid\Factory\Table\PageLayout as Table;
+use AbterPhp\Website\Grid\Factory\Table\PageLayout as TableFactory;
 use AbterPhp\Website\Grid\Filters\PageLayout as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
@@ -27,14 +27,14 @@ class PageCategory extends BaseFactory
      *
      * @param UrlGenerator      $urlGenerator
      * @param PaginationFactory $paginationFactory
-     * @param Table             $tableFactory
+     * @param TableFactory      $tableFactory
      * @param GridFactory       $gridFactory
      * @param Filters           $filters
      */
     public function __construct(
         UrlGenerator $urlGenerator,
         PaginationFactory $paginationFactory,
-        Table $tableFactory,
+        TableFactory $tableFactory,
         GridFactory $gridFactory,
         Filters $filters
     ) {

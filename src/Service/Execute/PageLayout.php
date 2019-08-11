@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
+use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets;
 use AbterPhp\Website\Orm\PageLayoutRepo as GridRepo;
@@ -19,6 +19,9 @@ class PageLayout extends RepoServiceAbstract
 {
     /** @var Slugify */
     protected $slugify;
+
+    /** @var GridRepo */
+    protected $repo;
 
     /**
      * PageLayout constructor.
@@ -55,14 +58,18 @@ class PageLayout extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity         $entity
-     * @param array          $postData
-     * @param UploadedFile[] $fileData
+     * @param IStringerEntity $entity
+     * @param array           $postData
+     * @param UploadedFile[]  $fileData
      *
      * @return Entity
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
+        if (!($entity instanceof Entity)) {
+            throw new \InvalidArgumentException('Not a page layout...');
+        }
+
         $identifier = $this->slugify->slugify((string)$postData['identifier']);
 
         $assets = $this->createAssets($postData);
@@ -70,8 +77,7 @@ class PageLayout extends RepoServiceAbstract
         $entity
             ->setIdentifier($identifier)
             ->setBody((string)$postData['body'])
-            ->setAssets($assets)
-        ;
+            ->setAssets($assets);
 
         return $entity;
     }

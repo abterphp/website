@@ -17,9 +17,9 @@ interface IBlockDataMapper extends IDataMapper
     public function getByIdentifier(string $identifier): ?Entity;
 
     /**
-     * @param array $identifiers
+     * @param string[] $identifiers
      *
-     * @return Entity|null
+     * @return Entity[]
      */
     public function getWithLayoutByIdentifiers(array $identifiers): array;
 

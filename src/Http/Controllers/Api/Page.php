@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Api;
 
+use AbterPhp\Admin\Http\Controllers\ApiAbstract;
 use AbterPhp\Framework\Config\EnvReader;
 use AbterPhp\Framework\Databases\Queries\FoundRows;
-use AbterPhp\Framework\Http\Controllers\ApiAbstract;
-use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Service\Execute\Page as RepoService;
 use AbterPhp\Website\Service\Website\Index as IndexService;
 use Opulence\Http\Responses\Response;
@@ -67,7 +66,6 @@ class Page extends ApiAbstract
         try {
             $userGroupIdentifiers = $this->indexService->getUserGroupIdentifiers($this->getUserIdentifier());
 
-            /** @var Entity $entity */
             $entity = $this->indexService->getRenderedPage($entityId, $userGroupIdentifiers);
         } catch (\Exception $e) {
             $msg = sprintf(static::LOG_MSG_GET_FAILURE, static::ENTITY_SINGULAR, $entityId);

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Events\Listeners;
 
 use AbterPhp\Framework\Authorization\Constant\Role;
-use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Events\PageViewed;
 use Casbin\Enforcer;

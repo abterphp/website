@@ -13,6 +13,8 @@ use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
+/** @phan-file-suppress PhanTypeMismatchArgument */
+
 class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 {
     /**
@@ -37,6 +39,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function delete($entity)
     {
@@ -58,7 +62,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     }
 
     /**
-     * @return array
+     * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getAll(): array
     {
@@ -105,6 +110,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param int|string $id
      *
      * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getById($id)
     {
@@ -119,9 +125,10 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     }
 
     /**
-     * @param string $title
+     * @param string $identifier
      *
-     * @return ?Entity
+     * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
@@ -136,9 +143,10 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     }
 
     /**
-     * @param array $identifiers
+     * @param string[] $identifiers
      *
-     * @return Entity[]
+     * @return array
+     * @throws \Opulence\Orm\OrmException
      */
     public function getByCategoryIdentifiers(array $identifiers): array
     {
@@ -158,9 +166,10 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     }
 
     /**
-     * @param string $title
+     * @param string $identifier
      *
-     * @return ?Entity
+     * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getWithLayout(string $identifier): ?Entity
     {
@@ -177,6 +186,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function update($entity)
     {

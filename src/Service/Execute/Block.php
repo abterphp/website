@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
+use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use AbterPhp\Website\Orm\BlockRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Block as ValidatorFactory;
@@ -18,6 +18,9 @@ class Block extends RepoServiceAbstract
 {
     /** @var Slugify */
     protected $slugify;
+
+    /** @var GridRepo */
+    protected $repo;
 
     /**
      * Block constructor.
@@ -53,14 +56,18 @@ class Block extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity         $entity
-     * @param array          $postData
-     * @param UploadedFile[] $fileData
+     * @param IStringerEntity $entity
+     * @param array           $postData
+     * @param UploadedFile[]  $fileData
      *
      * @return Entity
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
+        if (!($entity instanceof Entity)) {
+            throw new \InvalidArgumentException('Not a block...');
+        }
+
         $body  = (string)$postData['body'];
         $title = (string)$postData['title'];
 
@@ -82,8 +89,7 @@ class Block extends RepoServiceAbstract
             ->setTitle($title)
             ->setBody($body)
             ->setLayoutId($layoutId)
-            ->setLayout($layout)
-        ;
+            ->setLayout($layout);
 
         return $entity;
     }

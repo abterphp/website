@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Form\Factory;
 
+use AbterPhp\Admin\Domain\Entities\UserGroup;
+use AbterPhp\Admin\Form\Factory\Base;
+use AbterPhp\Admin\Form\Factory\IFormFactory;
 use AbterPhp\Admin\Orm\UserGroupRepo;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Form\Component\Option;
 use AbterPhp\Framework\Form\Container\FormGroup;
-use AbterPhp\Framework\Form\Container\Hideable;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\MultiSelect;
 use AbterPhp\Framework\Form\Element\Select;
-use AbterPhp\Framework\Form\Element\Textarea;
-use AbterPhp\Framework\Form\Factory\Base;
-use AbterPhp\Framework\Form\Factory\IFormFactory;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;
@@ -121,6 +120,7 @@ class PageCategory extends Base
 
     /**
      * @return UserGroup[]
+     * @throws \Opulence\Orm\OrmException
      */
     protected function getAllUserGroups(): array
     {
@@ -146,7 +146,7 @@ class PageCategory extends Base
      * @param UserGroup[] $allUserGroups
      * @param int[]       $userGroupIds
      *
-     * @return array
+     * @return Option[]
      */
     protected function createUserGroupOptions(array $allUserGroups, array $userGroupIds): array
     {

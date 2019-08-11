@@ -20,8 +20,10 @@ class BlockTest extends \PHPUnit\Framework\TestCase
     /** @var Cache|MockObject */
     protected $cache;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->repo = $this->getMockBuilder(Repo::class)
             ->disableOriginalConstructor()
             ->setMethods(['getWithLayoutByIdentifiers'])

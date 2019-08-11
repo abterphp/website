@@ -39,7 +39,9 @@ class PageViewed
     }
 
     /**
-     * @return IView
+     * @param Entity $page
+     *
+     * @return $this
      */
     public function setPage(Entity $page): PageViewed
     {

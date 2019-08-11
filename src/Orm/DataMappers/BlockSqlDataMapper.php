@@ -9,6 +9,9 @@ use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
+use PDO;
+
+/** @phan-file-suppress PhanTypeMismatchArgument */
 
 class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
 {
@@ -21,19 +24,19 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
             throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Block entity.');
         }
 
-        $layoutIdType = \PDO::PARAM_NULL;
+        $layoutIdType = PDO::PARAM_NULL;
         if ($entity->getLayoutId()) {
-            $layoutIdType = \PDO::PARAM_STR;
+            $layoutIdType = PDO::PARAM_STR;
         }
         $query = (new QueryBuilder())
             ->insert(
                 'blocks',
                 [
-                    'id'         => [$entity->getId(), \PDO::PARAM_STR],
-                    'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
-                    'title'      => [$entity->getTitle(), \PDO::PARAM_STR],
-                    'body'       => [$entity->getBody(), \PDO::PARAM_STR],
-                    'layout'     => [$entity->getLayout(), \PDO::PARAM_STR],
+                    'id'         => [$entity->getId(), PDO::PARAM_STR],
+                    'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
+                    'title'      => [$entity->getTitle(), PDO::PARAM_STR],
+                    'body'       => [$entity->getBody(), PDO::PARAM_STR],
+                    'layout'     => [$entity->getLayout(), PDO::PARAM_STR],
                     'layout_id'  => [$entity->getLayoutId(), $layoutIdType],
                 ]
             );
@@ -45,6 +48,8 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function delete($entity)
     {
@@ -53,9 +58,9 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
         }
 
         $query = (new QueryBuilder())
-            ->update('blocks', 'blocks', ['deleted' => [1, \PDO::PARAM_INT]])
+            ->update('blocks', 'blocks', ['deleted' => [1, PDO::PARAM_INT]])
             ->where('id = ?')
-            ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
+            ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
         $statement = $this->writeConnection->prepare($query->getSql());
         $statement->bindValues($query->getParameters());
@@ -64,6 +69,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
 
     /**
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getAll(): array
     {
@@ -80,6 +86,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      * @param array    $params
      *
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
@@ -107,13 +114,14 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      * @param int|string $id
      *
      * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getById($id)
     {
         $query = $this->getBaseQuery()->andWhere('blocks.id = :block_id');
 
         $parameters = [
-            'block_id' => [$id, \PDO::PARAM_STR],
+            'block_id' => [$id, PDO::PARAM_STR],
         ];
 
         $sql = $query->getSql();
@@ -122,25 +130,27 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
     }
 
     /**
-     * @param string $title
+     * @param string $identifier
      *
      * @return Entity|null
+     * @throws \Opulence\Orm\OrmException
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
         $query = $this->getBaseQuery()->andWhere('blocks.identifier = :identifier');
 
         $parameters = [
-            'identifier' => [$identifier, \PDO::PARAM_STR],
+            'identifier' => [$identifier, PDO::PARAM_STR],
         ];
 
         return $this->read($query->getSql(), $parameters, self::VALUE_TYPE_ENTITY, true);
     }
 
     /**
-     * @param array $identifiers
+     * @param string[] $identifiers
      *
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getWithLayoutByIdentifiers(array $identifiers): array
     {
@@ -156,6 +166,8 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
 
     /**
      * @param Entity $entity
+     *
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function update($entity)
     {
@@ -163,9 +175,9 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
             throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Block entity.');
         }
 
-        $layoutIdType = \PDO::PARAM_NULL;
+        $layoutIdType = PDO::PARAM_NULL;
         if ($entity->getLayoutId()) {
-            $layoutIdType = \PDO::PARAM_STR;
+            $layoutIdType = PDO::PARAM_STR;
         }
 
         $query = (new QueryBuilder())
@@ -173,16 +185,16 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
                 'blocks',
                 'blocks',
                 [
-                    'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
-                    'title'      => [$entity->getTitle(), \PDO::PARAM_STR],
-                    'body'       => [$entity->getBody(), \PDO::PARAM_STR],
-                    'layout'     => [$entity->getLayout(), \PDO::PARAM_STR],
+                    'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
+                    'title'      => [$entity->getTitle(), PDO::PARAM_STR],
+                    'body'       => [$entity->getBody(), PDO::PARAM_STR],
+                    'layout'     => [$entity->getLayout(), PDO::PARAM_STR],
                     'layout_id'  => [$entity->getLayoutId(), $layoutIdType],
                 ]
             )
             ->where('id = ?')
             ->andWhere('deleted = 0')
-            ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
+            ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
         $statement = $this->writeConnection->prepare($query->getSql());
         $statement->bindValues($query->getParameters());

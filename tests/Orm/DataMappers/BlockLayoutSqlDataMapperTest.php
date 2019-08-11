@@ -13,7 +13,7 @@ class BlockLayoutSqlDataMapperTest extends SqlTestCase
     /** @var BlockLayoutSqlDataMapper */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -119,7 +119,7 @@ class BlockLayoutSqlDataMapperTest extends SqlTestCase
     }
 
     /**
-     * @param array      $expectedData
+     * @param array       $expectedData
      * @param BlockLayout $entity
      */
     protected function assertEntity(array $expectedData, $entity)

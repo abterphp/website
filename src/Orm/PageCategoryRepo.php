@@ -6,6 +6,7 @@ namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
+use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
 class PageCategoryRepo extends Repository implements IGridRepo
@@ -18,6 +19,7 @@ class PageCategoryRepo extends Repository implements IGridRepo
      * @param array    $params
      *
      * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {

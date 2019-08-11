@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Bootstrappers\Database;
 
 use AbterPhp\Admin\Bootstrappers\Database\MigrationsBootstrapper as AdminBootstrapper;
+use AbterPhp\Admin\Bootstrappers\Filesystem\FileFinderBootstrapper;
+use AbterPhp\Framework\Filesystem\IFileFinder; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use AbterPhp\Website\Databases\Migrations\Init;
 use Opulence\Databases\IConnection;
 use Opulence\Ioc\IContainer;
 
 class MigrationsBootstrapper extends AdminBootstrapper
 {
-    const MODULE_KEY = 'AbterPhp\\Website';
-
     /**
      * @return array
      */
@@ -30,13 +30,13 @@ class MigrationsBootstrapper extends AdminBootstrapper
      */
     public function registerBindings(IContainer $container)
     {
-        $migrationsPath = $this->getMigrationPath();
-        $driver         = $this->getDriver();
-
         /** @var IConnection $connection */
         $connection = $container->resolve(IConnection::class);
 
-        $migration = new Init($connection, $migrationsPath, $driver);
+        /** @var IFileFinder $fileFinder */
+        $fileFinder = $container->resolve(FileFinderBootstrapper::MIGRATION_FILE_FINDER);
+
+        $migration = new \AbterPhp\Admin\Databases\Migrations\Init($connection, $fileFinder);
 
         $container->bindInstance(Init::class, $migration);
     }

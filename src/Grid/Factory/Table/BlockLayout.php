@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Grid\Factory\Table;
 
-use AbterPhp\Framework\Grid\Factory\TableFactory;
-use AbterPhp\Framework\Grid\Factory\Table\BodyFactory;
+use AbterPhp\Admin\Grid\Factory\TableFactory;
+use AbterPhp\Admin\Grid\Factory\Table\BodyFactory;
 use AbterPhp\Website\Grid\Factory\Table\Header\BlockLayout as HeaderFactory;
 
 class BlockLayout extends TableFactory

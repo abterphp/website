@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
+use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\BlockLayout as Entity;
 use AbterPhp\Website\Orm\BlockLayoutRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\BlockLayout as ValidatorFactory;
@@ -18,6 +18,9 @@ class BlockLayout extends RepoServiceAbstract
 {
     /** @var Slugify */
     protected $slugify;
+
+    /** @var GridRepo */
+    protected $repo;
 
     /**
      * BlockLayout constructor.
@@ -54,14 +57,18 @@ class BlockLayout extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity         $entity
-     * @param array          $postData
-     * @param UploadedFile[] $fileData
+     * @param IStringerEntity $entity
+     * @param array           $postData
+     * @param UploadedFile[]  $fileData
      *
      * @return Entity
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
+        if (!($entity instanceof Entity)) {
+            throw new \InvalidArgumentException('Not a block layout...');
+        }
+
         $identifier = $this->slugify->slugify((string)$postData['identifier']);
 
         $entity

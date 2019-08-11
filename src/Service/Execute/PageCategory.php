@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Service\Execute;
 
 use AbterPhp\Admin\Domain\Entities\UserGroup;
+use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use AbterPhp\Website\Orm\PageCategoryRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\PageCategory as ValidatorFactory;
@@ -19,6 +19,9 @@ class PageCategory extends RepoServiceAbstract
 {
     /** @var Slugify */
     protected $slugify;
+
+    /** @var GridRepo */
+    protected $repo;
 
     /**
      * PageCategory constructor.
@@ -55,14 +58,18 @@ class PageCategory extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity         $entity
-     * @param array          $postData
-     * @param UploadedFile[] $fileData
+     * @param IStringerEntity $entity
+     * @param array           $postData
+     * @param UploadedFile[]  $fileData
      *
      * @return Entity
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
+        if (!($entity instanceof Entity)) {
+            throw new \InvalidArgumentException('Not a page category...');
+        }
+
         $name = (string)$postData['name'];
 
         $identifier = (string)$postData['identifier'];

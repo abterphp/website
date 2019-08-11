@@ -81,6 +81,7 @@ class Detailed implements IBuilder
      * @param string   $categoryIdentifier
      *
      * @return Component
+     * @throws \Opulence\Routing\Urls\URLException
      */
     protected function buildCategory(array $pages, string $categoryName, string $categoryIdentifier): Component
     {
@@ -95,7 +96,7 @@ class Detailed implements IBuilder
             $list[] = $this->buildPage($page);
         }
 
-        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $categoryIdentifier);
+        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, [$categoryIdentifier]);
         $a   = new Component($categoryName, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
         $container[] = new Component($a, [], [], Html5::TAG_H2);
@@ -108,12 +109,13 @@ class Detailed implements IBuilder
      * @param Entity $page
      *
      * @return Component
+     * @throws \Opulence\Routing\Urls\URLException
      */
     protected function buildPage(Entity $page): Component
     {
         $item = new Component(null, [], [], Html5::TAG_ARTICLE);
 
-        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
+        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, [$page->getIdentifier()]);
 
         $item[] = $this->buildPageTitle($page, $url);
         $item[] = $this->buildPageLead($page);

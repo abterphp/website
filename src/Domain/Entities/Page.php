@@ -283,7 +283,7 @@ class Page implements IStringerEntity
     }
 
     /**
-     * @param string|null $layout
+     * @param string|null $layoutId
      *
      * @return $this
      */
@@ -327,7 +327,7 @@ class Page implements IStringerEntity
     }
 
     /**
-     * @param Assets|null $header
+     * @param Assets|null $assets
      *
      * @return $this
      */

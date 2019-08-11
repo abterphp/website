@@ -33,7 +33,7 @@ class PageCategory implements ILoader
      * PageCategoryLoader constructor.
      *
      * @param PageRepo          $pageRepo
-     * @param PageCategoryCache $blockCache
+     * @param PageCategoryCache $pageCategoryCache
      * @param IBuilder[]        $builders
      */
     public function __construct(PageRepo $pageRepo, PageCategoryCache $pageCategoryCache, array $builders)
@@ -47,6 +47,7 @@ class PageCategory implements ILoader
      * @param ParsedTemplate[][] $parsedTemplates
      *
      * @return IData[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function load(array $parsedTemplates): array
     {
@@ -114,6 +115,7 @@ class PageCategory implements ILoader
      * @param string   $cacheTime
      *
      * @return bool
+     * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
     public function hasAnyChangedSince(array $identifiers, string $cacheTime): bool
     {

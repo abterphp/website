@@ -14,7 +14,7 @@ class BlockSqlDataMapperTest extends SqlTestCase
     /** @var BlockSqlDataMapper */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Execute;
 
-use AbterPhp\Framework\Http\Controllers\Admin\ExecuteAbstract;
+use AbterPhp\Admin\Http\Controllers\Admin\ExecuteAbstract;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Service\Execute\Block as RepoService;

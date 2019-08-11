@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
+use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
@@ -21,6 +21,9 @@ class Page extends RepoServiceAbstract
 {
     /** @var Slugify */
     protected $slugify;
+
+    /** @var GridRepo */
+    protected $repo;
 
     /**
      * Page constructor.
@@ -56,9 +59,9 @@ class Page extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity         $entity
-     * @param array          $postData
-     * @param UploadedFile[] $fileData
+     * @param IStringerEntity $entity
+     * @param array           $postData
+     * @param UploadedFile[]  $fileData
      *
      * @return Entity
      */
@@ -67,6 +70,7 @@ class Page extends RepoServiceAbstract
         if (!($entity instanceof Entity)) {
             throw new \InvalidArgumentException('Not a page...');
         }
+
         $title = (string)$postData['title'];
 
         $identifier = (string)$postData['identifier'];
@@ -75,8 +79,8 @@ class Page extends RepoServiceAbstract
         }
         $identifier = $this->slugify->slugify($identifier);
 
-        $lead    = (string)$postData['lead'];
-        $body    = (string)$postData['body'];
+        $lead = (string)$postData['lead'];
+        $body = (string)$postData['body'];
 
         $isDraft = false;
         if (!empty($postData['is_draft'])) {
@@ -164,11 +168,10 @@ class Page extends RepoServiceAbstract
      * @param string $entityId
      *
      * @return IStringerEntity
-     * @throws OrmException
+     * @throws \Opulence\Orm\OrmException
      */
     public function retrieveEntityWithLayout(string $entityId): IStringerEntity
     {
-        /** @var IStringerEntity $entity */
         $entity = $this->repo->getById($entityId);
 
         $entity = $this->repo->getWithLayout($entity->getIdentifier());

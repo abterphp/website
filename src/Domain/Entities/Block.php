@@ -157,7 +157,7 @@ class Block implements IStringerEntity
     }
 
     /**
-     * @param string|null $layout
+     * @param string|null $layoutId
      *
      * @return $this
      */

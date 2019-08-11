@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
+use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Form\Factory\Page as FormFactory;
 use AbterPhp\Website\Orm\PageRepo as Repo;
 use Opulence\Events\Dispatchers\IEventDispatcher;
-use Opulence\Orm\OrmException;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
 use Psr\Log\LoggerInterface;
@@ -81,9 +80,9 @@ class Page extends FormAbstract
     }
 
     /**
-     * @param Entity|null $entity
+     * @param IStringerEntity|null $entity
      *
-     * @throws OrmException
+     * @throws \League\Flysystem\FileNotFoundException
      */
     protected function addCustomAssets(?IStringerEntity $entity = null)
     {

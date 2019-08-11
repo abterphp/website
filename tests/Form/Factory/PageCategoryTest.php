@@ -28,8 +28,10 @@ class PageCategoryTest extends TestCase
     /** @var PageCategory */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->sessionMock = $this->getMockBuilder(Session::class)
             ->setMethods(['get'])
             ->getMock();
@@ -78,13 +80,13 @@ class PageCategoryTest extends TestCase
 
         $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
 
-        $this->assertContains($action, $form);
-        $this->assertContains($showUrl, $form);
-        $this->assertContains('CSRF', $form);
-        $this->assertContains('POST', $form);
-        $this->assertContains('identifier', $form);
-        $this->assertContains('name', $form);
-        $this->assertContains('button', $form);
+        $this->assertStringContainsString($action, $form);
+        $this->assertStringContainsString($showUrl, $form);
+        $this->assertStringContainsString('CSRF', $form);
+        $this->assertStringContainsString('POST', $form);
+        $this->assertStringContainsString('identifier', $form);
+        $this->assertStringContainsString('name', $form);
+        $this->assertStringContainsString('button', $form);
     }
 
     /**

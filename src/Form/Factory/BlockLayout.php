@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Form\Factory;
 
+use AbterPhp\Admin\Form\Factory\Base;
+use AbterPhp\Admin\Form\Factory\IFormFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Textarea;
-use AbterPhp\Framework\Form\Factory\Base;
-use AbterPhp\Framework\Form\Factory\IFormFactory;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;

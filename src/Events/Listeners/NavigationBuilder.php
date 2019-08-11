@@ -8,7 +8,6 @@ use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Events\NavigationReady;
 use AbterPhp\Framework\Html\Component\ButtonFactory;
 use AbterPhp\Framework\Navigation\Dropdown;
-use AbterPhp\Framework\Navigation\Extended;
 use AbterPhp\Framework\Navigation\Item;
 use AbterPhp\Framework\Navigation\Navigation;
 use AbterPhp\Website\Constant\Routes;

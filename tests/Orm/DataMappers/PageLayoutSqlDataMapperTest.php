@@ -16,7 +16,7 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
     /** @var PageLayoutSqlDataMapper */
     protected $sut;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

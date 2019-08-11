@@ -23,10 +23,10 @@ use Opulence\Sessions\ISession;
 class Index extends ControllerAbstract
 {
     /** @var ISession */
-    protected $indexService;
+    protected $session;
 
     /** @var IndexService */
-    protected $session;
+    protected $indexService;
 
     /** @var UrlGenerator */
     protected $urlGenerator;
@@ -72,7 +72,9 @@ class Index extends ControllerAbstract
     /**
      * Shows the homepage
      *
-     * @return Response The response
+     * @return Response
+     * @throws \Opulence\Routing\Urls\URLException
+     * @throws \Throwable
      */
     public function index(): Response
     {
@@ -82,7 +84,11 @@ class Index extends ControllerAbstract
     /**
      * Shows the homepage
      *
-     * @return Response The response
+     * @param string $identifier
+     *
+     * @return Response
+     * @throws \Opulence\Routing\Urls\URLException
+     * @throws \Throwable
      */
     public function fallback(string $identifier): Response
     {
@@ -93,7 +99,7 @@ class Index extends ControllerAbstract
             return $this->notFound();
         }
 
-        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $identifier);
+        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, [$identifier]);
         $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_INDEX);
 
         $this->view->setVar('body', $page->getRenderedBody());
@@ -112,7 +118,7 @@ class Index extends ControllerAbstract
      */
     protected function getUserGroupIdentifiers(): array
     {
-        $username = $this->session->get(Session::USERNAME, '');
+        $username = (string)$this->session->get(Session::USERNAME, '');
         if (!$username) {
             return [];
         }
@@ -139,6 +145,8 @@ class Index extends ControllerAbstract
 
     /**
      * @param Assets|null $assets
+     *
+     * @throws \League\Flysystem\FileNotFoundException
      */
     protected function setAssetsVars(?Assets $assets)
     {
@@ -166,6 +174,8 @@ class Index extends ControllerAbstract
 
     /**
      * @param LayoutAssets|null $assets
+     *
+     * @throws \League\Flysystem\FileNotFoundException
      */
     protected function setLayoutAssetsVars(?LayoutAssets $assets)
     {
@@ -221,7 +231,8 @@ class Index extends ControllerAbstract
     /**
      * 404 page
      *
-     * @return Response The response
+     * @return Response
+     * @throws \Throwable
      */
     protected function notFound(): Response
     {

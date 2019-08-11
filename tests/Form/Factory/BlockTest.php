@@ -32,8 +32,10 @@ class BlockTest extends TestCase
     /** @var Enforcer|MockObject */
     protected $enforcerMock;
 
-    public function setUp()
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->sessionMock = $this->getMockBuilder(Session::class)
             ->setMethods(['get'])
             ->getMock();
@@ -129,10 +131,10 @@ class BlockTest extends TestCase
 
         $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
 
-        $this->assertContains($action, $form);
-        $this->assertContains($showUrl, $form);
+        $this->assertStringContainsString($action, $form);
+        $this->assertStringContainsString($showUrl, $form);
         foreach ($contains as $needle) {
-            $this->assertContains($needle, $form);
+            $this->assertStringContainsString($needle, $form);
         }
     }
 
