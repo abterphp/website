@@ -36,7 +36,7 @@ class MigrationsBootstrapper extends AdminBootstrapper
         /** @var IFileFinder $fileFinder */
         $fileFinder = $container->resolve(FileFinderBootstrapper::MIGRATION_FILE_FINDER);
 
-        $migration = new \AbterPhp\Admin\Databases\Migrations\Init($connection, $fileFinder);
+        $migration = new Init($connection, $fileFinder);
 
         $container->bindInstance(Init::class, $migration);
     }
