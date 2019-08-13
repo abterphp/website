@@ -84,6 +84,8 @@ class Index extends ControllerAbstract
     /**
      * Shows the homepage
      *
+     * @suppress PhanTypeMismatchArgument issue with Opulence\Routing\Urls\UrlGenerator::createFromName
+     *
      * @param string $identifier
      *
      * @return Response
@@ -99,7 +101,7 @@ class Index extends ControllerAbstract
             return $this->notFound();
         }
 
-        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, [$identifier]);
+        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $identifier);
         $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_INDEX);
 
         $this->view->setVar('body', $page->getRenderedBody());
