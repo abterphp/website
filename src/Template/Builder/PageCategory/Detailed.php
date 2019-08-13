@@ -76,8 +76,6 @@ class Detailed implements IBuilder
     }
 
     /**
-     * @suppress PhanTypeMismatchArgument issue with Opulence\Routing\Urls\UrlGenerator::createFromName
-     *
      * @param Entity[] $pages
      * @param string   $categoryName
      * @param string   $categoryIdentifier
@@ -98,6 +96,7 @@ class Detailed implements IBuilder
             $list[] = $this->buildPage($page);
         }
 
+        // @phan-suppress-next-line PhanTypeMismatchArgument
         $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $categoryIdentifier);
         $a   = new Component($categoryName, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
@@ -117,6 +116,7 @@ class Detailed implements IBuilder
     {
         $item = new Component(null, [], [], Html5::TAG_ARTICLE);
 
+        // @phan-suppress-next-line PhanTypeMismatchArgument
         $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
 
         $item[] = $this->buildPageTitle($page, $url);

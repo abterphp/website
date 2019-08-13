@@ -68,8 +68,6 @@ class Simple implements IBuilder
     }
 
     /**
-     * @suppress PhanTypeMismatchArgument issue with Opulence\Routing\Urls\UrlGenerator::createFromName
-     *
      * @param Entity[] $pages
      * @param string   $categoryName
      * @param string   $categoryIdentifier
@@ -87,12 +85,14 @@ class Simple implements IBuilder
 
         $list = new Component(null, [], [], Html5::TAG_UL);
         foreach ($pages as $page) {
+            // @phan-suppress-next-line PhanTypeMismatchArgument
             $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
             $a   = new Component($page->getTitle(), [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
             $list[] = new Component($a, [], [], Html5::TAG_LI);
         }
 
+        // @phan-suppress-next-line PhanTypeMismatchArgument
         $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $categoryIdentifier);
         $a   = new Component($categoryName, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
