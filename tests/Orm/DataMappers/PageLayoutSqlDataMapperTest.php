@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMapper;
 
-use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
+use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
-use Opulence\Databases\Adapters\Pdo\Connection as Connection;
-use Opulence\Databases\IConnection;
-use PHPUnit\Framework\MockObject\MockObject;
 
-class PageLayoutSqlDataMapperTest extends SqlTestCase
+class PageLayoutSqlDataMapperTest extends DataMapperTestCase
 {
     /** @var PageLayoutSqlDataMapper */
     protected $sut;
@@ -29,10 +27,11 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql    = 'INSERT INTO page_layouts (id, identifier, body) VALUES (?, ?, ?)'; // phpcs:ignore
-        $values = [[$nextId, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR], [$body, \PDO::PARAM_STR]];
+        $sql       = 'INSERT INTO page_layouts (id, identifier, body) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values    = [[$nextId, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR], [$body, \PDO::PARAM_STR]];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new PageLayout($nextId, $identifier, $body, null);
 
         $this->sut->add($entity);
@@ -46,10 +45,11 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql    = 'UPDATE page_layouts AS page_layouts SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $sql       = 'UPDATE page_layouts AS page_layouts SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new PageLayout($id, $identifier, $body, null);
 
         $this->sut->delete($entity);
@@ -78,8 +78,8 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
 
@@ -109,8 +109,8 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getById($id);
 
@@ -140,8 +140,8 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 
@@ -158,8 +158,8 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql    = 'UPDATE page_layouts AS page_layouts SET identifier = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE page_layouts AS page_layouts SET identifier = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$identifier, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
             [$header, \PDO::PARAM_STR],
@@ -168,14 +168,11 @@ class PageLayoutSqlDataMapperTest extends SqlTestCase
             [$jsFiles, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
-        $entity = new PageLayout(
-            $id,
-            $identifier,
-            $body,
-            new PageLayout\Assets($identifier, $header, $footer, (array)$cssFiles, (array)$jsFiles)
-        );
+        $assets = new PageLayout\Assets($identifier, $header, $footer, (array)$cssFiles, (array)$jsFiles);
+        $entity = new PageLayout($id, $identifier, $body, $assets);
 
         $this->sut->update($entity);
     }

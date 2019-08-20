@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Admin\Domain\Entities\UserGroup;
-use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
-use AbterPhp\Framework\Orm\MockIdGeneratorFactory;
+use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Admin\TestDouble\Orm\MockIdGeneratorFactory;
+use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
 
-class PageCategorySqlDataMapperTest extends SqlTestCase
+class PageCategorySqlDataMapperTest extends DataMapperTestCase
 {
     /** @var PageCategorySqlDataMapper */
     protected $sut;
@@ -28,10 +29,10 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql    = 'INSERT INTO page_categories (id, name, identifier) VALUES (?, ?, ?)'; // phpcs:ignore
-        $values = [[$nextId, \PDO::PARAM_STR], [$name, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR]];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $sql       = 'INSERT INTO page_categories (id, name, identifier) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values    = [[$nextId, \PDO::PARAM_STR], [$name, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR]];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
         $entity = new PageCategory($nextId, $name, $identifier);
 
         $this->sut->add($entity);
@@ -45,15 +46,17 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql0   = 'UPDATE page_categories AS page_categories SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
-        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values), 0);
+        $sql0       = 'UPDATE page_categories AS page_categories SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
+        $values0    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
+
+        $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1    = [[$id, \PDO::PARAM_STR]];
+        $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
 
         $entity = new PageCategory($id, $name, $identifier);
-
-        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
-        $values1 = [[$id, \PDO::PARAM_STR]];
-        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
 
         $this->sut->delete($entity);
     }
@@ -73,8 +76,8 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
                 'identifier' => $identifier,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
 
@@ -96,8 +99,8 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
                 'identifier' => $identifier,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getById($id);
 
@@ -119,8 +122,8 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
                 'identifier' => $identifier,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 
@@ -139,15 +142,17 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
             [$identifier, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values0), 0);
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
-        $entity = new PageCategory($id, $name, $identifier);
-
-        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
-        $values1 = [
+        $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1    = [
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
+        $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
+
+        $entity = new PageCategory($id, $name, $identifier);
 
         $this->sut->update($entity);
     }
@@ -172,15 +177,15 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
             [$identifier, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql0, $this->createWriteStatement($values0), 0);
-
-        $entity = new PageCategory($id, $name, $identifier, $userGroups);
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
         $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
         $values1 = [
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql1, $this->createWriteStatement($values1), 1);
+        $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
 
         $sql2    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
         $values2 = [
@@ -188,7 +193,8 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
             [$userGroups[0]->getId(), \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql2, $this->createWriteStatement($values2), 2);
+        $statement2 = MockStatementFactory::createWriteStatement($this, $values2);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql2, $statement2, 2);
 
         $sql3    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
         $values3 = [
@@ -196,7 +202,10 @@ class PageCategorySqlDataMapperTest extends SqlTestCase
             [$userGroups[1]->getId(), \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
-        $this->prepare($this->writeConnectionMock, $sql3, $this->createWriteStatement($values3), 3);
+        $statement3 = MockStatementFactory::createWriteStatement($this, $values3);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql3, $statement3, 3);
+
+        $entity = new PageCategory($id, $name, $identifier, $userGroups);
 
         $this->sut->update($entity);
     }

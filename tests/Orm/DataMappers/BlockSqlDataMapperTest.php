@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMapper;
 
-use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
+use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\Block;
 use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper;
-use Opulence\Databases\Adapters\Pdo\Connection as Connection;
 
-class BlockSqlDataMapperTest extends SqlTestCase
+class BlockSqlDataMapperTest extends DataMapperTestCase
 {
     /** @var BlockSqlDataMapper */
     protected $sut;
@@ -30,8 +30,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql    = 'INSERT INTO blocks (id, identifier, title, body, layout, layout_id) VALUES (?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values = [
+        $sql       = 'INSERT INTO blocks (id, identifier, title, body, layout, layout_id) VALUES (?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values    = [
             [$nextId, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],
@@ -39,8 +39,9 @@ class BlockSqlDataMapperTest extends SqlTestCase
             [$layout, \PDO::PARAM_STR],
             [$layoutId, \PDO::PARAM_NULL],
         ];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new Block($nextId, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->add($entity);
@@ -57,8 +58,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
         $layout     = '';
         $layoutId   = 'ae749110-e1f9-4f76-9391-5fe3b28a0b0d';
 
-        $sql    = 'INSERT INTO blocks (id, identifier, title, body, layout, layout_id) VALUES (?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values = [
+        $sql       = 'INSERT INTO blocks (id, identifier, title, body, layout, layout_id) VALUES (?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values    = [
             [$nextId, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],
@@ -66,8 +67,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
             [$layout, \PDO::PARAM_STR],
             [$layoutId, \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
         $entity = new Block($nextId, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->add($entity);
@@ -84,10 +85,10 @@ class BlockSqlDataMapperTest extends SqlTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql    = 'UPDATE blocks AS blocks SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $sql       = 'UPDATE blocks AS blocks SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
         $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->delete($entity);
@@ -114,8 +115,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
                 'layout_id'  => $layoutId,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
 
@@ -143,8 +144,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
                 'layout_id'  => $layoutId,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getById($id);
 
@@ -172,8 +173,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
                 'layout_id'  => $layoutId,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 
@@ -201,8 +202,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
                 'layout_id'  => $layoutId,
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getWithLayoutByIdentifiers([$identifier]);
 
@@ -218,8 +219,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql    = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
@@ -227,8 +228,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
             [$layoutId, \PDO::PARAM_NULL],
             [$id, \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
         $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->update($entity);
@@ -243,8 +244,8 @@ class BlockSqlDataMapperTest extends SqlTestCase
         $layout     = '';
         $layoutId   = 'd7a7bcad-71bc-40a1-8a0d-dc2b28a54811';
 
-        $sql    = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
@@ -252,8 +253,9 @@ class BlockSqlDataMapperTest extends SqlTestCase
             [$layoutId, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
         $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->update($entity);

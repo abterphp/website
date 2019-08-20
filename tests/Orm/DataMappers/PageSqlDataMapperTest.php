@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMapper;
 
-use AbterPhp\Framework\Orm\DataMappers\SqlTestCase;
+use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
 
-class PageSqlDataMapperTest extends SqlTestCase
+class PageSqlDataMapperTest extends DataMapperTestCase
 {
     /** @var PageSqlDataMapper */
     protected $sut;
@@ -74,8 +75,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getCssFiles()), \PDO::PARAM_STR],
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->add($entity);
 
@@ -115,8 +116,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getCssFiles()), \PDO::PARAM_STR],
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->add($entity);
 
@@ -156,8 +157,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getCssFiles()), \PDO::PARAM_STR],
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->add($entity);
 
@@ -171,8 +172,8 @@ class PageSqlDataMapperTest extends SqlTestCase
 
         $sql    = 'UPDATE pages AS pages SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
         $values = [[1, \PDO::PARAM_INT], [$entity->getId(), \PDO::PARAM_STR]];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->delete($entity);
     }
@@ -195,8 +196,8 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'layout_id'   => $entity->getLayoutId(),
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
 
@@ -237,8 +238,8 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'js_files'            => implode("\r\n", $assets->getJsFiles()),
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getById($id);
 
@@ -280,8 +281,8 @@ class PageSqlDataMapperTest extends SqlTestCase
                 'js_files'            => implode("\r\n", $assets->getJsFiles()),
             ],
         ];
-
-        $this->prepare($this->readConnectionMock, $sql, $this->createReadStatement($values, $expectedData));
+        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getByIdentifier($entity->getIdentifier());
 
@@ -319,8 +320,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
             [$entity->getId(), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->update($entity);
     }
@@ -357,8 +358,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
             [$entity->getId(), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->update($entity);
     }
@@ -395,8 +396,8 @@ class PageSqlDataMapperTest extends SqlTestCase
             [implode("\r\n", $assets->getJsFiles()), \PDO::PARAM_STR],
             [$entity->getId(), \PDO::PARAM_STR],
         ];
-
-        $this->prepare($this->writeConnectionMock, $sql, $this->createWriteStatement($values));
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $this->sut->update($entity);
     }
