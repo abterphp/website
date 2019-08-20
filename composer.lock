@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/admin.git",
-                "reference": "b09ae26f3de39c826739e0322ed0856bf097a021"
+                "reference": "29ef50bd2a07003829353cea3c20e834dc0bffbd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/admin/zipball/b09ae26f3de39c826739e0322ed0856bf097a021",
-                "reference": "b09ae26f3de39c826739e0322ed0856bf097a021",
+                "url": "https://api.github.com/repos/abterphp/admin/zipball/29ef50bd2a07003829353cea3c20e834dc0bffbd",
+                "reference": "29ef50bd2a07003829353cea3c20e834dc0bffbd",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 }
             ],
             "description": "Admin module for AbterPHP",
-            "time": "2019-08-20T22:50:36+00:00"
+            "time": "2019-08-20T23:45:54+00:00"
         },
         {
             "name": "abterphp/framework",
