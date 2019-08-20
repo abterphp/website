@@ -20,9 +20,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      */
     public function add($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Block entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $layoutIdType = PDO::PARAM_NULL;
         if ($entity->getLayoutId()) {
@@ -53,9 +51,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      */
     public function delete($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Block entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
             ->update('blocks', 'blocks', ['deleted' => [1, PDO::PARAM_INT]])
@@ -171,9 +167,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      */
     public function update($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Block entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $layoutIdType = PDO::PARAM_NULL;
         if ($entity->getLayoutId()) {

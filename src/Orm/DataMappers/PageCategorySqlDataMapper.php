@@ -24,9 +24,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      */
     public function add($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Page Category entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $data  = $this->getColumnNamesToValues($entity, true);
         $query = (new QueryBuilder())->insert('page_categories', $data);
@@ -46,9 +44,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      */
     public function delete($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Page Category entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
             ->update('page_categories', 'page_categories', ['deleted' => [1, \PDO::PARAM_INT]])
@@ -147,9 +143,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      */
     public function update($entity)
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(__CLASS__ . ':' . __FUNCTION__ . ' expects a Page Category entity.');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $columnNamesToValues = $this->getColumnNamesToValues($entity, false);
 
