@@ -45,15 +45,10 @@ class PageCategoryTest extends TestCase
 
     public function testLoadZero()
     {
-        $identifier = 'pc-1';
-
-        $category = new PageCategoryEntity('', 'PC #1', $identifier);
-        $page     = new Page('', $identifier, '', '', '', false, $category);
-
         $this->pageRepoMock
             ->expects($this->any())
             ->method('getByCategoryIdentifiers')
-            ->willReturn([$page]);
+            ->willReturn([]);
 
         $parsedTemplates = [];
 
@@ -62,7 +57,7 @@ class PageCategoryTest extends TestCase
         $this->assertEquals([], $actualResult);
     }
 
-    public function testLoadOne()
+    public function testLoadOneWithMatchingBuilder()
     {
         $identifier = 'pc-1';
 
@@ -99,7 +94,7 @@ class PageCategoryTest extends TestCase
         $this->assertEquals([$dataStub], $actualResult);
     }
 
-    public function testLoadMultiple()
+    public function testLoadMultipleWithMatchingBuilders()
     {
         $identifier0 = 'pc-1';
         $identifier1 = 'pc-2';
@@ -169,9 +164,36 @@ class PageCategoryTest extends TestCase
             ],
         ];
 
+        $this->sut->load($parsedTemplates);
+    }
+
+    public function testLoadZeroPageForBuilder()
+    {
+        $identifier = 'pc-1';
+
+        $this->pageRepoMock
+            ->expects($this->any())
+            ->method('getByCategoryIdentifiers')
+            ->willReturn([]);
+
+        /** @var IBuilder|MockObject $builderMock */
+        $builderMock = $this->getMockBuilder(IBuilder::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['build', 'getIdentifier'])
+            ->getMock();
+        $builderMock->expects($this->never())->method('build');
+
+        $this->sut->addBuilder('detailed', $builderMock);
+
+        $parsedTemplates = [
+            $identifier => [
+                new ParsedTemplate('pagecategory', $identifier, ['builder' => 'detailed']),
+            ],
+        ];
+
         $actualResult = $this->sut->load($parsedTemplates);
 
-        $this->assertEquals([$dataStub], $actualResult);
+        $this->assertEquals([], $actualResult);
     }
 
     public function testHasAnyChangedSinceCallsBlockCache()
