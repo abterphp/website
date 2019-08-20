@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Service\Execute;
 
-use AbterPhp\Admin\Http\Service\Execute\RepoServiceAbstract;
+use AbterPhp\Admin\Service\Execute\RepoServiceAbstract;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets;
