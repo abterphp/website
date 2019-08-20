@@ -36,9 +36,10 @@ class Block implements ILoader
     }
 
     /**
-     * @param ParsedTemplate[][] $parsedTemplates
+     * @param array<string,ParsedTemplate[]> $parsedTemplates
      *
      * @return IData[]
+     * @throws \Opulence\Orm\OrmException
      */
     public function load(array $parsedTemplates): array
     {

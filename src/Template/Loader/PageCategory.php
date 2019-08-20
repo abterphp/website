@@ -11,6 +11,8 @@ use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Databases\Queries\PageCategoryCache;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Orm\PageRepo;
+use Opulence\Orm\OrmException;
+use Opulence\QueryBuilders\InvalidQueryException;
 
 class PageCategory implements ILoader
 {
@@ -22,7 +24,7 @@ class PageCategory implements ILoader
     /**
      * @var PageCategoryCache
      */
-    protected $pageCategoryCache;
+    protected $cache;
 
     /**
      * @var IBuilder[]
@@ -38,16 +40,29 @@ class PageCategory implements ILoader
      */
     public function __construct(PageRepo $pageRepo, PageCategoryCache $pageCategoryCache, array $builders)
     {
-        $this->pageRepo          = $pageRepo;
-        $this->pageCategoryCache = $pageCategoryCache;
-        $this->builders          = $builders;
+        $this->pageRepo = $pageRepo;
+        $this->cache    = $pageCategoryCache;
+        $this->builders = $builders;
+    }
+
+    /**
+     * @param string   $name
+     * @param IBuilder $builder
+     *
+     * @return $this
+     */
+    public function addBuilder(string $name, IBuilder $builder): self
+    {
+        $this->builders[$name] = $builder;
+
+        return $this;
     }
 
     /**
      * @param ParsedTemplate[][] $parsedTemplates
      *
      * @return IData[]
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function load(array $parsedTemplates): array
     {
@@ -66,7 +81,7 @@ class PageCategory implements ILoader
      * @param ParsedTemplate[][] $parsedTemplates
      * @param Page[][]           $groupedPages
      *
-     * @return array
+     * @return IData[]
      */
     protected function createTemplateData(array $parsedTemplates, array $groupedPages): array
     {
@@ -98,7 +113,7 @@ class PageCategory implements ILoader
     /**
      * @param array $pages
      *
-     * @return Page[][]
+     * @return array<string,Page[]>
      */
     protected function groupPages(array $pages): array
     {
@@ -115,10 +130,10 @@ class PageCategory implements ILoader
      * @param string   $cacheTime
      *
      * @return bool
-     * @throws \Opulence\QueryBuilders\InvalidQueryException
+     * @throws InvalidQueryException
      */
     public function hasAnyChangedSince(array $identifiers, string $cacheTime): bool
     {
-        return $this->pageCategoryCache->hasAnyChangedSince($identifiers, $cacheTime);
+        return $this->cache->hasAnyChangedSince($identifiers, $cacheTime);
     }
 }

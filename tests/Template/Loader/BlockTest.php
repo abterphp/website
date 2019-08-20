@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Loader;
 
-use AbterPhp\Website\Databases\Queries\BlockCache as Cache;
-use AbterPhp\Website\Domain\Entities\Block as Entity;
-use AbterPhp\Website\Orm\BlockRepo as Repo;
+use AbterPhp\Framework\Template\ParsedTemplate;
+use AbterPhp\Website\Databases\Queries\BlockCache;
+use AbterPhp\Website\Domain\Entities\Block as BlockEntity;
+use AbterPhp\Website\Orm\BlockRepo;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -15,22 +16,22 @@ class BlockTest extends TestCase
     /** @var Block - System Under Test */
     protected $sut;
 
-    /** @var Repo|MockObject */
+    /** @var BlockRepo|MockObject */
     protected $repoMock;
 
-    /** @var Cache|MockObject */
+    /** @var BlockCache|MockObject */
     protected $cacheMock;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->repoMock = $this->getMockBuilder(Repo::class)
+        $this->repoMock = $this->getMockBuilder(BlockRepo::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['getWithLayoutByIdentifiers'])
             ->getMock();
 
-        $this->cacheMock = $this->getMockBuilder(Cache::class)
+        $this->cacheMock = $this->getMockBuilder(BlockCache::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['hasAnyChangedSince'])
             ->getMock();
@@ -40,20 +41,24 @@ class BlockTest extends TestCase
 
     public function testLoadOne()
     {
-        $blockIdentifier = 'block-1';
+        $identifier = 'block-1';
 
-        $entity = new Entity('', $blockIdentifier, '', '', '');
+        $entity = new BlockEntity('', $identifier, '', '', '');
 
         $this->repoMock
             ->expects($this->any())
             ->method('getWithLayoutByIdentifiers')
             ->willReturn([$entity]);
 
-        $templateDataCollection = $this->sut->load([$blockIdentifier]);
+        $parsedTemplates = [
+            $identifier => new ParsedTemplate('block', $identifier),
+        ];
+
+        $templateDataCollection = $this->sut->load($parsedTemplates);
 
         $this->assertCount(1, $templateDataCollection);
         foreach ($templateDataCollection as $templateData) {
-            $this->assertSame($blockIdentifier, $templateData->getIdentifier());
+            $this->assertSame($identifier, $templateData->getIdentifier());
         }
     }
 
