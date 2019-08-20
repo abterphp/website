@@ -7,34 +7,35 @@ namespace AbterPhp\Website\Template\Loader;
 use AbterPhp\Website\Databases\Queries\BlockCache as Cache;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use AbterPhp\Website\Orm\BlockRepo as Repo;
-use PHPUnit_Framework_MockObject_MockObject as MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class BlockTest extends \PHPUnit\Framework\TestCase
+class BlockTest extends TestCase
 {
     /** @var Block */
     protected $sut;
 
     /** @var Repo|MockObject */
-    protected $repo;
+    protected $repoMock;
 
     /** @var Cache|MockObject */
-    protected $cache;
+    protected $cacheMock;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->repo = $this->getMockBuilder(Repo::class)
+        $this->repoMock = $this->getMockBuilder(Repo::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getWithLayoutByIdentifiers'])
+            ->onlyMethods(['getWithLayoutByIdentifiers'])
             ->getMock();
 
-        $this->cache = $this->getMockBuilder(Cache::class)
+        $this->cacheMock = $this->getMockBuilder(Cache::class)
             ->disableOriginalConstructor()
-            ->setMethods(['hasAnyChangedSince'])
+            ->onlyMethods(['hasAnyChangedSince'])
             ->getMock();
 
-        $this->sut = new Block($this->repo, $this->cache);
+        $this->sut = new Block($this->repoMock, $this->cacheMock);
     }
 
     public function testLoadOne()
@@ -43,7 +44,7 @@ class BlockTest extends \PHPUnit\Framework\TestCase
 
         $entity = new Entity('', $blockIdentifier, '', '', '');
 
-        $this->repo
+        $this->repoMock
             ->expects($this->any())
             ->method('getWithLayoutByIdentifiers')
             ->willReturn([$entity]);
@@ -54,5 +55,22 @@ class BlockTest extends \PHPUnit\Framework\TestCase
         foreach ($templateDataCollection as $templateData) {
             $this->assertSame($blockIdentifier, $templateData->getIdentifier());
         }
+    }
+
+    public function testHasAnyChangedSinceCallsBlockCache()
+    {
+        $identifiers    = ['foo', 'bar', 'baz'];
+        $cacheTime      = 'foo';
+        $expectedResult = true;
+
+        $this->cacheMock
+            ->expects($this->once())
+            ->method('hasAnyChangedSince')
+            ->with($identifiers, $cacheTime)
+            ->willReturn($expectedResult);
+
+        $actualResult = $this->sut->hasAnyChangedSince($identifiers, $cacheTime);
+
+        $this->assertSame($expectedResult, $actualResult);
     }
 }

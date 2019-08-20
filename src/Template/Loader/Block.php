@@ -16,23 +16,23 @@ class Block implements ILoader
     /**
      * @var BlockRepo
      */
-    protected $blockRepo;
+    protected $repo;
 
     /**
      * @var BlockCache
      */
-    protected $blockCache;
+    protected $cache;
 
     /**
      * BlockLoader constructor.
      *
-     * @param BlockRepo  $blockRepo
-     * @param BlockCache $blockCache
+     * @param BlockRepo  $repo
+     * @param BlockCache $cache
      */
-    public function __construct(BlockRepo $blockRepo, BlockCache $blockCache)
+    public function __construct(BlockRepo $repo, BlockCache $cache)
     {
-        $this->blockRepo  = $blockRepo;
-        $this->blockCache = $blockCache;
+        $this->repo  = $repo;
+        $this->cache = $cache;
     }
 
     /**
@@ -44,7 +44,7 @@ class Block implements ILoader
     {
         $identifiers = array_keys($parsedTemplates);
 
-        $blocks = $this->blockRepo->getWithLayoutByIdentifiers($identifiers);
+        $blocks = $this->repo->getWithLayoutByIdentifiers($identifiers);
 
         $templateData = [];
         foreach ($blocks as $block) {
@@ -66,6 +66,6 @@ class Block implements ILoader
      */
     public function hasAnyChangedSince(array $identifiers, string $cacheTime): bool
     {
-        return $this->blockCache->hasAnyChangedSince($identifiers, $cacheTime);
+        return $this->cache->hasAnyChangedSince($identifiers, $cacheTime);
     }
 }
