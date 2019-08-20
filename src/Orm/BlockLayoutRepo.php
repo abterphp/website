@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
-use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
+use AbterPhp\Website\Domain\Entities\BlockLayout as Entity;
 use AbterPhp\Website\Orm\DataMappers\BlockLayoutSqlDataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 

@@ -123,6 +123,43 @@ class BlockRepoTest extends RepoTestCase
         $this->assertSame($entities, $actualResult);
     }
 
+    public function testGetIdentifier()
+    {
+        $identifier = 'foo-0';
+
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', '');
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getByIdentifier')->willReturn($entityStub0);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getByIdentifier($identifier);
+
+        $this->assertSame($entityStub0, $actualResult);
+    }
+
+    public function testGetWithLayoutByIdentifiers()
+    {
+        $identifier0 = 'foo-0';
+        $identifier1 = 'foo-0';
+
+        $entityStub0 = new Entity('foo0', $identifier0, '', '', '');
+        $entityStub1 = new Entity('foo1', $identifier1, '', '', '');
+        $entities    = [$entityStub0, $entityStub1];
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getWithLayoutByIdentifiers')->willReturn($entities);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getWithLayoutByIdentifiers([$identifier0, $identifier1]);
+
+        $this->assertSame($entities, $actualResult);
+    }
+
     /**
      * @param Entity|null $entity
      *

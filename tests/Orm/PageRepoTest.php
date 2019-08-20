@@ -123,6 +123,60 @@ class PageRepoTest extends RepoTestCase
         $this->assertSame($entities, $actualResult);
     }
 
+    public function testGetIdentifier()
+    {
+        $identifier = 'foo-0';
+
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', '', false);
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getByIdentifier')->willReturn($entityStub0);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getByIdentifier($identifier);
+
+        $this->assertSame($entityStub0, $actualResult);
+    }
+
+    public function testGetWithLayout()
+    {
+        $identifier = 'foo-0';
+
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', '', false);
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getWithLayout')->willReturn($entityStub0);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getWithLayout($identifier);
+
+        $this->assertSame($entityStub0, $actualResult);
+    }
+
+    public function testGetByCategoryIdentifiers()
+    {
+        $identifier0 = 'foo-0';
+        $identifier1 = 'foo-1';
+
+        $entityStub0 = new Entity('foo0', $identifier0, '', '', '', false);
+        $entityStub1 = new Entity('foo1', $identifier1, '', '', '', false);
+        $entities    = [$entityStub0, $entityStub1];
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getByCategoryIdentifiers')->willReturn($entities);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getByCategoryIdentifiers([$identifier0, $identifier1]);
+
+        $this->assertSame($entities, $actualResult);
+    }
+
     /**
      * @param Entity|null $entity
      *

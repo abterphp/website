@@ -6,7 +6,7 @@ namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Admin\TestCase\Orm\RepoTestCase;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
-use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
+use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
 use Opulence\Orm\DataMappers\IDataMapper;
 use Opulence\Orm\IEntityRegistry;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -16,7 +16,7 @@ class PageLayoutRepoTest extends RepoTestCase
     /** @var PageLayoutRepo - System Under Test */
     protected $sut;
 
-    /** @var PageCategorySqlDataMapper|MockObject */
+    /** @var PageLayoutSqlDataMapper|MockObject */
     protected $dataMapperMock;
 
     public function setUp(): void
@@ -27,12 +27,12 @@ class PageLayoutRepoTest extends RepoTestCase
     }
 
     /**
-     * @return PageCategorySqlDataMapper|MockObject
+     * @return PageLayoutSqlDataMapper|MockObject
      */
     protected function createDataMapperMock(): IDataMapper
     {
-        /** @var PageCategorySqlDataMapper|MockObject $mock */
-        $mock = $this->createMock(PageCategorySqlDataMapper::class);
+        /** @var PageLayoutSqlDataMapper|MockObject $mock */
+        $mock = $this->createMock(PageLayoutSqlDataMapper::class);
 
         return $mock;
     }
@@ -121,6 +121,23 @@ class PageLayoutRepoTest extends RepoTestCase
         $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
         $this->assertSame($entities, $actualResult);
+    }
+
+    public function testGetIdentifier()
+    {
+        $identifier = 'foo-0';
+
+        $entityStub0 = new Entity('foo0', 'foo-0', '', null);
+
+        $entityRegistry = $this->createEntityRegistryStub(null);
+
+        $this->dataMapperMock->expects($this->once())->method('getByIdentifier')->willReturn($entityStub0);
+
+        $this->unitOfWorkMock->expects($this->any())->method('getEntityRegistry')->willReturn($entityRegistry);
+
+        $actualResult = $this->sut->getByIdentifier($identifier);
+
+        $this->assertSame($entityStub0, $actualResult);
     }
 
     /**
