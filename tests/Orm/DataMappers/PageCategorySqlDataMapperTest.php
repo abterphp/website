@@ -13,7 +13,7 @@ use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
 
 class PageCategorySqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var PageCategorySqlDataMapper */
+    /** @var PageCategorySqlDataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void

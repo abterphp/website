@@ -11,7 +11,7 @@ use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
 
 class PageLayoutSqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var PageLayoutSqlDataMapper */
+    /** @var PageLayoutSqlDataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void

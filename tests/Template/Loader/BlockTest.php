@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class BlockTest extends TestCase
 {
-    /** @var Block */
+    /** @var Block - System Under Test */
     protected $sut;
 
     /** @var Repo|MockObject */

@@ -14,14 +14,14 @@ use PHPUnit\Framework\TestCase;
 
 class BlockLayoutTest extends TestCase
 {
+    /** @var BlockLayout - System Under Test */
+    protected $sut;
+
     /** @var ISession|MockObject */
     protected $sessionMock;
 
     /** @var ITranslator|MockObject */
     protected $translatorMock;
-
-    /** @var BlockLayout */
-    protected $sut;
 
     public function setUp(): void
     {

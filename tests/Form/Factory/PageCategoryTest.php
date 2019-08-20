@@ -16,6 +16,9 @@ use PHPUnit\Framework\TestCase;
 
 class PageCategoryTest extends TestCase
 {
+    /** @var PageCategory - System Under Test */
+    protected $sut;
+
     /** @var ISession|MockObject */
     protected $sessionMock;
 
@@ -24,9 +27,6 @@ class PageCategoryTest extends TestCase
 
     /** @var UserGroupRepo|MockObject */
     protected $userGroupRepoMock;
-
-    /** @var PageCategory */
-    protected $sut;
 
     public function setUp(): void
     {

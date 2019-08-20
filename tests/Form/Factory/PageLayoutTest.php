@@ -15,6 +15,9 @@ use AbterPhp\Website\Form\Factory\PageLayout\Assets as AssetsFactory;
 
 class PageLayoutTest extends TestCase
 {
+    /** @var PageLayout - System Under Test */
+    protected $sut;
+
     /** @var ISession|MockObject */
     protected $sessionMock;
 
@@ -23,9 +26,6 @@ class PageLayoutTest extends TestCase
 
     /** @var AssetsFactory|MockObject */
     protected $assetsFactoryMock;
-
-    /** @var PageLayout */
-    protected $sut;
 
     public function setUp(): void
     {

@@ -12,7 +12,7 @@ use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
 
 class PageSqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var PageSqlDataMapper */
+    /** @var PageSqlDataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void

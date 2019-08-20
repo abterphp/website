@@ -11,7 +11,7 @@ use AbterPhp\Website\Orm\DataMappers\BlockLayoutSqlDataMapper;
 
 class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var BlockLayoutSqlDataMapper */
+    /** @var BlockLayoutSqlDataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void

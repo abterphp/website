@@ -21,7 +21,7 @@ use PHPUnit\Framework\TestCase;
 
 class PageTest extends TestCase
 {
-    /** @var Page */
+    /** @var Page - System Under Test */
     protected $sut;
 
     /** @var ISession|MockObject */

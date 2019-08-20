@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Databases\Queries;
 
-class BlockCacheTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class BlockCacheTest extends TestCase
 {
     public function testIncomplete()
     {
