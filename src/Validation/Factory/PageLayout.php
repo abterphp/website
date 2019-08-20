@@ -31,9 +31,6 @@ class PageLayout extends ValidatorFactory
             ->field('header');
 
         $validator
-            ->field('header');
-
-        $validator
             ->field('footer');
 
         $validator

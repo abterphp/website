@@ -30,13 +30,12 @@ class Page extends ValidatorFactory
         $validator
             ->field('lead');
 
-        // Body must not be empty if layout and layout ID are both empty
         $validator
-            ->field('body')
-            ->atLeastOne('layout_id', 'layout');
+            ->field('body');
 
         $validator
-            ->field('is_draft');
+            ->field('is_draft')
+            ->numeric();
 
         $validator
             ->field('category_id')

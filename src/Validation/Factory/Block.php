@@ -24,12 +24,11 @@ class Block extends ValidatorFactory
             ->field('identifier');
 
         $validator
-            ->field('title');
+            ->field('title')
+            ->required();
 
-        // Body must not be empty if layout and layout ID are both empty
         $validator
-            ->field('body')
-            ->atLeastOne('layout_id', 'layout');
+            ->field('body');
 
         $validator
             ->field('layout_id')
