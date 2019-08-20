@@ -30,15 +30,8 @@ class PageCategoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->pageRepoMock = $this->getMockBuilder(PageRepo::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getByCategoryIdentifiers'])
-            ->getMock();
-
-        $this->cacheMock = $this->getMockBuilder(PageCategoryCache::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['hasAnyChangedSince'])
-            ->getMock();
+        $this->pageRepoMock = $this->createMock(PageRepo::class);
+        $this->cacheMock    = $this->createMock(PageCategoryCache::class);
 
         $this->sut = new PageCategory($this->pageRepoMock, $this->cacheMock, []);
     }
@@ -69,16 +62,10 @@ class PageCategoryTest extends TestCase
             ->method('getByCategoryIdentifiers')
             ->willReturn([$page]);
 
-        $dataStub = $this->getMockBuilder(IData::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getIdentifier', 'getTemplates', 'getVars'])
-            ->getMock();
+        $dataStub = $this->createMock(IData::class);
 
         /** @var IBuilder|MockObject $builderMock */
-        $builderMock = $this->getMockBuilder(IBuilder::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['build', 'getIdentifier'])
-            ->getMock();
+        $builderMock = $this->createMock(IBuilder::class);
         $builderMock->expects($this->once())->method('build')->willReturn($dataStub);
 
         $this->sut->addBuilder('detailed', $builderMock);
@@ -110,21 +97,12 @@ class PageCategoryTest extends TestCase
             ->method('getByCategoryIdentifiers')
             ->willReturn([$page00, $page01, $page10]);
 
-        $dataStub = $this->getMockBuilder(IData::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getIdentifier', 'getTemplates', 'getVars'])
-            ->getMock();
+        $dataStub = $this->createMock(IData::class);
 
         /** @var IBuilder|MockObject $builderMock */
-        $builderMock0 = $this->getMockBuilder(IBuilder::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['build', 'getIdentifier'])
-            ->getMock();
+        $builderMock0 = $this->createMock(IBuilder::class);
         $builderMock0->expects($this->exactly(2))->method('build')->willReturn($dataStub);
-        $builderMock1 = $this->getMockBuilder(IBuilder::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['build', 'getIdentifier'])
-            ->getMock();
+        $builderMock1 = $this->createMock(IBuilder::class);
         $builderMock1->expects($this->once())->method('build')->willReturn($dataStub);
 
         $this->sut->addBuilder('detailed', $builderMock0)->addBuilder('simple', $builderMock1);
@@ -177,10 +155,7 @@ class PageCategoryTest extends TestCase
             ->willReturn([]);
 
         /** @var IBuilder|MockObject $builderMock */
-        $builderMock = $this->getMockBuilder(IBuilder::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['build', 'getIdentifier'])
-            ->getMock();
+        $builderMock = $this->createMock(IBuilder::class);
         $builderMock->expects($this->never())->method('build');
 
         $this->sut->addBuilder('detailed', $builderMock);

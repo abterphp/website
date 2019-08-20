@@ -26,15 +26,9 @@ class BlockTest extends TestCase
     {
         parent::setUp();
 
-        $this->repoMock = $this->getMockBuilder(BlockRepo::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['getWithLayoutByIdentifiers'])
-            ->getMock();
+        $this->repoMock = $this->createMock(BlockRepo::class);
 
-        $this->cacheMock = $this->getMockBuilder(BlockCache::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['hasAnyChangedSince'])
-            ->getMock();
+        $this->cacheMock = $this->createMock(BlockCache::class);
 
         $this->sut = new Block($this->repoMock, $this->cacheMock);
     }

@@ -36,25 +36,15 @@ class BlockTest extends TestCase
     {
         parent::setUp();
 
-        $this->sessionMock = $this->getMockBuilder(Session::class)
-            ->setMethods(['get'])
-            ->getMock();
+        $this->sessionMock = $this->createMock(Session::class);
         $this->sessionMock->expects($this->any())->method('get')->willReturnArgument(0);
 
-        $this->translatorMock = $this->getMockBuilder(ITranslator::class)
-            ->setMethods(['translate', 'canTranslate'])
-            ->getMock();
+        $this->translatorMock = $this->createMock(ITranslator::class);
         $this->translatorMock->expects($this->any())->method('translate')->willReturnArgument(0);
 
-        $this->layoutRepoMock = $this->getMockBuilder(BlockLayoutRepo::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getAll'])
-            ->getMock();
+        $this->layoutRepoMock = $this->createMock(BlockLayoutRepo::class);
 
-        $this->enforcerMock = $this->getMockBuilder(Enforcer::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['enforce'])
-            ->getMock();
+        $this->enforcerMock = $this->createMock(Enforcer::class);
 
         $this->sut = new Block($this->sessionMock, $this->translatorMock, $this->layoutRepoMock, $this->enforcerMock);
     }
@@ -143,10 +133,7 @@ class BlockTest extends TestCase
      */
     protected function createMockEntity()
     {
-        $entityMock = $this->getMockBuilder(Entity::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getId', 'getIdentifier', 'getTitle', 'getBody', 'getLayoutId', 'getLayout'])
-            ->getMock();
+        $entityMock = $this->createMock(Entity::class);
 
         return $entityMock;
     }

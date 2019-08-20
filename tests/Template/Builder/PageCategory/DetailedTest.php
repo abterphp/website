@@ -30,15 +30,8 @@ class DetailedTest extends TestCase
 
     public function setUp(): void
     {
-        $this->dispatcherMock = $this->getMockBuilder(IEventDispatcher::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['dispatch'])
-            ->getMock();
-
-        $this->urlGeneratorMock = $this->getMockBuilder(UrlGenerator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(['createFromName', 'createRegexFromName'])
-            ->getMock();
+        $this->dispatcherMock   = $this->createMock(IEventDispatcher::class);
+        $this->urlGeneratorMock = $this->createMock(UrlGenerator::class);
 
         $this->translatorMock = MockTranslatorFactory::createSimpleTranslator($this, $this->translations);
 
@@ -66,11 +59,11 @@ class DetailedTest extends TestCase
     public function testBuildOnePage()
     {
         $categoryIdentifier = 'foo';
-        $pageIdentifier = 'bar';
-        $pageTitle = 'Bar';
+        $pageIdentifier     = 'bar';
+        $pageTitle          = 'Bar';
 
         $category = new PageCategory('', '', $categoryIdentifier);
-        $page    = new Page('', $pageIdentifier, $pageTitle, '', '', false, $category);
+        $page     = new Page('', $pageIdentifier, $pageTitle, '', '', false, $category);
 
         $actualResult = $this->sut->build([$page]);
 

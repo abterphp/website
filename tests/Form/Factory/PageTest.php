@@ -49,42 +49,23 @@ class PageTest extends TestCase
     {
         parent::setUp();
 
-        $this->sessionMock = $this->getMockBuilder(Session::class)
-            ->setMethods(['get'])
-            ->getMock();
+        $this->sessionMock = $this->createMock(Session::class);
         $this->sessionMock->expects($this->any())->method('get')->willReturnArgument(0);
 
-        $this->translatorMock = $this->getMockBuilder(ITranslator::class)
-            ->setMethods(['translate', 'canTranslate'])
-            ->getMock();
+        $this->translatorMock = $this->createMock(ITranslator::class);
         $this->translatorMock->expects($this->any())->method('translate')->willReturnArgument(0);
 
-        $this->categoryRepoMock = $this->getMockBuilder(PageCategoryRepo::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getAll'])
-            ->getMock();
+        $this->categoryRepoMock = $this->createMock(PageCategoryRepo::class);
 
-        $this->layoutRepoMock = $this->getMockBuilder(PageLayoutRepo::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getAll'])
-            ->getMock();
+        $this->layoutRepoMock = $this->createMock(PageLayoutRepo::class);
 
-        $this->metaFactoryMock = $this->getMockBuilder(MetaFactory::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['create'])
-            ->getMock();
+        $this->metaFactoryMock = $this->createMock(MetaFactory::class);
         $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
 
-        $this->assetsFactoryMock = $this->getMockBuilder(AssetsFactory::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['create'])
-            ->getMock();
+        $this->assetsFactoryMock = $this->createMock(AssetsFactory::class);
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
 
-        $this->enforcerMock = $this->getMockBuilder(Enforcer::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['enforce'])
-            ->getMock();
+        $this->enforcerMock = $this->createMock(Enforcer::class);
 
         $this->sut = new Page(
             $this->sessionMock,
@@ -193,23 +174,7 @@ class PageTest extends TestCase
      */
     protected function createMockEntity()
     {
-        $entityMock = $this->getMockBuilder(Entity::class)
-            ->disableOriginalConstructor()
-            ->setMethods(
-                [
-                    'getId',
-                    'getIdentifier',
-                    'getTitle',
-                    'getLead',
-                    'getBody',
-                    'isDraft',
-                    'getCategory',
-                    'getLayoutId',
-                    'getLayout',
-                    'getMeta',
-                ]
-            )
-            ->getMock();
+        $entityMock = $this->createMock(Entity::class);
 
         return $entityMock;
     }
