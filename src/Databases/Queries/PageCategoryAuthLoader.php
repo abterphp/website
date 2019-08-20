@@ -27,7 +27,7 @@ class PageCategoryAuthLoader implements IAuthLoader
     }
 
     /**
-     * @return array|bool
+     * @return array
      */
     public function loadAll(): array
     {
