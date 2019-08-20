@@ -91,10 +91,6 @@ class Detailed implements IBuilder
     {
         $container = new Component(null, [], [Html5::ATTR_CLASS => 'page-category'], Html5::TAG_SECTION);
 
-        if (count($pages) === 0) {
-            return $container;
-        }
-
         $list = new Component(null, [], [Html5::ATTR_CLASS => 'page-container'], Html5::TAG_DIV);
         foreach ($pages as $page) {
             $list[] = $this->buildPage($page);
