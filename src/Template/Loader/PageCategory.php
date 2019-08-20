@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Loader;
 
+use AbterPhp\Framework\Exception\Config;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ILoader;
@@ -101,9 +102,7 @@ class PageCategory implements ILoader
                     continue;
                 }
 
-                $builder = reset($this->builders);
-
-                $templateData[] = $builder->build($pages);
+                throw new Config(__CLASS__);
             }
         }
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Loader;
 
+use AbterPhp\Framework\Exception\Config;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ParsedTemplate;
@@ -146,6 +147,31 @@ class PageCategoryTest extends TestCase
         $actualResult = $this->sut->load($parsedTemplates);
 
         $this->assertEquals([$dataStub, $dataStub, $dataStub], $actualResult);
+    }
+
+    public function testLoadThrowsExceptionOnInvalidLoader()
+    {
+        $this->expectException(Config::class);
+
+        $identifier = 'pc-1';
+
+        $category = new PageCategoryEntity('', 'PC #1', $identifier);
+        $page     = new Page('', $identifier, '', '', '', false, $category);
+
+        $this->pageRepoMock
+            ->expects($this->any())
+            ->method('getByCategoryIdentifiers')
+            ->willReturn([$page]);
+
+        $parsedTemplates = [
+            $identifier => [
+                new ParsedTemplate('pagecategory', $identifier, ['builder' => 'nope']),
+            ],
+        ];
+
+        $actualResult = $this->sut->load($parsedTemplates);
+
+        $this->assertEquals([$dataStub], $actualResult);
     }
 
     public function testHasAnyChangedSinceCallsBlockCache()
