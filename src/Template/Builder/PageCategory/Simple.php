@@ -17,10 +17,6 @@ class Simple implements IBuilder
 {
     const IDENTIFIER = 'simple';
 
-    const LIST_ITEM_TEMPLATE      = '<li><a href="%s">%s</a></li>';
-    const LIST_TEMPLATE           = '<ul>%s</ul>';
-    const LIST_CONTAINER_TEMPLATE = '<div class="page-categories"><h2>%s</h2>%s</div>';
-
     /** @var IEventDispatcher */
     protected $dispatcher;
 
@@ -54,6 +50,14 @@ class Simple implements IBuilder
      */
     public function build(array $pages): IData
     {
+        if (count($pages) === 0) {
+            throw new \InvalidArgumentException();
+        }
+
+        if (!$pages[0]->getCategory()) {
+            throw new \LogicException();
+        }
+
         $category = $pages[0]->getCategory();
 
         $body = $this->getCategoryHtml($pages, $category->getName(), $category->getIdentifier());
@@ -78,10 +82,6 @@ class Simple implements IBuilder
     protected function getCategoryHtml(array $pages, string $categoryName, string $categoryIdentifier): Component
     {
         $container = new Component(null, [], [Html5::ATTR_CLASS => 'page-category'], Html5::TAG_DIV);
-
-        if (count($pages) === 0) {
-            return $container;
-        }
 
         $list = new Component(null, [], [], Html5::TAG_UL);
         foreach ($pages as $page) {

@@ -18,10 +18,6 @@ class Detailed implements IBuilder
 {
     const IDENTIFIER = 'detailed';
 
-    const LIST_ITEM_TEMPLATE      = '<li><a href="%s">%s</a></li>';
-    const LIST_TEMPLATE           = '<ul>%s</ul>';
-    const LIST_CONTAINER_TEMPLATE = '<div class="page-categories"><h2>%s</h2>%s</div>';
-
     const MORE_BTN_CONTAINER_CLASS = 'more-btn-container';
 
     /** @var IEventDispatcher */
@@ -62,6 +58,14 @@ class Detailed implements IBuilder
      */
     public function build(array $pages): IData
     {
+        if (count($pages) === 0) {
+            throw new \InvalidArgumentException();
+        }
+
+        if (!$pages[0]->getCategory()) {
+            throw new \LogicException();
+        }
+
         $category = $pages[0]->getCategory();
 
         $body = $this->buildCategory($pages, $category->getName(), $category->getIdentifier());
