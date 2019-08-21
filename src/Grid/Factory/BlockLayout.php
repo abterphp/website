@@ -11,8 +11,8 @@ use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
 use AbterPhp\Website\Constant\Routes;
-use AbterPhp\Website\Grid\Factory\Table\PageLayout as TableFactory;
-use AbterPhp\Website\Grid\Filters\PageLayout as Filters;
+use AbterPhp\Website\Grid\Factory\Table\BlockLayout as TableFactory;
+use AbterPhp\Website\Grid\Filters\BlockLayout as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class BlockLayout extends BaseFactory
