@@ -235,7 +235,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      */
     protected function loadEntity(array $hash)
     {
-        $userGroups = $this->getUserGroups($hash);
+        $userGroups = $this->loadUserGroups($hash);
 
         return new Entity(
             $hash['id'],
@@ -250,14 +250,10 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
      *
      * @return array
      */
-    private function getUserGroups(array $hash): array
+    private function loadUserGroups(array $hash): array
     {
         if (empty($hash[static::USER_GROUP_IDS])) {
             return [];
-        }
-
-        if (is_array($hash[static::USER_GROUP_IDS])) {
-            return $hash[static::USER_GROUP_IDS];
         }
 
         $userGroups = [];
