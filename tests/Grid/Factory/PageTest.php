@@ -6,9 +6,11 @@ namespace AbterPhp\Website\Grid\Factory;
 
 use AbterPhp\Admin\Grid\Factory\GridFactory;
 use AbterPhp\Admin\Grid\Factory\PaginationFactory;
+use AbterPhp\Framework\Grid\IGrid;
+use AbterPhp\Website\Domain\Entities\Page as Entity;
+use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Grid\Factory\Table\Page as TableFactory;
 use AbterPhp\Website\Grid\Filters\Page as Filters;
-use AbterPhp\Framework\Grid\IGrid;
 use Opulence\Routing\Urls\UrlGenerator;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -58,5 +60,43 @@ class PageTest extends TestCase
         $actualResult = $this->sut->createGrid($params, $baseUrl);
 
         $this->assertInstanceOf(IGrid::class, $actualResult);
+    }
+
+    public function testGetCategoryNameIsEmptyStringIfNoCategoryIsSet()
+    {
+        $entity = new Entity('', '', '', '', '', false);
+
+        $actualResult = $this->sut->getCategoryName($entity);
+
+        $this->assertSame('', $actualResult);
+    }
+
+    public function testGetCategoryReturnsCategoryNameIfSet()
+    {
+        $categoryName = 'foo';
+        $category     = new PageCategory('', $categoryName, '');
+        $entity       = new Entity('', '', '', '', '', false, $category);
+
+        $actualResult = $this->sut->getCategoryName($entity);
+
+        $this->assertSame($categoryName, $actualResult);
+    }
+
+    public function testIsPublishedIfPageIsDraft()
+    {
+        $entity = new Entity('', '', '', '', '', true);
+
+        $actualResult = $this->sut->isPublished($entity);
+
+        $this->assertStringContainsString('is-danger', $actualResult);
+    }
+
+    public function testIsPublishedIfPageIsNotDraft()
+    {
+        $entity = new Entity('', '', '', '', '', false);
+
+        $actualResult = $this->sut->isPublished($entity);
+
+        $this->assertStringContainsString('is-success', $actualResult);
     }
 }

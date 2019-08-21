@@ -25,8 +25,6 @@ class Page extends BaseFactory
 
     const GETTER_IDENTIFIER   = 'getIdentifier';
     const GETTER_TITLE        = 'getTitle';
-    const GETTER_CATEGORY     = 'getCategory';
-    const GETTER_IS_PUBLISHED = 'pageIsPublished';
 
     /**
      * Page constructor.
