@@ -66,16 +66,11 @@ class PageCategory extends RepoServiceAbstract
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException('Not a page category...');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $name = (string)$postData['name'];
 
-        $identifier = (string)$postData['identifier'];
-        if (empty($identifier)) {
-            $identifier = $name;
-        }
+        $identifier = empty($postData['identifier']) ? $name : (string)$postData['identifier'];
         $identifier = $this->slugify->slugify($identifier);
 
         $userGroups = [];

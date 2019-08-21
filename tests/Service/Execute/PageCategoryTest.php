@@ -69,9 +69,12 @@ class PageCategoryTest extends TestCase
     {
         $identifier = 'foo';
         $name       = 'bar';
+        $ugId0      = '2b54ef5e-39b6-4422-81be-e6c147779753';
+        $ugId1      = '83e69b07-9a64-4db3-aaa7-28e28a4c918d';
         $postData   = [
-            'identifier' => $identifier,
-            'name'       => $name,
+            'identifier'     => $identifier,
+            'name'           => $name,
+            'user_group_ids' => [$ugId0, $ugId1],
         ];
 
         $this->gridRepoMock->expects($this->once())->method('add');

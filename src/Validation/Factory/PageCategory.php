@@ -27,6 +27,9 @@ class PageCategory extends ValidatorFactory
             ->field('name')
             ->required();
 
+        $validator
+            ->field('user_group_ids');
+
         return $validator;
     }
 }

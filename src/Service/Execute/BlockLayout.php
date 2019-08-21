@@ -65,9 +65,7 @@ class BlockLayout extends RepoServiceAbstract
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException('Not a block layout...');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $identifier = $this->slugify->slugify((string)$postData['identifier']);
 

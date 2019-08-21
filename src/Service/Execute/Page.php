@@ -69,9 +69,7 @@ class Page extends RepoServiceAbstract
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException('Not a page...');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $title = empty($postData['title']) ? '' : (string)$postData['title'];
 
