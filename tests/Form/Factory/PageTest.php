@@ -66,9 +66,7 @@ class PageTest extends TestCase
         $this->metaFactoryMock = $this->createMock(MetaFactory::class);
         $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($metaNodes);
 
-        $assetNodes = [$this->createMock(INode::class)];
         $this->assetsFactoryMock = $this->createMock(AssetsFactory::class);
-        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
 
         $this->enforcerMock = $this->createMock(Enforcer::class);
 
@@ -163,6 +161,9 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getLayout')->willReturn($layout);
         $entityMock->expects($this->any())->method('getMeta')->willReturn($meta);
 
+        $assetNodes = [$this->createMock(INode::class)];
+        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
+
         $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
 
         $this->assertStringContainsString($action, $form);
@@ -189,7 +190,7 @@ class PageTest extends TestCase
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
         $lead        = "blah tldr;";
         $body        = "Blah!\n\n...and more blah...";
-        $isDraft     = false;
+        $isDraft     = true;
         $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
         $layoutId    = '5131c135-185e-4342-9df2-969f57390287';
         $layout      = 'abc {{ var/body }} cba';
@@ -202,6 +203,8 @@ class PageTest extends TestCase
 
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
+
+        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
 
         /** @var Entity|MockObject $entityMock */
         $entityMock = $this->createMock(Entity::class);
