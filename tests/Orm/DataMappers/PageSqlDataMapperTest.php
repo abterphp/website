@@ -29,17 +29,19 @@ class PageSqlDataMapperTest extends DataMapperTestCase
      * @param string|null $categoryId
      * @param string      $layout
      * @param string|null $layoutId
+     * @param bool        $withAssets
      *
      * @return Page
      */
-    protected function getEntity(
+    protected function createEntity(
         string $id = '',
         ?string $categoryId = null,
         string $layout = 'qux',
-        ?string $layoutId = null
+        ?string $layoutId = null,
+        bool $withAssets = true
     ): Page {
         $meta     = new Page\Meta('m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8');
-        $assets   = new Page\Assets('foo', 'baz', 'yak', ['zar'], ['boi'], null);
+        $assets   = $withAssets ? new Page\Assets('foo', 'baz', 'yak', ['zar'], ['boi'], null) : null;
         $category = $categoryId ? new PageCategory($categoryId, '', '') : null;
 
         return new Page($id, 'foo', 'bar', 'baz', 'quix', false, $category, $layout, $layoutId, $meta, $assets);
@@ -49,7 +51,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     {
         $nextId = 'fee8891b-2c31-49db-9a44-3e6179865c1f';
 
-        $entity = $this->getEntity($nextId);
+        $entity = $this->createEntity($nextId);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -90,7 +92,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $nextId   = '9340c9ec-f1cd-4a85-bc71-15c13c31a22e';
         $layoutId = 'f1be9cd6-e7cb-40c1-b584-f265259bd8de';
 
-        $entity = $this->getEntity($nextId, null, '', $layoutId);
+        $entity = $this->createEntity($nextId, null, '', $layoutId);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -131,7 +133,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $nextId     = '9340c9ec-f1cd-4a85-bc71-15c13c31a22e';
         $categoryId = 'f1be9cd6-e7cb-40c1-b584-f265259bd8de';
 
-        $entity = $this->getEntity($nextId, $categoryId);
+        $entity = $this->createEntity($nextId, $categoryId);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -170,7 +172,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testDelete()
     {
         $id     = '2fdfb4aa-b199-40d6-86bd-06eed25bff43';
-        $entity = $this->getEntity($id);
+        $entity = $this->createEntity($id);
 
         $sql       = 'UPDATE pages AS pages SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
         $values    = [[1, \PDO::PARAM_INT], [$entity->getId(), \PDO::PARAM_STR]];
@@ -183,7 +185,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testGetAll()
     {
         $id       = '63111dd1-4ea8-4152-83fa-59463d1d92fb';
-        $entity   = $this->getEntity($id);
+        $entity   = $this->createEntity($id);
         $layoutId = null;
 
         $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.is_draft, pages.category_id, pages.layout_id FROM pages WHERE (pages.deleted = 0)'; // phpcs:ignore
@@ -310,7 +312,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testGetById()
     {
         $id     = '24ce60d4-95a6-441b-9c95-fe578ef1e23c';
-        $entity = $this->getEntity($id);
+        $entity = $this->createEntity($id);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -352,7 +354,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testGetByIdentifier()
     {
         $id     = '08cf6a6b-5d86-405b-b573-fa4a6f4c6122';
-        $entity = $this->getEntity($id);
+        $entity = $this->createEntity($id);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -395,7 +397,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testGetWithLayout()
     {
         $id     = '08cf6a6b-5d86-405b-b573-fa4a6f4c6122';
-        $entity = $this->getEntity($id);
+        $entity = $this->createEntity($id);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -438,7 +440,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     public function testUpdateSimple()
     {
         $id     = 'ea075f20-95de-4ce4-9dfb-13bae781031d';
-        $entity = $this->getEntity($id);
+        $entity = $this->createEntity($id);
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
@@ -476,7 +478,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     {
         $id       = 'd90e6027-75ef-4121-8fda-7f38f7cd39e6';
         $layoutId = 'ffe0bd1c-8b9a-4cb4-8255-86444e37223a';
-        $entity   = $this->getEntity($id, null, '', $layoutId);
+        $entity   = $this->createEntity($id, null, '', $layoutId);
         $meta     = $entity->getMeta();
         $assets   = $entity->getAssets();
 
@@ -510,11 +512,44 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $this->sut->update($entity);
     }
 
+    public function testUpdateWithoutAssets()
+    {
+        $id       = 'd90e6027-75ef-4121-8fda-7f38f7cd39e6';
+        $layoutId = 'ffe0bd1c-8b9a-4cb4-8255-86444e37223a';
+        $entity   = $this->createEntity($id, null, '', $layoutId, false);
+        $meta     = $entity->getMeta();
+
+        $sql       = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
+            [$entity->getIdentifier(), \PDO::PARAM_STR],
+            [$entity->getTitle(), \PDO::PARAM_STR],
+            [$entity->getLead(), \PDO::PARAM_STR],
+            [$entity->getBody(), \PDO::PARAM_STR],
+            [$entity->isDraft(), \PDO::PARAM_BOOL],
+            [null, \PDO::PARAM_NULL],
+            [$entity->getLayout(), \PDO::PARAM_STR],
+            [$entity->getLayoutId(), \PDO::PARAM_STR],
+            [$meta->getDescription(), \PDO::PARAM_STR],
+            [$meta->getRobots(), \PDO::PARAM_STR],
+            [$meta->getAuthor(), \PDO::PARAM_STR],
+            [$meta->getCopyright(), \PDO::PARAM_STR],
+            [$meta->getKeywords(), \PDO::PARAM_STR],
+            [$meta->getOGTitle(), \PDO::PARAM_STR],
+            [$meta->getOGImage(), \PDO::PARAM_STR],
+            [$meta->getOGDescription(), \PDO::PARAM_STR],
+            [$entity->getId(), \PDO::PARAM_STR],
+        ];
+        $statement = MockStatementFactory::createWriteStatement($this, $values);
+        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+
+        $this->sut->update($entity);
+    }
+
     public function testUpdateWithCategoryId()
     {
         $id         = 'd90e6027-75ef-4121-8fda-7f38f7cd39e6';
         $categoryId = 'ffe0bd1c-8b9a-4cb4-8255-86444e37223a';
-        $entity     = $this->getEntity($id, $categoryId);
+        $entity     = $this->createEntity($id, $categoryId);
         $meta       = $entity->getMeta();
         $assets     = $entity->getAssets();
 

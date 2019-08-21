@@ -214,17 +214,10 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     protected function getColumnNamesToValues(Entity $entity, bool $create): array
     {
-        $layoutIdType = \PDO::PARAM_NULL;
-        if ($entity->getLayoutId()) {
-            $layoutIdType = \PDO::PARAM_STR;
-        }
+        $layoutIdType = $entity->getLayoutId() ? \PDO::PARAM_STR : \PDO::PARAM_NULL;
 
-        $categoryId     = null;
-        $categoryIdType = \PDO::PARAM_NULL;
-        if ($entity->getCategory()) {
-            $categoryIdType = \PDO::PARAM_STR;
-            $categoryId     = $entity->getCategory()->getId();
-        }
+        $categoryId     = $entity->getCategory() ? $entity->getCategory()->getId() : null;
+        $categoryIdType = $categoryId ? \PDO::PARAM_STR : \PDO::PARAM_NULL;
 
         $columnNamesToValues = [
             'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
@@ -255,10 +248,6 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      */
     protected function populateWithMeta(Entity $entity, array $columnNamesToValues): array
     {
-        if (!$entity->getMeta()) {
-            return $columnNamesToValues;
-        }
-
         $meta = $entity->getMeta();
 
         $metaValues = [
