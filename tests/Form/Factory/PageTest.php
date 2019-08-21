@@ -62,12 +62,13 @@ class PageTest extends TestCase
 
         $this->layoutRepoMock = $this->createMock(PageLayoutRepo::class);
 
-        $assetNodes = [$this->createMock(INode::class)];
+        $metaNodes = [$this->createMock(INode::class)];
         $this->metaFactoryMock = $this->createMock(MetaFactory::class);
-        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
+        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($metaNodes);
 
+        $assetNodes = [$this->createMock(INode::class)];
         $this->assetsFactoryMock = $this->createMock(AssetsFactory::class);
-        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
+        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
 
         $this->enforcerMock = $this->createMock(Enforcer::class);
 
@@ -148,9 +149,6 @@ class PageTest extends TestCase
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
-        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
-        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
-
         /** @var Entity|MockObject $entityMock */
         $entityMock = $this->createMock(Entity::class);
 
@@ -204,11 +202,6 @@ class PageTest extends TestCase
 
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
-
-        $assetNodes = [$this->createMock(INode::class)];
-        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
-        $metaNodes = [$this->createMock(INode::class)];
-        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($metaNodes);
 
         /** @var Entity|MockObject $entityMock */
         $entityMock = $this->createMock(Entity::class);
