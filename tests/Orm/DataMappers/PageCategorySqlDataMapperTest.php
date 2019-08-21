@@ -109,6 +109,32 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPageWithOrdersAndConditions()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $name       = 'bar';
+
+        $orders     = ['pc.identifier ASC'];
+        $conditions = ['pc.identifier LIKE \'abc%\'', 'pc.identifier LIKE \'%bca\''];
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.identifier LIKE \'abc%\') AND (pc.identifier LIKE \'%bca\') GROUP BY pc.id ORDER BY pc.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'name'       => $name,
+                'identifier' => $identifier,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'fc2bdb23-bdd1-49aa-8613-b5e0ce76450d';

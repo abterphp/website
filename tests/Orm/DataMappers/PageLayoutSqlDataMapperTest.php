@@ -119,6 +119,40 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPageWithOrdersAndConditions()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $body       = 'bar';
+        $header     = 'baz';
+        $footer     = 'yak';
+        $cssFiles   = 'zar';
+        $jsFiles    = 'boi';
+
+        $orders     = ['page_layouts.identifier ASC'];
+        $conditions = ['page_layouts.identifier LIKE \'abc%\'', 'page_layouts.identifier LIKE \'%bca\''];
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'identifier' => $identifier,
+                'body'       => $body,
+                'header'     => $header,
+                'footer'     => $footer,
+                'css_files'  => $cssFiles,
+                'js_files'   => $jsFiles,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'fc2bdb23-bdd1-49aa-8613-b5e0ce76450d';

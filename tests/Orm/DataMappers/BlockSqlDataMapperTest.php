@@ -154,6 +154,38 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPageWithOrdersAndConditions()
+    {
+        $id         = '8da63e49-5c76-4520-9280-30c125305239';
+        $identifier = 'foo';
+        $title      = 'bar';
+        $body       = 'baz';
+        $layout     = 'qux';
+        $layoutId   = null;
+
+        $orders     = ['blocks.identifier ASC'];
+        $conditions = ['blocks.identifier LIKE \'abc%\'', 'blocks.identifier LIKE \'%bca\''];
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) AND (blocks.identifier LIKE \'abc%\') AND (blocks.identifier LIKE \'%bca\') ORDER BY blocks.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'identifier' => $identifier,
+                'title'      => $title,
+                'body'       => $body,
+                'layout'     => $layout,
+                'layout_id'  => $layoutId,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'da406cd9-4a65-4384-b1dd-454c4d26c196';

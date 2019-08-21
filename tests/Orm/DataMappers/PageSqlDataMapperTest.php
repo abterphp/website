@@ -235,6 +235,38 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPageWithOrdersAndConditions()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $title      = 'bar';
+        $isDraft    = false;
+        $categoryId = '6c79a886-9c74-441b-b205-dc1d274e7e55';
+        $layoutId   = '0ec12802-0eb4-4a90-b0ba-454d4d42a367';
+
+        $orders     = ['pages.identifier ASC'];
+        $conditions = ['pages.identifier LIKE \'abc%\'', 'pages.identifier LIKE \'%bca\''];
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pages.id, pages.identifier, pages.title, pages.is_draft, categories.name AS category_name FROM pages LEFT JOIN page_categories AS categories ON categories.id = pages.category_id WHERE (pages.deleted = 0) AND (pages.identifier LIKE \'abc%\') AND (pages.identifier LIKE \'%bca\') ORDER BY pages.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'          => $id,
+                'identifier'  => $identifier,
+                'title'       => $title,
+                'is_draft'    => $isDraft,
+                'category_id' => $categoryId,
+                'layout_id'   => $layoutId,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetByCategoryIdentifiers()
     {
         $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';

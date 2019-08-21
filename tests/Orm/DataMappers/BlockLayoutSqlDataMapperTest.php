@@ -91,6 +91,26 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPageWithOrdersAndConditions()
+    {
+        $id         = 'bde8a749-b409-43c6-a061-c6a7d2dce6a0';
+        $identifier = 'foo';
+        $body       = 'bar';
+
+        $orders     = ['block_layouts.identifier ASC'];
+        $conditions = ['block_layouts.identifier LIKE \'abc%\'', 'block_layouts.identifier LIKE \'%bca\''];
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) AND (block_layouts.identifier LIKE \'abc%\') AND (block_layouts.identifier LIKE \'%bca\') ORDER BY block_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [['id' => $id, 'identifier' => $identifier, 'body' => $body]];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'adbeb333-3110-42ec-a2ed-74a33db518ff';
