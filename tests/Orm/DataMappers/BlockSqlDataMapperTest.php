@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\Block;
 use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BlockSqlDataMapperTest extends DataMapperTestCase
 {
@@ -119,6 +121,35 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
+    public function testGetPage()
+    {
+        $id         = '8da63e49-5c76-4520-9280-30c125305239';
+        $identifier = 'foo';
+        $title      = 'bar';
+        $body       = 'baz';
+        $layout     = 'qux';
+        $layoutId   = null;
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'identifier' => $identifier,
+                'title'      => $title,
+                'body'       => $body,
+                'layout'     => $layout,
+                'layout_id'  => $layoutId,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
         $this->assertCollection($expectedData, $actualResult);
     }
@@ -257,6 +288,36 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
+
+        $this->sut->update($entity);
+    }
+
+    public function testAddThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->add($entity);
+    }
+
+    public function testDeleteThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->delete($entity);
+    }
+
+    public function testUpdateThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
 
         $this->sut->update($entity);
     }

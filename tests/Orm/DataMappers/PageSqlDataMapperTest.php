@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PageSqlDataMapperTest extends DataMapperTestCase
 {
@@ -51,8 +53,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values = [
+        $sql       = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values    = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
@@ -92,8 +94,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values = [
+        $sql       = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values    = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
@@ -133,8 +135,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values = [
+        $sql       = 'INSERT INTO pages (id, identifier, title, lead, body, is_draft, category_id, layout, layout_id, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords, meta_og_title, meta_og_image, meta_og_description, header, footer, css_files, js_files) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values    = [
             [$entity->getId(), \PDO::PARAM_STR],
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
@@ -170,8 +172,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $id     = '2fdfb4aa-b199-40d6-86bd-06eed25bff43';
         $entity = $this->getEntity($id);
 
-        $sql    = 'UPDATE pages AS pages SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values = [[1, \PDO::PARAM_INT], [$entity->getId(), \PDO::PARAM_STR]];
+        $sql       = 'UPDATE pages AS pages SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[1, \PDO::PARAM_INT], [$entity->getId(), \PDO::PARAM_STR]];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
@@ -196,10 +198,72 @@ class PageSqlDataMapperTest extends DataMapperTestCase
                 'layout_id'   => $entity->getLayoutId(),
             ],
         ];
-        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
         MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
+    public function testGetPage()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $title      = 'bar';
+        $isDraft    = false;
+        $categoryId = '6c79a886-9c74-441b-b205-dc1d274e7e55';
+        $layoutId   = '0ec12802-0eb4-4a90-b0ba-454d4d42a367';
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pages.id, pages.identifier, pages.title, pages.is_draft, categories.name AS category_name FROM pages LEFT JOIN page_categories AS categories ON categories.id = pages.category_id WHERE (pages.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'          => $id,
+                'identifier'  => $identifier,
+                'title'       => $title,
+                'is_draft'    => $isDraft,
+                'category_id' => $categoryId,
+                'layout_id'   => $layoutId,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, [], [], []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
+    public function testGetByCategoryIdentifiers()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $title      = 'bar';
+        $isDraft    = false;
+        $categoryId = '6c79a886-9c74-441b-b205-dc1d274e7e55';
+        $layoutId   = '0ec12802-0eb4-4a90-b0ba-454d4d42a367';
+
+        $identifiers = [$identifier];
+
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.is_draft, page_categories.id AS category_id, page_categories.identifier AS category_identifier, page_categories.name AS category_name FROM pages INNER JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted = 0) AND (page_categories.identifier IN (?)) AND (pages.is_draft = 0)'; // phpcs:ignore
+        $values       = [
+            [$identifier, \PDO::PARAM_STR],
+        ];
+        $expectedData = [
+            [
+                'id'          => $id,
+                'identifier'  => $identifier,
+                'title'       => $title,
+                'is_draft'    => $isDraft,
+                'category_id' => $categoryId,
+                'layout_id'   => $layoutId,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getByCategoryIdentifiers($identifiers);
 
         $this->assertCollection($expectedData, $actualResult);
     }
@@ -238,7 +302,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
                 'js_files'            => implode("\r\n", $assets->getJsFiles()),
             ],
         ];
-        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
         MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getById($id);
@@ -281,10 +345,53 @@ class PageSqlDataMapperTest extends DataMapperTestCase
                 'js_files'            => implode("\r\n", $assets->getJsFiles()),
             ],
         ];
-        $statement = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
         MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getByIdentifier($entity->getIdentifier());
+
+        $this->assertEntity($expectedData[0], $actualResult);
+    }
+
+    public function testGetWithLayout()
+    {
+        $id     = '08cf6a6b-5d86-405b-b573-fa4a6f4c6122';
+        $entity = $this->getEntity($id);
+        $meta   = $entity->getMeta();
+        $assets = $entity->getAssets();
+
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, COALESCE(layouts.body, pages.layout) AS layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header AS header, pages.footer AS footer, pages.css_files AS css_files, pages.js_files AS js_files, layouts.identifier AS layout_identifier, layouts.header AS layout_header, layouts.footer AS layout_footer, layouts.css_files AS layout_css_files, layouts.js_files AS layout_js_files FROM pages LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id WHERE (pages.deleted = 0) AND (layouts.deleted = 0 OR layouts.deleted IS NULL) AND ((pages.identifier = :identifier OR pages.id = :identifier))';  // phpcs:ignore
+        $values       = ['identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR]];
+        $expectedData = [
+            [
+                'id'                  => $entity->getId(),
+                'identifier'          => $entity->getIdentifier(),
+                'title'               => $entity->getTitle(),
+                'lead'                => $entity->getLead(),
+                'body'                => $entity->getBody(),
+                'is_draft'            => $entity->isDraft(),
+                'is_draft'            => (string)$entity->isDraft(),
+                'category_id'         => null,
+                'layout'              => $entity->getLayout(),
+                'layout_id'           => $entity->getLayoutId(),
+                'meta_description'    => $meta->getDescription(),
+                'meta_robots'         => $meta->getRobots(),
+                'meta_author'         => $meta->getAuthor(),
+                'meta_copyright'      => $meta->getCopyright(),
+                'meta_keywords'       => $meta->getKeywords(),
+                'meta_og_title'       => $meta->getOGTitle(),
+                'meta_og_image'       => $meta->getOGImage(),
+                'meta_og_description' => $meta->getOGDescription(),
+                'header'              => $assets->getHeader(),
+                'footer'              => $assets->getFooter(),
+                'css_files'           => implode("\r\n", $assets->getCssFiles()),
+                'js_files'            => implode("\r\n", $assets->getJsFiles()),
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getWithLayout($entity->getIdentifier());
 
         $this->assertEntity($expectedData[0], $actualResult);
     }
@@ -296,8 +403,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta   = $entity->getMeta();
         $assets = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getLead(), \PDO::PARAM_STR],
@@ -334,8 +441,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta     = $entity->getMeta();
         $assets   = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getLead(), \PDO::PARAM_STR],
@@ -372,8 +479,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $meta       = $entity->getMeta();
         $assets     = $entity->getAssets();
 
-        $sql    = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values = [
+        $sql       = 'UPDATE pages AS pages SET identifier = ?, title = ?, lead = ?, body = ?, is_draft = ?, category_id = ?, layout = ?, layout_id = ?, meta_description = ?, meta_robots = ?, meta_author = ?, meta_copyright = ?, meta_keywords = ?, meta_og_title = ?, meta_og_image = ?, meta_og_description = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values    = [
             [$entity->getIdentifier(), \PDO::PARAM_STR],
             [$entity->getTitle(), \PDO::PARAM_STR],
             [$entity->getLead(), \PDO::PARAM_STR],
@@ -398,6 +505,36 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+
+        $this->sut->update($entity);
+    }
+
+    public function testAddThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->add($entity);
+    }
+
+    public function testDeleteThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->delete($entity);
+    }
+
+    public function testUpdateThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
 
         $this->sut->update($entity);
     }

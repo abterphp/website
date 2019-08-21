@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMappers;
 
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\BlockLayout as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -14,7 +15,7 @@ use Opulence\QueryBuilders\MySql\SelectQuery;
 class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutDataMapper
 {
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function add($entity)
     {
@@ -36,7 +37,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function delete($entity)
     {
@@ -127,7 +128,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function update($entity)
     {

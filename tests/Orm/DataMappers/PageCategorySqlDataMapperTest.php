@@ -7,9 +7,11 @@ namespace AbterPhp\Website\Orm\DataMapper;
 use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
 use AbterPhp\Admin\TestDouble\Orm\MockIdGeneratorFactory;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PageCategorySqlDataMapperTest extends DataMapperTestCase
 {
@@ -84,6 +86,29 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPage()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $name       = 'bar';
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) GROUP BY pc.id LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'name'       => $name,
+                'identifier' => $identifier,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, [], [], []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'fc2bdb23-bdd1-49aa-8613-b5e0ce76450d';
@@ -136,8 +161,8 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'bar';
         $name       = 'foo';
 
-        $sql0    = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values0 = [
+        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values0    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
@@ -171,8 +196,8 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
 
         $this->sut->setIdGenerator(MockIdGeneratorFactory::create($this, $ugpc0, $ugpc1));
 
-        $sql0    = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
-        $values0 = [
+        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $values0    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
@@ -180,15 +205,15 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
-        $sql1    = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
-        $values1 = [
+        $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
+        $values1    = [
             [$id, \PDO::PARAM_STR],
         ];
         $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
 
-        $sql2    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
-        $values2 = [
+        $sql2       = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values2    = [
             [$ugpc0, \PDO::PARAM_STR],
             [$userGroups[0]->getId(), \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
@@ -196,8 +221,8 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $statement2 = MockStatementFactory::createWriteStatement($this, $values2);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql2, $statement2, 2);
 
-        $sql3    = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
-        $values3 = [
+        $sql3       = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values3    = [
             [$ugpc1, \PDO::PARAM_STR],
             [$userGroups[1]->getId(), \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
@@ -206,6 +231,36 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql3, $statement3, 3);
 
         $entity = new PageCategory($id, $name, $identifier, $userGroups);
+
+        $this->sut->update($entity);
+    }
+
+    public function testAddThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->add($entity);
+    }
+
+    public function testDeleteThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->delete($entity);
+    }
+
+    public function testUpdateThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
 
         $this->sut->update($entity);
     }

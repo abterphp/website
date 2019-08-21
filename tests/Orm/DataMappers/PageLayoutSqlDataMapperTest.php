@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class PageLayoutSqlDataMapperTest extends DataMapperTestCase
 {
@@ -82,6 +84,37 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
 
         $actualResult = $this->sut->getAll();
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
+    public function testGetPage()
+    {
+        $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
+        $identifier = 'foo';
+        $body       = 'bar';
+        $header     = 'baz';
+        $footer     = 'yak';
+        $cssFiles   = 'zar';
+        $jsFiles    = 'boi';
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [
+            [
+                'id'         => $id,
+                'identifier' => $identifier,
+                'body'       => $body,
+                'header'     => $header,
+                'footer'     => $footer,
+                'css_files'  => $cssFiles,
+                'js_files'   => $jsFiles,
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
         $this->assertCollection($expectedData, $actualResult);
     }
@@ -173,6 +206,36 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
 
         $assets = new PageLayout\Assets($identifier, $header, $footer, (array)$cssFiles, (array)$jsFiles);
         $entity = new PageLayout($id, $identifier, $body, $assets);
+
+        $this->sut->update($entity);
+    }
+
+    public function testAddThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->add($entity);
+    }
+
+    public function testDeleteThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->delete($entity);
+    }
+
+    public function testUpdateThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
 
         $this->sut->update($entity);
     }

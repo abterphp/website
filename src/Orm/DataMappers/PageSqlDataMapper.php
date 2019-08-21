@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMappers;
 
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\Page\Assets as PageAssets;
 use AbterPhp\Website\Domain\Entities\PageCategory;
@@ -18,7 +19,7 @@ use Opulence\QueryBuilders\MySql\SelectQuery;
 class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 {
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function add($entity)
     {
@@ -36,7 +37,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
@@ -174,14 +175,14 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 
         $sql    = $query->getSql();
         $params = [
-            'identifier' => $identifier,
+            'identifier' => [$identifier, \PDO::PARAM_STR],
         ];
 
         return $this->read($sql, $params, self::VALUE_TYPE_ENTITY, true);
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */

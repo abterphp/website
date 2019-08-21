@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMappers;
 
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -14,7 +15,7 @@ use Opulence\QueryBuilders\MySql\SelectQuery;
 class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMapper
 {
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function add($entity)
     {
@@ -29,7 +30,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
@@ -125,7 +126,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */

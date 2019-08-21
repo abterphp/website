@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm\DataMapper;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\BlockLayout;
 use AbterPhp\Website\Orm\DataMappers\BlockLayoutSqlDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
 {
@@ -72,6 +74,23 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetPage()
+    {
+        $id         = 'bde8a749-b409-43c6-a061-c6a7d2dce6a0';
+        $identifier = 'foo';
+        $body       = 'bar';
+
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $values       = [];
+        $expectedData = [['id' => $id, 'identifier' => $identifier, 'body' => $body]];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getPage(0, 10, [], [], []);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testGetById()
     {
         $id         = 'adbeb333-3110-42ec-a2ed-74a33db518ff';
@@ -118,6 +137,36 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $entity = new BlockLayout($id, $identifier, $body);
+
+        $this->sut->update($entity);
+    }
+
+    public function testAddThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->add($entity);
+    }
+
+    public function testDeleteThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
+
+        $this->sut->delete($entity);
+    }
+
+    public function testUpdateThrowsExceptionIfCalledWithInvalidEntity()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+
+        /** @var IStringerEntity|MockObject $entity */
+        $entity = $this->createMock(IStringerEntity::class);
 
         $this->sut->update($entity);
     }

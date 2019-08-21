@@ -6,6 +6,7 @@ namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\Domain\Entities\UserGroup;
 use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -20,7 +21,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
     use IdGeneratorUserTrait;
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function add($entity)
     {
@@ -40,7 +41,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function delete($entity)
     {
@@ -139,7 +140,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function update($entity)
     {

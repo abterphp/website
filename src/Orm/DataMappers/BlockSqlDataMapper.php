@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Orm\DataMappers;
 
+use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
@@ -16,7 +17,7 @@ use PDO;
 class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
 {
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      */
     public function add($entity)
     {
@@ -45,7 +46,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
@@ -161,7 +162,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
     }
 
     /**
-     * @param Entity $entity
+     * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
      */
