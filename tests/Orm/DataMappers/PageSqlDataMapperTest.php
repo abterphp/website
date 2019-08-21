@@ -300,6 +300,13 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetByCategoryIdentifiersCanReturnEarly()
+    {
+        $actualResult = $this->sut->getByCategoryIdentifiers([]);
+
+        $this->assertSame([], $actualResult);
+    }
+
     public function testGetById()
     {
         $id     = '24ce60d4-95a6-441b-9c95-fe578ef1e23c';

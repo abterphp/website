@@ -273,6 +273,15 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $this->assertCollection($expectedData, $actualResult);
     }
 
+    public function testGetWithLayoutByIdentifiersCanReturnEarly()
+    {
+        $expectedData = [];
+
+        $actualResult = $this->sut->getWithLayoutByIdentifiers([]);
+
+        $this->assertCollection($expectedData, $actualResult);
+    }
+
     public function testUpdateWithoutLayoutId()
     {
         $id         = 'f7cdde13-7f39-493e-9c7a-ddeab4adb8eb';

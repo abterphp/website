@@ -158,6 +158,33 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $this->assertEntity($expectedData[0], $actualResult);
     }
 
+    public function testGetByIdWithUserGroups()
+    {
+        $id         = 'fc2bdb23-bdd1-49aa-8613-b5e0ce76450d';
+        $identifier = 'foo';
+        $name       = 'bar';
+
+        $ugId0 = '92dcb09a-eb3b-49b8-96c2-1a37818c780c';
+        $ugId1 = '2f962fe9-7e5b-4e06-a02f-bcd68152a83c';
+
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
+        $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
+        $expectedData = [
+            [
+                'id'             => $id,
+                'name'           => $name,
+                'identifier'     => $identifier,
+                'user_group_ids' => "$ugId0,$ugId1",
+            ],
+        ];
+        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+
+        $actualResult = $this->sut->getById($id);
+
+        $this->assertEntity($expectedData[0], $actualResult);
+    }
+
     public function testGetByIdentifier()
     {
         $id         = '4a7847c6-d202-4fc7-972b-bd4d634efda1';
@@ -301,5 +328,25 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $this->assertSame($expectedData['id'], $entity->getId());
         $this->assertSame($expectedData['identifier'], $entity->getIdentifier());
         $this->assertSame($expectedData['name'], $entity->getName());
+
+        $this->assertUserGroups($expectedData, $entity);
+    }
+
+    /**
+     * @param array        $expectedData
+     * @param PageCategory $entity
+     */
+    protected function assertUserGroups(array $expectedData, $entity)
+    {
+        if (empty($expectedData['user_group_ids'])) {
+            return;
+        }
+
+        $ugIds = [];
+        foreach ($entity->getUserGroups() as $ug) {
+            $ugIds[] = $ug->getId();
+        }
+
+        $this->assertSame($expectedData['user_group_ids'], implode(',', $ugIds));
     }
 }

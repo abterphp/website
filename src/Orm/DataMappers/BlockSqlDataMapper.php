@@ -170,10 +170,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $layoutIdType = PDO::PARAM_NULL;
-        if ($entity->getLayoutId()) {
-            $layoutIdType = PDO::PARAM_STR;
-        }
+        $layoutIdType = $entity->getLayoutId() ? PDO::PARAM_STR : PDO::PARAM_NULL;
 
         $query = (new QueryBuilder())
             ->update(
@@ -203,10 +200,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
      */
     protected function loadEntity(array $hash)
     {
-        $layoutId = null;
-        if ($hash['layout_id']) {
-            $layoutId = $hash['layout_id'];
-        }
+        $layoutId = $hash['layout_id'] ?: null;
 
         return new Entity(
             $hash['id'],

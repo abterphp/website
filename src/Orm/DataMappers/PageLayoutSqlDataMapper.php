@@ -217,10 +217,6 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
      */
     protected function loadAssets(array $hash): ?Entity\Assets
     {
-        if (!array_key_exists('header', $hash)) {
-            return null;
-        }
-
         return new Entity\Assets(
             $hash['identifier'],
             $hash['header'],
