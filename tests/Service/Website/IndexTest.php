@@ -114,4 +114,15 @@ class IndexTest extends TestCase
             $this->assertSame($userGroups[$idx]->getIdentifier(), $item);
         }
     }
+
+    public function testGetUserGroupIdentifiersReturnsEarlyIfEntityIsNotFound()
+    {
+        $visitorUsername = 'foo';
+
+        $this->userRepoMock->expects($this->any())->method('getByUsername')->willThrowException(new OrmException());
+
+        $actualResult = $this->sut->getUserGroupIdentifiers($visitorUsername);
+
+        $this->assertSame([], $actualResult);
+    }
 }
