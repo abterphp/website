@@ -428,14 +428,17 @@ class Page extends Base
             return $this;
         }
 
-        $hideable = new Hideable($this->translator->translate('website:pageAssetsBtn'));
-
         $nodes = $this->assetsFactory->create($entity);
-        foreach ($nodes as $node) {
-            $hideable[] = $node;
+        if (empty($nodes)) {
+            return $this;
         }
 
-        $this->form[] = $hideable;
+        $container = new Hideable($this->translator->translate('website:pageAssetsBtn'));
+        foreach ($nodes as $node) {
+            $container[] = $node;
+        }
+
+        $this->form[] = $container;
 
         return $this;
     }

@@ -100,12 +100,17 @@ class PageLayout extends Base
      */
     protected function addAssets(Entity $entity): PageLayout
     {
-        $hideable = new Hideable($this->translator->translate('website:pageLayoutAssetsBtn'));
-        foreach ($this->assetsFactory->create($entity) as $component) {
-            $hideable[] = $component;
+        $components = $this->assetsFactory->create($entity);
+        if (empty($components)) {
+            return $this;
         }
 
-        $this->form[] = $hideable;
+        $container = new Hideable($this->translator->translate('website:pageLayoutAssetsBtn'));
+        foreach ($components as $component) {
+            $container[] = $component;
+        }
+
+        $this->form[] = $container;
 
         return $this;
     }

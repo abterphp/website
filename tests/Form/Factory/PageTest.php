@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Form\Factory;
 
+use AbterPhp\Framework\Html\INode;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\PageLayout;
@@ -145,6 +146,66 @@ class PageTest extends TestCase
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
+        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
+
+        $entityMock = $this->createMockEntity();
+
+        $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
+        $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
+        $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
+        $entityMock->expects($this->any())->method('getLead')->willReturn($lead);
+        $entityMock->expects($this->any())->method('getBody')->willReturn($body);
+        $entityMock->expects($this->any())->method('isDraft')->willReturn($isDraft);
+        $entityMock->expects($this->any())->method('getCategory')->willReturn($category);
+        $entityMock->expects($this->any())->method('getLayoutId')->willReturn($layoutId);
+        $entityMock->expects($this->any())->method('getLayout')->willReturn($layout);
+        $entityMock->expects($this->any())->method('getMeta')->willReturn($meta);
+
+        $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
+
+        $this->assertStringContainsString($action, $form);
+        $this->assertStringContainsString($showUrl, $form);
+        foreach ($contains as $needle) {
+            $this->assertStringContainsString($needle, $form);
+        }
+    }
+
+    /**
+     * @dataProvider createProvider
+     *
+     * @param bool  $advancedAllowed
+     * @param array $contains
+     */
+    public function testCreateWithAssets(bool $advancedAllowed, array $contains)
+    {
+        $action      = 'foo';
+        $method      = RequestMethods::POST;
+        $showUrl     = 'bar';
+        $entityId    = '619e5cd9-342e-4405-8d51-bf9a0ce944d1';
+        $identifier  = 'blah';
+        $title       = 'Blah!';
+        $description = 'Blah and blah and more blah, but only reasonable amount of blah';
+        $lead        = "blah tldr;";
+        $body        = "Blah!\n\n...and more blah...";
+        $isDraft     = false;
+        $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
+        $layoutId    = '5131c135-185e-4342-9df2-969f57390287';
+        $layout      = 'abc {{ var/body }} cba';
+        $meta        = new Entity\Meta($description, '', '', '', '', '', '', '');
+
+        $layouts = [
+            new PageLayout('1ee4a806-724c-447b-951a-6594e6d12fbd', 'bl-126', 'BL 126', null),
+            new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'bl-129', 'BL 129', null),
+        ];
+
+        $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
+        $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
+
+        $assetNodes = [
+            $this->createMock(INode::class),
+        ];
+
+        $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
         $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
 
         $entityMock = $this->createMockEntity();
