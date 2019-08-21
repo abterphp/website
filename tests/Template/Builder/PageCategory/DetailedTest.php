@@ -78,4 +78,11 @@ class DetailedTest extends TestCase
 
         $this->assertStringContainsString($pageTitle, $body);
     }
+
+    public function testGetIdentifier()
+    {
+        $actualResult = $this->sut->getIdentifier();
+
+        $this->assertSame($this->sut::IDENTIFIER, $actualResult);
+    }
 }
