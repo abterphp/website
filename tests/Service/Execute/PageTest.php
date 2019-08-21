@@ -70,10 +70,12 @@ class PageTest extends TestCase
         $title      = 'Bar';
         $identifier = 'bar';
         $layout     = 'baz';
+        $categoryId = '7060fa74-f383-4e6f-99bd-ca40db021b1f';
         $postData   = [
-            'title'      => $title,
-            'identifier' => $identifier,
-            'layout'     => $layout,
+            'title'       => $title,
+            'identifier'  => $identifier,
+            'layout'      => $layout,
+            'category_id' => $categoryId,
         ];
 
         $this->gridRepoMock->expects($this->once())->method('add');
@@ -219,5 +221,18 @@ class PageTest extends TestCase
         $secondRun = $this->sut->validateForm($postData);
 
         $this->assertSame($firstRun, $secondRun);
+    }
+
+    public function testRetrieveEntityWithLayout()
+    {
+        $id     = 'foo';
+        $entity = $this->sut->createEntity($id);
+
+        $this->gridRepoMock->expects($this->once())->method('getById')->willReturn($entity);
+        $this->gridRepoMock->expects($this->once())->method('getWithLayout')->willReturn($entity);
+
+        $actualResult = $this->sut->retrieveEntityWithLayout($id);
+
+        $this->assertSame($entity, $actualResult);
     }
 }
