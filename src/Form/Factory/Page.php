@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Form\Factory;
 
 use AbterPhp\Admin\Form\Factory\Base;
-use AbterPhp\Admin\Form\Factory\IFormFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Form\Component\Option;
@@ -100,9 +99,7 @@ class Page extends Base
      */
     public function create(string $action, string $method, string $showUrl, ?IEntity $entity = null): IForm
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException(IFormFactory::ERR_MSG_ENTITY_MISSING);
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $username        = $this->session->get(Session::USERNAME);
         $advancedAllowed = $this->enforcer->enforce(
