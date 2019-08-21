@@ -58,6 +58,8 @@ class Page extends RepoServiceAbstract
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      *
      * @param IStringerEntity $entity
      * @param array           $postData
@@ -108,6 +110,8 @@ class Page extends RepoServiceAbstract
     }
 
     /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @param array $postData
      *
      * @return Meta
@@ -138,6 +142,8 @@ class Page extends RepoServiceAbstract
     }
 
     /**
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      * @param array $postData
      *
      * @return Assets
