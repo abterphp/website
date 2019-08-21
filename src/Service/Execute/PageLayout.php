@@ -74,9 +74,11 @@ class PageLayout extends RepoServiceAbstract
 
         $assets = $this->createAssets($postData);
 
+        $body = empty($postData['body']) ? '' : $postData['body'];
+
         $entity
             ->setIdentifier($identifier)
-            ->setBody((string)$postData['body'])
+            ->setBody($body)
             ->setAssets($assets);
 
         return $entity;
@@ -89,20 +91,18 @@ class PageLayout extends RepoServiceAbstract
      */
     protected function createAssets(array $postData): Assets
     {
-        if (is_string($postData['css-files'])) {
-            $postData['css-files'] = explode('\r\n', $postData['css-files']);
-        }
-
-        if (is_string($postData['js-files'])) {
-            $postData['js-files'] = explode('\r\n', $postData['js-files']);
-        }
+        $identifier = $postData['identifier'];
+        $header     = empty($postData['header']) ? '' : $postData['header'];
+        $footer     = empty($postData['footer']) ? '' : $postData['footer'];
+        $cssFiles   = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
+        $jsFiles    = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 
         return new Assets(
-            $postData['identifier'],
-            $postData['header'],
-            $postData['footer'],
-            $postData['css-files'],
-            $postData['js-files']
+            $identifier,
+            $header,
+            $footer,
+            $cssFiles,
+            $jsFiles
         );
     }
 }

@@ -71,33 +71,23 @@ class Page extends RepoServiceAbstract
             throw new \InvalidArgumentException('Not a page...');
         }
 
-        $title = (string)$postData['title'];
+        $title = empty($postData['title']) ? '' : (string)$postData['title'];
 
-        $identifier = (string)$postData['identifier'];
-        if (empty($identifier)) {
-            $identifier = $title;
-        }
+        $identifier = empty($postData['identifier']) ? $title : (string)$postData['identifier'];
         $identifier = $this->slugify->slugify($identifier);
 
-        $lead = (string)$postData['lead'];
-        $body = (string)$postData['body'];
+        $lead = empty($postData['lead']) ? '' : (string)$postData['lead'];
+        $body = empty($postData['body']) ? '' : (string)$postData['body'];
 
-        $isDraft = false;
-        if (!empty($postData['is_draft'])) {
-            $isDraft = (bool)$postData['is_draft'];
-        }
+        $isDraft = empty($postData['is_draft']);
 
         $category = null;
         if (!empty($postData['category_id'])) {
             $category = new PageCategory((string)$postData['category_id'], '', '');
         }
 
-        $layoutId = (string)$postData['layout_id'];
-        $layout   = '';
-        if (!$layoutId) {
-            $layoutId = null;
-            $layout   = (string)$postData['layout'];
-        }
+        $layoutId = empty($postData['layout_id']) ? null : (string)$postData['layout_id'];
+        $layout   = empty($postData['layout']) || $layoutId !== null ? '' : (string)$postData['layout'];
 
         $meta   = $this->getMeta($postData);
         $assets = $this->getAssets($postData);
@@ -124,15 +114,24 @@ class Page extends RepoServiceAbstract
      */
     protected function getMeta(array $postData): Meta
     {
+        $description   = empty($postData['description']) ? '' : $postData['description'];
+        $robots        = empty($postData['robots']) ? '' : $postData['robots'];
+        $author        = empty($postData['author']) ? '' : $postData['author'];
+        $copyright     = empty($postData['copyright']) ? '' : $postData['copyright'];
+        $keywords      = empty($postData['keywords']) ? '' : $postData['keywords'];
+        $ogTitle       = empty($postData['og-title']) ? '' : $postData['og-title'];
+        $ogImage       = empty($postData['og-image']) ? '' : $postData['og-image'];
+        $ogDescription = empty($postData['og-description']) ? '' : $postData['og-description'];
+
         $entity = new Meta(
-            $postData['description'],
-            $postData['robots'],
-            $postData['author'],
-            $postData['copyright'],
-            $postData['keywords'],
-            $postData['og-title'],
-            $postData['og-image'],
-            $postData['og-description']
+            $description,
+            $robots,
+            $author,
+            $copyright,
+            $keywords,
+            $ogTitle,
+            $ogImage,
+            $ogDescription
         );
 
         return $entity;
@@ -145,23 +144,20 @@ class Page extends RepoServiceAbstract
      */
     protected function getAssets(array $postData): Assets
     {
-        if (is_string($postData['css-files'])) {
-            $postData['css-files'] = explode('\r\n', $postData['css-files']);
-        }
-        if (is_string($postData['js-files'])) {
-            $postData['js-files'] = explode('\r\n', $postData['js-files']);
-        }
+        $identifier = $postData['identifier'];
+        $header     = empty($postData['header']) ? '' : $postData['header'];
+        $footer     = empty($postData['footer']) ? '' : $postData['footer'];
+        $cssFiles   = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
+        $jsFiles    = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 
-        $entity = new Assets(
-            $postData['identifier'],
-            $postData['header'],
-            $postData['footer'],
-            $postData['css-files'],
-            $postData['js-files'],
+        return new Assets(
+            $identifier,
+            $header,
+            $footer,
+            $cssFiles,
+            $jsFiles,
             null
         );
-
-        return $entity;
     }
 
     /**

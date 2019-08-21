@@ -71,9 +71,11 @@ class BlockLayout extends RepoServiceAbstract
 
         $identifier = $this->slugify->slugify((string)$postData['identifier']);
 
+        $body = empty($postData['body']) ? '' : (string)$postData['body'];
+
         $entity
             ->setIdentifier($identifier)
-            ->setBody((string)$postData['body']);
+            ->setBody($body);
 
         return $entity;
     }

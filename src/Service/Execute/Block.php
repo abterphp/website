@@ -64,25 +64,16 @@ class Block extends RepoServiceAbstract
      */
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
-        if (!($entity instanceof Entity)) {
-            throw new \InvalidArgumentException('Not a block...');
-        }
+        assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $body  = (string)$postData['body'];
+        $body  = empty($postData['body']) ? '' : (string)$postData['body'];
         $title = (string)$postData['title'];
 
-        $identifier = (string)$postData['identifier'];
-        if (empty($identifier)) {
-            $identifier = $title;
-        }
+        $identifier = empty($postData['identifier']) ? $title : (string)$postData['identifier'];
         $identifier = $this->slugify->slugify($identifier);
 
-        $layoutId = (string)$postData['layout_id'];
-        $layout   = '';
-        if (!$layoutId) {
-            $layoutId = null;
-            $layout   = (string)$postData['layout'];
-        }
+        $layoutId = empty($postData['layout_id']) ? null : (string)$postData['layout_id'];
+        $layout   = empty($postData['layout']) || $layoutId !== null ? '' : (string)$postData['layout'];
 
         $entity
             ->setIdentifier($identifier)
