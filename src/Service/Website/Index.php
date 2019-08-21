@@ -16,7 +16,7 @@ use Opulence\Orm\OrmException;
 class Index
 {
     /** @var Engine */
-    protected $templateEngine;
+    protected $engine;
 
     /** @var PageRepo */
     protected $pageRepo;
@@ -30,18 +30,18 @@ class Index
     /**
      * Index constructor.
      *
-     * @param Engine           $templateEngine
+     * @param Engine           $engine
      * @param PageRepo         $pageRepo
      * @param UserRepo         $userRepo
      * @param IEventDispatcher $eventDispatcher
      */
     public function __construct(
-        Engine $templateEngine,
+        Engine $engine,
         PageRepo $pageRepo,
         UserRepo $userRepo,
         IEventDispatcher $eventDispatcher
     ) {
-        $this->templateEngine  = $templateEngine;
+        $this->engine          = $engine;
         $this->pageRepo        = $pageRepo;
         $this->userRepo        = $userRepo;
         $this->eventDispatcher = $eventDispatcher;
@@ -76,7 +76,7 @@ class Index
             'layout' => $page->getLayout(),
         ];
 
-        $renderedBody = $this->templateEngine->run('page', $page->getIdentifier(), $templates, $vars);
+        $renderedBody = $this->engine->run('page', $page->getIdentifier(), $templates, $vars);
 
         $page->setRenderedBody($renderedBody);
 
@@ -100,7 +100,6 @@ class Index
         foreach ($user->getUserGroups() as $userGroup) {
             $userGroupIdentifiers[] = $userGroup->getIdentifier();
         }
-
 
         return $userGroupIdentifiers;
     }
