@@ -56,12 +56,15 @@ class PageTest extends TestCase
         $this->translatorMock = $this->createMock(ITranslator::class);
         $this->translatorMock->expects($this->any())->method('translate')->willReturnArgument(0);
 
+        $categories = [new PageCategory('', '', '')];
         $this->categoryRepoMock = $this->createMock(PageCategoryRepo::class);
+        $this->categoryRepoMock->expects($this->any())->method('getAll')->willReturn($categories);
 
         $this->layoutRepoMock = $this->createMock(PageLayoutRepo::class);
 
+        $assetNodes = [$this->createMock(INode::class)];
         $this->metaFactoryMock = $this->createMock(MetaFactory::class);
-        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
+        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
 
         $this->assetsFactoryMock = $this->createMock(AssetsFactory::class);
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
@@ -148,7 +151,8 @@ class PageTest extends TestCase
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
         $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -201,14 +205,13 @@ class PageTest extends TestCase
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
-        $assetNodes = [
-            $this->createMock(INode::class),
-        ];
-
+        $assetNodes = [$this->createMock(INode::class)];
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
-        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn([]);
+        $metaNodes = [$this->createMock(INode::class)];
+        $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($metaNodes);
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -228,15 +231,5 @@ class PageTest extends TestCase
         foreach ($contains as $needle) {
             $this->assertStringContainsString($needle, $form);
         }
-    }
-
-    /**
-     * @return MockObject|Entity
-     */
-    protected function createMockEntity()
-    {
-        $entityMock = $this->createMock(Entity::class);
-
-        return $entityMock;
     }
 }

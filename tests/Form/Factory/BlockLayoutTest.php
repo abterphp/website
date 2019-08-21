@@ -45,7 +45,8 @@ class BlockLayoutTest extends TestCase
         $identifier = 'blah';
         $body       = 'mah';
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -60,15 +61,5 @@ class BlockLayoutTest extends TestCase
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('body', $form);
         $this->assertStringContainsString('button', $form);
-    }
-
-    /**
-     * @return MockObject|Entity
-     */
-    protected function createMockEntity()
-    {
-        $entityMock = $this->createMock(Entity::class);
-
-        return $entityMock;
     }
 }

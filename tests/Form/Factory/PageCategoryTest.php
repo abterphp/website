@@ -64,7 +64,8 @@ class PageCategoryTest extends TestCase
 
         $this->userGroupRepoMock->expects($this->any())->method('getAll')->willReturn($allUserGroups);
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -80,15 +81,5 @@ class PageCategoryTest extends TestCase
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('name', $form);
         $this->assertStringContainsString('button', $form);
-    }
-
-    /**
-     * @return MockObject|Entity
-     */
-    protected function createMockEntity()
-    {
-        $entityMock = $this->createMock(Entity::class);
-
-        return $entityMock;
     }
 }

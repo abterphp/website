@@ -110,7 +110,8 @@ class BlockTest extends TestCase
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -126,15 +127,5 @@ class BlockTest extends TestCase
         foreach ($contains as $needle) {
             $this->assertStringContainsString($needle, $form);
         }
-    }
-
-    /**
-     * @return MockObject|Entity
-     */
-    protected function createMockEntity()
-    {
-        $entityMock = $this->createMock(Entity::class);
-
-        return $entityMock;
     }
 }

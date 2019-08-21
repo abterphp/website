@@ -52,7 +52,8 @@ class PageLayoutTest extends TestCase
         $identifier = 'blah';
         $body       = 'mah';
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
@@ -80,15 +81,14 @@ class PageLayoutTest extends TestCase
         $identifier = 'blah';
         $body       = 'mah';
 
-        $entityMock = $this->createMockEntity();
+        /** @var Entity|MockObject $entityMock */
+        $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
 
-        $assetNodes = [
-            $this->createMock(INode::class),
-        ];
+        $assetNodes = [$this->createMock(INode::class)];
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn($assetNodes);
 
         $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
@@ -100,15 +100,5 @@ class PageLayoutTest extends TestCase
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('body', $form);
         $this->assertStringContainsString('button', $form);
-    }
-
-    /**
-     * @return MockObject|Entity
-     */
-    protected function createMockEntity()
-    {
-        $entityMock = $this->createMock(Entity::class);
-
-        return $entityMock;
     }
 }
