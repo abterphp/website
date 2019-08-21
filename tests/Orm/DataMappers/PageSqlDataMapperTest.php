@@ -9,6 +9,7 @@ use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Domain\Entities\PageCategory;
+use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -25,11 +26,11 @@ class PageSqlDataMapperTest extends DataMapperTestCase
     }
 
     /**
-     * @param string      $id
-     * @param string|null $categoryId
-     * @param string      $layout
-     * @param string|null $layoutId
-     * @param bool        $withAssets
+     * @param string          $id
+     * @param string|null     $categoryId
+     * @param string          $layout
+     * @param PageLayout|null $layoutEntity
+     * @param bool            $withAssets
      *
      * @return Page
      */
@@ -396,10 +397,11 @@ class PageSqlDataMapperTest extends DataMapperTestCase
 
     public function testGetWithLayout()
     {
-        $id     = '08cf6a6b-5d86-405b-b573-fa4a6f4c6122';
-        $entity = $this->createEntity($id);
-        $meta   = $entity->getMeta();
-        $assets = $entity->getAssets();
+        $id       = '08cf6a6b-5d86-405b-b573-fa4a6f4c6122';
+        $entity   = $this->createEntity($id);
+        $meta     = $entity->getMeta();
+        $assets   = $entity->getAssets();
+        $layoutId = '3f98d8ae-06b3-4fd3-8539-284b377f741b';
 
         $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, COALESCE(layouts.body, pages.layout) AS layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header AS header, pages.footer AS footer, pages.css_files AS css_files, pages.js_files AS js_files, layouts.identifier AS layout_identifier, layouts.header AS layout_header, layouts.footer AS layout_footer, layouts.css_files AS layout_css_files, layouts.js_files AS layout_js_files FROM pages LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id WHERE (pages.deleted = 0) AND (layouts.deleted = 0 OR layouts.deleted IS NULL) AND ((pages.identifier = :identifier OR pages.id = :identifier))';  // phpcs:ignore
         $values       = ['identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR]];
@@ -423,10 +425,15 @@ class PageSqlDataMapperTest extends DataMapperTestCase
                 'meta_og_title'       => $meta->getOGTitle(),
                 'meta_og_image'       => $meta->getOGImage(),
                 'meta_og_description' => $meta->getOGDescription(),
-                'header'              => $assets->getHeader(),
-                'footer'              => $assets->getFooter(),
-                'css_files'           => implode("\r\n", $assets->getCssFiles()),
-                'js_files'            => implode("\r\n", $assets->getJsFiles()),
+                'header'              => '',
+                'footer'              => '',
+                'css_files'           => '',
+                'js_files'            => '',
+                'layout_identifier'   => $layoutId,
+                'layout_header'       => $assets->getHeader(),
+                'layout_footer'       => $assets->getFooter(),
+                'layout_css_files'    => implode("\r\n", $assets->getCssFiles()),
+                'layout_js_files'     => implode("\r\n", $assets->getJsFiles()),
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -434,7 +441,10 @@ class PageSqlDataMapperTest extends DataMapperTestCase
 
         $actualResult = $this->sut->getWithLayout($entity->getIdentifier());
 
-        $this->assertEntity($expectedData[0], $actualResult);
+        $this->assertNotEmpty($actualResult->getAssets());
+        $this->assertNotEmpty($actualResult->getAssets()->getLayoutAssets());
+        $this->assertEquals($assets->getCssFiles(), $actualResult->getAssets()->getLayoutAssets()->getCssFiles());
+        $this->assertEquals($assets->getJsFiles(), $actualResult->getAssets()->getLayoutAssets()->getJsFiles());
     }
 
     public function testUpdateSimple()
