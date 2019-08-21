@@ -30,12 +30,13 @@ class PageInvalidator
      */
     public function handle(EntityChange $event)
     {
-        switch ($event->getEntityName()) {
-            case Page::class:
-            case PageLayout::class:
-            case Block::class:
-                $this->cacheManager->flush();
-                break;
+        $entity = $event->getEntity();
+        if ($entity instanceof Page) {
+            $this->cacheManager->flush();
+        } elseif ($entity instanceof PageLayout) {
+            $this->cacheManager->flush();
+        } elseif ($entity instanceof Block) {
+            $this->cacheManager->flush();
         }
     }
 }

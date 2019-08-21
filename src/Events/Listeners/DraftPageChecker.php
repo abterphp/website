@@ -47,17 +47,21 @@ class DraftPageChecker
 
         foreach ($event->getUserGroupIdentifiers() as $userGroupIdentifier) {
             if ($this->enforcer->enforce($userGroupIdentifier, static::RESOURCE_IDENTIFIER, Role::READ)) {
-                return $this->handleAllowed($event);
+                $this->handleAllowed($event);
+
+                return;
             }
         }
 
-        return $this->handleNotAllowed($event);
+        $this->handleNotAllowed($event);
+
+        return;
     }
 
     /**
      * @param PageViewed $event
      */
-    protected function handleAllowed(PageViewed $event)
+    protected function handleAllowed(PageViewed $event): void
     {
         $page = clone $event->getPage();
 
@@ -83,7 +87,7 @@ class DraftPageChecker
     /**
      * @param PageViewed $event
      */
-    protected function handleNotAllowed(PageViewed $event)
+    protected function handleNotAllowed(PageViewed $event): void
     {
         $event->setIsAllowed(false);
     }
