@@ -81,7 +81,7 @@ class DraftPageChecker
         );
 
         $event->setPage($page);
-        $event->setIsAllowed(true);
+        $event->setIsAllowed();
     }
 
     /**
@@ -89,6 +89,6 @@ class DraftPageChecker
      */
     protected function handleNotAllowed(PageViewed $event): void
     {
-        $event->setIsAllowed(false);
+        $event->setIsNotAllowed();
     }
 }

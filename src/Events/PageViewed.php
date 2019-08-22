@@ -60,11 +60,23 @@ class PageViewed
     }
 
     /**
-     * @param bool $isAllowed
+     * @return $this
      */
-    public function setIsAllowed(bool $isAllowed): void
+    public function setIsAllowed(): self
     {
-        $this->isAllowed = $isAllowed;
+        $this->isAllowed = true;
+
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function setIsNotAllowed(): self
+    {
+        $this->isAllowed = false;
+
+        return $this;
     }
 
     /**
