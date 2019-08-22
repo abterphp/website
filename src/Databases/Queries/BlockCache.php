@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Databases\Queries;
 
+use AbterPhp\Admin\Exception\Database;
 use Opulence\Databases\ConnectionPools\ConnectionPool;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -50,7 +51,7 @@ class BlockCache
         $statement  = $connection->prepare($query->getSql());
         $statement->bindValues($query->getParameters());
         if (!$statement->execute()) {
-            return true;
+            throw new Database($statement->errorInfo());
         }
 
         return $statement->fetchColumn() > 0;
