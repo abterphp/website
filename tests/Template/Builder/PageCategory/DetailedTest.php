@@ -79,6 +79,30 @@ class DetailedTest extends TestCase
         $this->assertStringContainsString($pageTitle, $body);
     }
 
+    public function testBuildOnePageCanBuildLead()
+    {
+        $categoryIdentifier = 'foo';
+        $pageIdentifier     = 'bar';
+        $pageTitle          = 'Bar';
+        $lead               = "foo\nbar\n";
+
+        $category = new PageCategory('', '', $categoryIdentifier);
+        $page     = new Page('', $pageIdentifier, $pageTitle, $lead, '', false, $category);
+
+        $actualResult = $this->sut->build([$page]);
+
+        $this->assertSame($categoryIdentifier, $actualResult->getIdentifier());
+
+        $templates = $actualResult->getTemplates();
+
+        $this->assertIsArray($templates);
+        $this->assertArrayHasKey('body', $templates);
+
+        $body = $templates['body'];
+
+        $this->assertStringContainsString('class="detailed-lead"', $body);
+    }
+
     public function testGetIdentifier()
     {
         $actualResult = $this->sut->getIdentifier();

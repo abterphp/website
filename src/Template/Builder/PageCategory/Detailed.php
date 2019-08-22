@@ -20,6 +20,8 @@ class Detailed implements IBuilder
 
     const MORE_BTN_CONTAINER_CLASS = 'more-btn-container';
 
+    const CLASS_LEAD = 'detailed-lead';
+
     /** @var IEventDispatcher */
     protected $dispatcher;
 
@@ -146,7 +148,7 @@ class Detailed implements IBuilder
      */
     protected function buildPageLead(Entity $page): Component
     {
-        $lead = new Component(null, [], [], Html5::TAG_DIV);
+        $lead = new Component(null, [], [Html5::ATTR_CLASS => static::CLASS_LEAD], Html5::TAG_DIV);
         foreach (explode("\n", $page->getLead()) as $paragraph) {
             if (trim($paragraph) === '') {
                 continue;
