@@ -12,13 +12,14 @@ use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
-/** @phan-file-suppress PhanTypeMismatchArgument */
-
+/**
+ * @phan-file-suppress PhanTypeMismatchArgument
+ */
 class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDataMapper
 {
-    const USER_GROUP_IDS = 'user_group_ids';
-
     use IdGeneratorUserTrait;
+
+    const USER_GROUP_IDS = 'user_group_ids';
 
     /**
      * @param IStringerEntity $entity
