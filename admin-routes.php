@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use AbterPhp\Admin\Config\Routes as RoutesConfig;
 use AbterPhp\Admin\Http\Middleware\Authentication;
 use AbterPhp\Admin\Http\Middleware\Authorization;
 use AbterPhp\Admin\Http\Middleware\LastGridPage;
 use AbterPhp\Framework\Authorization\Constant\Role;
+use AbterPhp\Website\Constant\Routes as RoutesConstant;
 use Opulence\Routing\Router;
 
 /**
@@ -20,7 +22,7 @@ $router->group(
     function (Router $router) {
         $router->group(
             [
-                'path'       => PATH_ADMIN,
+                'path'       => RoutesConfig::getAdminBasePath(),
                 'middleware' => [
                     Authentication::class,
                 ],
@@ -46,8 +48,8 @@ $router->group(
                         "/${path}",
                         "Admin\Grid\\${controllerName}@show",
                         [
-                            OPTION_NAME       => "${route}",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,
@@ -68,8 +70,8 @@ $router->group(
                         "/${path}/new",
                         "Admin\Form\\${controllerName}@new",
                         [
-                            OPTION_NAME       => "${route}-new",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}-new",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,
@@ -89,8 +91,8 @@ $router->group(
                         "/${path}/new",
                         "Admin\Execute\\${controllerName}@create",
                         [
-                            OPTION_NAME       => "${route}-create",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}-create",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,
@@ -110,8 +112,8 @@ $router->group(
                         "/${path}/:entityId/edit",
                         "Admin\Form\\${controllerName}@edit",
                         [
-                            OPTION_NAME       => "${route}-edit",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}-edit",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,
@@ -131,8 +133,8 @@ $router->group(
                         "/${path}/:entityId/edit",
                         "Admin\Execute\\${controllerName}@update",
                         [
-                            OPTION_NAME       => "${route}-update",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}-update",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,
@@ -152,8 +154,8 @@ $router->group(
                         "/${path}/:entityId/delete",
                         "Admin\Execute\\${controllerName}@delete",
                         [
-                            OPTION_NAME       => "${route}-delete",
-                            OPTION_MIDDLEWARE => [
+                            RoutesConstant::OPTION_NAME       => "${route}-delete",
+                            RoutesConstant::OPTION_MIDDLEWARE => [
                                 Authorization::withParameters(
                                     [
                                         Authorization::RESOURCE => $route,

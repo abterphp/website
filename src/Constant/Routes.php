@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Constant;
 
-class Routes
+use AbterPhp\Framework\Constant\Routes as FrameworkRoutes;
+
+class Routes extends FrameworkRoutes
 {
     const ROUTE_INDEX    = 'index';
     const ROUTE_FALLBACK = 'fallback';
