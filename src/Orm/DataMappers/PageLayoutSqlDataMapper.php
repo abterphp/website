@@ -156,6 +156,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
     protected function getColumnNamesToValues(Entity $entity, bool $create): array
     {
         $columnNamesToValues = [
+            'name'       => [$entity->getName(), \PDO::PARAM_STR],
             'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
             'body'       => [$entity->getBody(), \PDO::PARAM_STR],
         ];
@@ -204,6 +205,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
 
         return new Entity(
             $hash['id'],
+            $hash['name'],
             $hash['identifier'],
             $hash['body'],
             $assets
@@ -235,6 +237,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
         $query = (new QueryBuilder())
             ->select(
                 'page_layouts.id',
+                'page_layouts.name',
                 'page_layouts.identifier',
                 'page_layouts.body',
                 'page_layouts.header',

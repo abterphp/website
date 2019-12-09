@@ -13,6 +13,7 @@ use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\MultiSelect;
 use AbterPhp\Framework\Form\Element\Select;
+use AbterPhp\Framework\Form\Extra\Help;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;
@@ -53,8 +54,8 @@ class PageCategory extends Base
 
         $this->createForm($action, $method)
             ->addDefaultElements()
-            ->addIdentifier($entity)
             ->addName($entity)
+            ->addIdentifier($entity)
             ->addUserGroups($entity)
             ->addDefaultButtons($showUrl);
 
@@ -70,12 +71,12 @@ class PageCategory extends Base
      *
      * @return $this
      */
-    protected function addIdentifier(Entity $entity): PageCategory
+    protected function addName(Entity $entity): PageCategory
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
-        $label = new Label('identifier', 'website:pageCategoryIdentifier');
+        $input = new Input('name', 'name', $entity->getName());
+        $label = new Label('name', 'website:pageCategoryName');
 
-        $this->form[] = new FormGroup($input, $label, null);
+        $this->form[] = new FormGroup($input, $label);
 
         return $this;
     }
@@ -85,12 +86,13 @@ class PageCategory extends Base
      *
      * @return $this
      */
-    protected function addName(Entity $entity): PageCategory
+    protected function addIdentifier(Entity $entity): PageCategory
     {
-        $input = new Input('name', 'name', $entity->getIdentifier());
-        $label = new Label('name', 'website:pageCategoryName');
+        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $label = new Label('identifier', 'website:pageCategoryIdentifier');
+        $help  = new Help('website:pageCategoryIdentifierHelp');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }

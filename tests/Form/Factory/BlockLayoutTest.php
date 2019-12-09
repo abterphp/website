@@ -42,6 +42,7 @@ class BlockLayoutTest extends TestCase
         $method     = RequestMethods::POST;
         $showUrl    = 'bar';
         $entityId   = '97450fee-7c17-4416-8cec-084648b5dfe3';
+        $name       = 'Blah';
         $identifier = 'blah';
         $body       = 'mah';
 
@@ -49,7 +50,9 @@ class BlockLayoutTest extends TestCase
         $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
+        $entityMock->expects($this->any())->method('getName')->willReturn($name);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
+        $entityMock->expects($this->any())->method('getName')->willReturn($name);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
 
         $form = (string)$this->sut->create($action, $method, $showUrl, $entityMock);
@@ -58,6 +61,7 @@ class BlockLayoutTest extends TestCase
         $this->assertStringContainsString($showUrl, $form);
         $this->assertStringContainsString('CSRF', $form);
         $this->assertStringContainsString('POST', $form);
+        $this->assertStringContainsString('name', $form);
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('body', $form);
         $this->assertStringContainsString('button', $form);

@@ -7,12 +7,12 @@ namespace AbterPhp\Website\Form\Factory;
 use AbterPhp\Framework\Html\INode;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
+use AbterPhp\Website\Form\Factory\PageLayout\Assets as AssetsFactory;
 use Opulence\Http\Requests\RequestMethods;
 use Opulence\Sessions\ISession;
 use Opulence\Sessions\Session;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use AbterPhp\Website\Form\Factory\PageLayout\Assets as AssetsFactory;
 
 class PageLayoutTest extends TestCase
 {
@@ -49,6 +49,7 @@ class PageLayoutTest extends TestCase
         $method     = RequestMethods::POST;
         $showUrl    = 'bar';
         $entityId   = 'c5098ee4-ab53-4d96-9d23-bde122f8f09b';
+        $name       = 'Blah';
         $identifier = 'blah';
         $body       = 'mah';
 
@@ -57,6 +58,7 @@ class PageLayoutTest extends TestCase
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
+        $entityMock->expects($this->any())->method('getName')->willReturn($name);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
 
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
@@ -67,6 +69,7 @@ class PageLayoutTest extends TestCase
         $this->assertStringContainsString($showUrl, $form);
         $this->assertStringContainsString('CSRF', $form);
         $this->assertStringContainsString('POST', $form);
+        $this->assertStringContainsString('name', $form);
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('body', $form);
         $this->assertStringContainsString('button', $form);
@@ -78,6 +81,7 @@ class PageLayoutTest extends TestCase
         $method     = RequestMethods::POST;
         $showUrl    = 'bar';
         $entityId   = 'c5098ee4-ab53-4d96-9d23-bde122f8f09b';
+        $name       = 'Blah';
         $identifier = 'blah';
         $body       = 'mah';
 
@@ -85,6 +89,7 @@ class PageLayoutTest extends TestCase
         $entityMock = $this->createMock(Entity::class);
 
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
+        $entityMock->expects($this->any())->method('getName')->willReturn($name);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
 
@@ -97,6 +102,7 @@ class PageLayoutTest extends TestCase
         $this->assertStringContainsString($showUrl, $form);
         $this->assertStringContainsString('CSRF', $form);
         $this->assertStringContainsString('POST', $form);
+        $this->assertStringContainsString('name', $form);
         $this->assertStringContainsString('identifier', $form);
         $this->assertStringContainsString('body', $form);
         $this->assertStringContainsString('button', $form);

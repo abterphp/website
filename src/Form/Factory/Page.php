@@ -110,8 +110,8 @@ class Page extends Base
 
         $this->createForm($action, $method)
             ->addDefaultElements()
-            ->addIdentifier($entity)
             ->addTitle($entity)
+            ->addIdentifier($entity)
             ->addDescription($entity)
             ->addMeta($entity)
             ->addLead($entity)
@@ -135,10 +135,10 @@ class Page extends Base
      *
      * @return $this
      */
-    protected function addIdentifier(Entity $entity): Page
+    protected function addTitle(Entity $entity): Page
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
-        $label = new Label('title', 'website:pageIdentifier');
+        $input = new Input('title', 'title', $entity->getTitle());
+        $label = new Label('title', 'website:pageTitle');
 
         $this->form[] = new FormGroup($input, $label);
 
@@ -150,12 +150,13 @@ class Page extends Base
      *
      * @return $this
      */
-    protected function addTitle(Entity $entity): Page
+    protected function addIdentifier(Entity $entity): Page
     {
-        $input = new Input('title', 'title', $entity->getTitle());
-        $label = new Label('title', 'website:pageTitle');
+        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $label = new Label('title', 'website:pageIdentifier');
+        $help  = new Help('website:pageIdentifierHelp');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }

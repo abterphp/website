@@ -68,6 +68,6 @@ class BlockLayout extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '');
+        return new Entity($entityId, '', '', '');
     }
 }

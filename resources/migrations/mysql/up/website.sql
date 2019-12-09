@@ -36,6 +36,7 @@ VALUES (UUID(), 'content-editor', 'Content Editor'),
 CREATE TABLE `block_layouts`
 (
     `id`         char(36)     NOT NULL,
+    `name`       varchar(160) NOT NULL,
     `identifier` varchar(160) NOT NULL,
     `body`       mediumtext   NOT NULL,
     `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
@@ -47,10 +48,10 @@ CREATE TABLE `block_layouts`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO `block_layouts` (`id`, `identifier`, `body`)
-VALUES (UUID(), 'index-text-section',
+INSERT INTO `block_layouts` (`id`, `name`, `identifier`, `body`)
+VALUES (UUID(), 'Index Text Section', 'index-text-section',
         '                <div><hr class=\"section-heading-spacer\"></div>\r\n                <div class=\"clearfix\"></div>\r\n                <h2 class=\"section-heading\">{{var/title}}</h2>\r\n                <div class=\"lead\">{{var/body}}</div>'),
-       (UUID(), 'empty', '{{var/body}}');
+       (UUID(), 'Empty', 'empty', '{{var/body}}');
 
 --
 -- Table structure and data for table `blocks`
@@ -59,8 +60,8 @@ VALUES (UUID(), 'index-text-section',
 CREATE TABLE `blocks`
 (
     `id`         char(36)            NOT NULL,
-    `identifier` varchar(160)        NOT NULL,
     `title`      varchar(120)        NOT NULL,
+    `identifier` varchar(160)        NOT NULL,
     `body`       mediumtext          NOT NULL,
     `layout_id`  char(36)            NULL,
     `layout`     mediumtext          NOT NULL,
@@ -68,7 +69,7 @@ CREATE TABLE `blocks`
     `updated_at` timestamp           NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `deleted`    tinyint(1) unsigned NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `identifier` (`identifier`),
+    UNIQUE KEY `blocks_identifier` (`identifier`),
     KEY `blocks_deleted_index` (`deleted`),
     KEY `block_layouts_id_fk` (`layout_id`),
     CONSTRAINT `blocks_layouts_id_fk` FOREIGN KEY (`layout_id`) REFERENCES `block_layouts` (`id`)
@@ -100,6 +101,7 @@ CREATE TABLE `page_categories`
 CREATE TABLE `page_layouts`
 (
     `id`         char(36)     NOT NULL,
+    `name`       varchar(160) NOT NULL,
     `identifier` varchar(160) NOT NULL,
     `body`       mediumtext   NOT NULL,
     `header`     mediumtext   NOT NULL,
@@ -115,8 +117,8 @@ CREATE TABLE `page_layouts`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO `page_layouts` (`id`, `identifier`, `body`, `header`, `footer`, `css_files`, `js_files`)
-VALUES (UUID(), 'empty', '{{var/body}}', '', '', '', '');
+INSERT INTO `page_layouts` (`id`, `name`, `identifier`, `body`, `header`, `footer`, `css_files`, `js_files`)
+VALUES (UUID(), 'Empty', 'empty', '{{var/body}}', '', '', '', '');
 
 --
 -- Table structure and data for table `pages`

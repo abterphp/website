@@ -52,7 +52,7 @@ class PageLayout extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', new Assets('', '', '', [], []));
+        return new Entity($entityId, '', '', '', new Assets('', '', '', [], []));
     }
 
     /**
@@ -67,14 +67,18 @@ class PageLayout extends RepoServiceAbstract
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
+        
+        $name = (string)$postData['name'];
 
-        $identifier = $this->slugify->slugify((string)$postData['identifier']);
+        $identifier = $postData['identifier'] ?: $name;
+        $identifier = $this->slugify->slugify($identifier);
 
         $assets = $this->createAssets($postData);
 
         $body = empty($postData['body']) ? '' : $postData['body'];
 
         $entity
+            ->setName($name)
             ->setIdentifier($identifier)
             ->setBody($body)
             ->setAssets($assets);

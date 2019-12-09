@@ -17,9 +17,10 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class PageCategory extends BaseFactory
 {
-    const GROUP_IDENTIFIER = 'pageCategory-identifier';
     const GROUP_NAME       = 'pageCategory-name';
+    const GROUP_IDENTIFIER = 'pageCategory-identifier';
 
+    const GETTER_NAME       = 'getName';
     const GETTER_IDENTIFIER = 'getIdentifier';
 
     /**
@@ -47,6 +48,7 @@ class PageCategory extends BaseFactory
     public function getGetters(): array
     {
         return [
+            static::GROUP_NAME       => static::GETTER_NAME,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }
@@ -59,10 +61,10 @@ class PageCategory extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF  => Routes::ROUTE_PAGE_CATEGORIES_EDIT,
+            Html5::ATTR_HREF => Routes::ROUTE_PAGE_CATEGORIES_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF  => Routes::ROUTE_PAGE_CATEGORIES_DELETE,
+            Html5::ATTR_HREF => Routes::ROUTE_PAGE_CATEGORIES_DELETE,
         ];
 
         $cellActions   = new Actions();

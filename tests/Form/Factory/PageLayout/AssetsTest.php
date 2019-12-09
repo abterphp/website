@@ -22,6 +22,7 @@ class AssetsTest extends TestCase
     public function testCreate()
     {
         $id         = 'bde8a749-b409-43c6-a061-c6a7d2dce6a0';
+        $name       = 'Foo';
         $identifier = 'foo';
         $header     = 'bar';
         $footer     = 'baz';
@@ -30,7 +31,7 @@ class AssetsTest extends TestCase
         $body       = 'pior';
 
         $assets = new Entity\Assets($identifier, $header, $footer, $cssFiles, $jsFiles);
-        $entity = new Entity($id, $identifier, $body, $assets);
+        $entity = new Entity($id, $name, $identifier, $body, $assets);
 
         $actualResult = $this->sut->create($entity);
 

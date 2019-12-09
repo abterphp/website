@@ -12,6 +12,7 @@ use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Select;
 use AbterPhp\Framework\Form\Element\Textarea;
+use AbterPhp\Framework\Form\Extra\Help;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Countable;
 use AbterPhp\Framework\Form\Label\Label;
@@ -97,8 +98,9 @@ class Block extends Base
     {
         $input = new Input('identifier', 'identifier', $entity->getIdentifier());
         $label = new Label('title', 'website:blockIdentifier');
+        $help  = new Help('website:blockIdentifierHelp');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }

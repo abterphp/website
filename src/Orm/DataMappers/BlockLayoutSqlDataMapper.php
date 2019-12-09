@@ -11,7 +11,6 @@ use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
 /** @phan-file-suppress PhanTypeMismatchArgument */
-
 class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutDataMapper
 {
     /**
@@ -26,6 +25,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
                 'block_layouts',
                 [
                     'id'         => $entity->getId(),
+                    'name'       => $entity->getName(),
                     'identifier' => $entity->getIdentifier(),
                     'body'       => $entity->getBody(),
                 ]
@@ -139,6 +139,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
                 'block_layouts',
                 'block_layouts',
                 [
+                    'name'       => [$entity->getName(), \PDO::PARAM_STR],
                     'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
                     'body'       => [$entity->getBody(), \PDO::PARAM_STR],
                 ]
@@ -161,6 +162,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
     {
         return new Entity(
             $hash['id'],
+            $hash['name'],
             $hash['identifier'],
             $hash['body']
         );
@@ -175,6 +177,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
         $query = (new QueryBuilder())
             ->select(
                 'block_layouts.id',
+                'block_layouts.name',
                 'block_layouts.identifier',
                 'block_layouts.body'
             )

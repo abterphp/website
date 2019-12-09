@@ -51,7 +51,7 @@ class BlockLayout extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '');
+        return new Entity($entityId, '', '', '');
     }
 
     /**
@@ -67,11 +67,15 @@ class BlockLayout extends RepoServiceAbstract
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $identifier = $this->slugify->slugify((string)$postData['identifier']);
+        $name = (string)$postData['name'];
+        
+        $identifier = $postData['identifier'] ?: $name;
+        $identifier = $this->slugify->slugify($identifier);
 
         $body = empty($postData['body']) ? '' : (string)$postData['body'];
 
         $entity
+            ->setName($name)
             ->setIdentifier($identifier)
             ->setBody($body);
 

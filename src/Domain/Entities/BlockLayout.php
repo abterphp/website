@@ -12,21 +12,26 @@ class BlockLayout implements IStringerEntity
     protected $id;
 
     /** @var string */
+    protected $name;
+
+    /** @var string */
     protected $identifier;
 
     /** @var string */
     protected $body;
 
     /**
-     * Page constructor.
+     * BlockLayout constructor.
      *
      * @param string $id
+     * @param string $name
      * @param string $identifier
      * @param string $body
      */
-    public function __construct(string $id, string $identifier, string $body)
+    public function __construct(string $id, string $name, string $identifier, string $body)
     {
         $this->id         = $id;
+        $this->name         = $name;
         $this->identifier = $identifier;
         $this->body       = $body;
     }
@@ -45,6 +50,26 @@ class BlockLayout implements IStringerEntity
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName(string $name): BlockLayout
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**

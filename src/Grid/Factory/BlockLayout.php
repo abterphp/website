@@ -17,9 +17,10 @@ use Opulence\Routing\Urls\UrlGenerator;
 
 class BlockLayout extends BaseFactory
 {
+    const GROUP_NAME       = 'blockLayout-name';
     const GROUP_IDENTIFIER = 'blockLayout-identifier';
-    const GROUP_TITLE      = 'blockLayout-title';
 
+    const GETTER_NAME       = 'getName';
     const GETTER_IDENTIFIER = 'getIdentifier';
 
     /**
@@ -47,6 +48,7 @@ class BlockLayout extends BaseFactory
     public function getGetters(): array
     {
         return [
+            static::GROUP_NAME       => static::GETTER_NAME,
             static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }
@@ -59,10 +61,10 @@ class BlockLayout extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF  => Routes::ROUTE_BLOCK_LAYOUTS_EDIT,
+            Html5::ATTR_HREF => Routes::ROUTE_BLOCK_LAYOUTS_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF  => Routes::ROUTE_BLOCK_LAYOUTS_DELETE,
+            Html5::ATTR_HREF => Routes::ROUTE_BLOCK_LAYOUTS_DELETE,
         ];
 
         $cellActions   = new Actions();

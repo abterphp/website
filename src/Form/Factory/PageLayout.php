@@ -10,6 +10,7 @@ use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Container\Hideable;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Textarea;
+use AbterPhp\Framework\Form\Extra\Help;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;
@@ -51,6 +52,7 @@ class PageLayout extends Base
 
         $this->createForm($action, $method)
             ->addDefaultElements()
+            ->addName($entity)
             ->addIdentifier($entity)
             ->addBody($entity)
             ->addAssets($entity)
@@ -68,12 +70,28 @@ class PageLayout extends Base
      *
      * @return $this
      */
+    protected function addName(Entity $entity): PageLayout
+    {
+        $input = new Input('name', 'name', $entity->getName());
+        $label = new Label('name', 'website:pageLayoutName');
+
+        $this->form[] = new FormGroup($input, $label, null);
+
+        return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
     protected function addIdentifier(Entity $entity): PageLayout
     {
         $input = new Input('identifier', 'identifier', $entity->getIdentifier());
         $label = new Label('identifier', 'website:pageLayoutIdentifier');
+        $help  = new Help('website:pageLayoutIdentifierHelp');
 
-        $this->form[] = new FormGroup($input, $label, null);
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }

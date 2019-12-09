@@ -13,6 +13,9 @@ class PageLayout implements IStringerEntity
     protected $id;
 
     /** @var string */
+    protected $name;
+
+    /** @var string */
     protected $identifier;
 
     /** @var string */
@@ -22,16 +25,18 @@ class PageLayout implements IStringerEntity
     protected $assets;
 
     /**
-     * Page constructor.
+     * PageLayout constructor.
      *
      * @param string      $id
+     * @param string      $name
      * @param string      $identifier
      * @param string      $body
      * @param Assets|null $assets
      */
-    public function __construct(string $id, string $identifier, string $body, ?Assets $assets)
+    public function __construct(string $id, string $name, string $identifier, string $body, ?Assets $assets)
     {
         $this->id         = $id;
+        $this->name       = $name;
         $this->identifier = $identifier;
         $this->body       = $body;
         $this->assets     = $assets;
@@ -51,6 +56,26 @@ class PageLayout implements IStringerEntity
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName(string $name): PageLayout
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     /**

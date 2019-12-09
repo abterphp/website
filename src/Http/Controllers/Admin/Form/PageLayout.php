@@ -76,7 +76,7 @@ class PageLayout extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', new Entity\Assets('', '', '', [], []));
+        return new Entity($entityId, '', '', '', new Entity\Assets('', '', '', [], []));
     }
 
     /**

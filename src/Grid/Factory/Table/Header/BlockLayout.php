@@ -8,25 +8,27 @@ use AbterPhp\Admin\Grid\Factory\Table\HeaderFactory;
 
 class BlockLayout extends HeaderFactory
 {
+    const GROUP_NAME       = 'blockLayout-name';
     const GROUP_IDENTIFIER = 'blockLayout-identifier';
-    const GROUP_TITLE      = 'blockLayout-title';
 
+    const HEADER_NAME       = 'website:blockLayoutName';
     const HEADER_IDENTIFIER = 'website:blockLayoutIdentifier';
 
     /** @var array */
     protected $headers = [
+        self::GROUP_NAME       => self::HEADER_NAME,
         self::GROUP_IDENTIFIER => self::HEADER_IDENTIFIER,
     ];
 
     /** @var array */
     protected $inputNames = [
+        self::GROUP_NAME       => 'name',
         self::GROUP_IDENTIFIER => 'identifier',
-        self::GROUP_TITLE      => 'title',
     ];
 
     /** @var array */
     protected $fieldNames = [
+        self::GROUP_NAME       => 'block_layouts.name',
         self::GROUP_IDENTIFIER => 'block_layouts.identifier',
-        self::GROUP_TITLE      => 'block_layouts.title',
     ];
 }

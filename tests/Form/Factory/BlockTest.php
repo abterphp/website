@@ -103,8 +103,8 @@ class BlockTest extends TestCase
         $layout     = 'abc {{ var/body }} cba';
 
         $layouts = [
-            new BlockLayout('5f480eb5-1a54-4f5c-8303-59ae466ada68', 'bl-126', 'BL 126'),
-            new BlockLayout('11325e40-1b6b-4820-8d4b-548a572acd02', 'bl-129', 'BL 129'),
+            new BlockLayout('5f480eb5-1a54-4f5c-8303-59ae466ada68', 'BL 126', 'bl-126', 'BL 126 B'),
+            new BlockLayout('11325e40-1b6b-4820-8d4b-548a572acd02', 'BL 129', 'bl-129', 'BL 129 B'),
         ];
 
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);

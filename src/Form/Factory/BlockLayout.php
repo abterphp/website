@@ -9,6 +9,7 @@ use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Form\Container\FormGroup;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Textarea;
+use AbterPhp\Framework\Form\Extra\Help;
 use AbterPhp\Framework\Form\IForm;
 use AbterPhp\Framework\Form\Label\Label;
 use AbterPhp\Framework\I18n\ITranslator;
@@ -43,6 +44,7 @@ class BlockLayout extends Base
 
         $this->createForm($action, $method)
             ->addDefaultElements()
+            ->addName($entity)
             ->addIdentifier($entity)
             ->addBody($entity)
             ->addDefaultButtons($showUrl);
@@ -59,16 +61,28 @@ class BlockLayout extends Base
      *
      * @return $this
      */
-    protected function addIdentifier(Entity $entity): BlockLayout
+    protected function addName(Entity $entity): BlockLayout
     {
-        $input = new Input(
-            'identifier',
-            'identifier',
-            $entity->getIdentifier()
-        );
-        $label = new Label('identifier', 'website:blockLayoutIdentifier');
+        $input = new Input('name', 'name', $entity->getName());
+        $label = new Label('name', 'website:blockLayoutName');
 
         $this->form[] = new FormGroup($input, $label);
+
+        return $this;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
+    protected function addIdentifier(Entity $entity): BlockLayout
+    {
+        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $label = new Label('identifier', 'website:blockLayoutIdentifier');
+        $help  = new Help('website:blockLayoutIdentifierHelp');
+
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }

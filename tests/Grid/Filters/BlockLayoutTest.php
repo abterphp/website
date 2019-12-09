@@ -32,6 +32,7 @@ class BlockLayoutTest extends TestCase
         $html = (string)$sut;
 
         $this->assertStringContainsString('<div class="hidable">', $html);
+        $this->assertStringContainsString('filter-name', $html);
         $this->assertStringContainsString('filter-identifier', $html);
     }
 }

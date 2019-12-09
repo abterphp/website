@@ -20,6 +20,8 @@ class BlockLayout extends Filters
     {
         parent::__construct($intents, $attributes, $tag);
 
+        $this->nodes[] = new ExactFilter('name', 'website:blockLayoutName');
+
         $this->nodes[] = new ExactFilter('identifier', 'website:blockLayoutIdentifier');
     }
 }

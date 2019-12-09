@@ -67,8 +67,10 @@ class BlockLayoutTest extends TestCase
 
     public function testCreate()
     {
+        $name       = 'Bar';
         $identifier = 'bar';
         $postData   = [
+            'name'       => $name,
             'identifier' => $identifier,
         ];
 
@@ -91,8 +93,10 @@ class BlockLayoutTest extends TestCase
 
         $entity = $this->sut->createEntity($id);
 
+        $name       = 'Bar';
         $identifier = 'bar';
         $postData   = [
+            'name'       => $name,
             'identifier' => $identifier,
         ];
 

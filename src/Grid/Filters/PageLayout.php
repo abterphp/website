@@ -6,6 +6,7 @@ namespace AbterPhp\Website\Grid\Filters;
 
 use AbterPhp\Framework\Grid\Component\Filters;
 use AbterPhp\Framework\Grid\Filter\ExactFilter;
+use AbterPhp\Framework\Grid\Filter\LikeFilter;
 
 class PageLayout extends Filters
 {
@@ -19,6 +20,8 @@ class PageLayout extends Filters
     public function __construct(array $intents = [], array $attributes = [], ?string $tag = null)
     {
         parent::__construct($intents, $attributes, $tag);
+
+        $this->nodes[] = new LikeFilter('name', 'website:pageLayoutName');
 
         $this->nodes[] = new ExactFilter('identifier', 'website:pageLayoutIdentifier');
     }

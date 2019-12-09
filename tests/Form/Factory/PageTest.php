@@ -140,8 +140,8 @@ class PageTest extends TestCase
         $meta        = new Entity\Meta($description, '', '', '', '', '', '', '');
 
         $layouts = [
-            new PageLayout('1ee4a806-724c-447b-951a-6594e6d12fbd', 'bl-126', 'BL 126', null),
-            new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'bl-129', 'BL 129', null),
+            new PageLayout('1ee4a806-724c-447b-951a-6594e6d12fbd', 'BL 126', 'bl-126', 'BL 126 B', null),
+            new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'BL 129', 'bl-129', 'BL 129 B', null),
         ];
 
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
@@ -197,8 +197,8 @@ class PageTest extends TestCase
         $meta        = new Entity\Meta($description, '', '', '', '', '', '', '');
 
         $layouts = [
-            new PageLayout('1ee4a806-724c-447b-951a-6594e6d12fbd', 'bl-126', 'BL 126', null),
-            new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'bl-129', 'BL 129', null),
+            new PageLayout('1ee4a806-724c-447b-951a-6594e6d12fbd', 'BL 126', 'bl-126', 'BL 126 B', null),
+            new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'BL 129', 'bl-129', 'BL 129 B', null),
         ];
 
         $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
