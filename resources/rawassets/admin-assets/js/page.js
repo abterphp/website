@@ -5,19 +5,21 @@ $(document).ready(function () {
         publishBtn = $('#publish-btn');
 
     isDraftContainer.hide();
-    if (isDraft.attr('checked')) {
+    if (isDraft.checked) {
         publishBtn
             .show()
             .removeClass('hidden')
-            .click(function() {
-                isDraft.attr('checked', false);
+            .click(function(e) {
+                isDraft.prop('checked', false);
+                e.preventDefault();
             });
     } else {
         draftBtn
             .show()
             .removeClass('hidden')
-            .click(function() {
-                isDraft.attr('checked', true);
+            .click(function(e) {
+                isDraft.prop('checked', true);
+                e.preventDefault();
             });
     }
 });

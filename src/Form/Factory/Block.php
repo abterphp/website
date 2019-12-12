@@ -176,7 +176,7 @@ class Block extends Base
         $options[] = new Option('', 'framework:none', false);
         foreach ($allLayouts as $layout) {
             $isSelected = $layout->getId() === $layoutId;
-            $options[]  = new Option($layout->getId(), $layout->getIdentifier(), $isSelected);
+            $options[]  = new Option($layout->getId(), $layout->getName(), $isSelected);
         }
 
         return $options;

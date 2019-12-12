@@ -79,7 +79,7 @@ class Page extends RepoServiceAbstract
         $lead = empty($postData['lead']) ? '' : (string)$postData['lead'];
         $body = empty($postData['body']) ? '' : (string)$postData['body'];
 
-        $isDraft = empty($postData['is_draft']);
+        $isDraft = !empty($postData['is_draft']);
 
         $category = null;
         if (!empty($postData['category_id'])) {

@@ -297,7 +297,7 @@ class Page extends Base
         $options[] = new Option('', 'framework:none', false);
         foreach ($allCategories as $category) {
             $isSelected = $category->getId() === $categoryId;
-            $options[]  = new Option($category->getId(), $category->getIdentifier(), $isSelected);
+            $options[]  = new Option($category->getId(), $category->getName(), $isSelected);
         }
 
         return $options;
@@ -342,9 +342,8 @@ class Page extends Base
         $options   = [];
         $options[] = new Option('', 'framework:none', false);
         foreach ($allLayouts as $layout) {
-            $content    = $layout->getIdentifier();
             $isSelected = $layout->getId() === $layoutId;
-            $options[]  = new Option($layout->getId(), $content, $isSelected);
+            $options[]  = new Option($layout->getId(), $layout->getName(), $isSelected);
         }
 
         return $options;
