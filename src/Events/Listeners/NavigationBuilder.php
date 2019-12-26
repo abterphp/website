@@ -46,6 +46,7 @@ class NavigationBuilder
         $dropdown[] = $this->createPageLayoutItem();
         $dropdown[] = $this->createBlockItem();
         $dropdown[] = $this->createBlockLayoutItem();
+        $dropdown[] = $this->createContentListItem();
 
         $item   = $this->createPageItem();
         $item->setIntent(Item::INTENT_DROPDOWN);
@@ -139,6 +140,24 @@ class NavigationBuilder
 
         $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_BLOCK_LAYOUTS, [], $icon);
         $resource = $this->getAdminResource(Routes::ROUTE_BLOCK_LAYOUTS);
+
+        $item = new Item($button);
+        $item->setResource($resource);
+
+        return $item;
+    }
+
+    /**
+     * @return Item
+     * @throws \Opulence\Routing\Urls\UrlException
+     */
+    protected function createContentListItem(): Item
+    {
+        $text = 'website:contentLists';
+        $icon = 'format_align_left';
+
+        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_CONTENT_LISTS, [], $icon);
+        $resource = $this->getAdminResource(Routes::ROUTE_CONTENT_LISTS);
 
         $item = new Item($button);
         $item->setResource($resource);

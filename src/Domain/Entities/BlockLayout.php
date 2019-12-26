@@ -31,7 +31,7 @@ class BlockLayout implements IStringerEntity
     public function __construct(string $id, string $name, string $identifier, string $body)
     {
         $this->id         = $id;
-        $this->name         = $name;
+        $this->name       = $name;
         $this->identifier = $identifier;
         $this->body       = $body;
     }

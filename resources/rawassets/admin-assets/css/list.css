@@ -1,0 +1,16 @@
+#new-items {
+    margin: 0 0 1em 3em;
+}
+
+#existing-items {
+    margin: 0 0 1em 3em;
+    position: relative;
+}
+
+#add-item-container {
+    margin: 1em 0;
+}
+
+.item-template {
+    margin: 1em 0;
+}

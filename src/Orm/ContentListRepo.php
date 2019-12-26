@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
-use AbterPhp\Website\Domain\Entities\Page as Entity;
-use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
+use AbterPhp\Website\Domain\Entities\ContentList as Entity;
+use AbterPhp\Website\Orm\DataMappers\ContentListSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
-class PageRepo extends Repository implements IGridRepo
+class ContentListRepo extends Repository implements IGridRepo
 {
     /**
      * @param int      $limitFrom
@@ -37,29 +37,5 @@ class PageRepo extends Repository implements IGridRepo
     {
         /** @see DataMapper::getByIdentifier() */
         return $this->getFromDataMapper('getByIdentifier', [$identifier]);
-    }
-
-    /**
-     * @param string $identifier
-     *
-     * @return Entity|null
-     * @throws \Opulence\Orm\OrmException
-     */
-    public function getWithLayout(string $identifier): ?Entity
-    {
-        /** @see DataMapper::getWithLayout() */
-        return $this->getFromDataMapper('getWithLayout', [$identifier]);
-    }
-
-    /**
-     * @param string[] $identifiers
-     *
-     * @return Entity[]
-     * @throws \Opulence\Orm\OrmException
-     */
-    public function getByCategoryIdentifiers(array $identifiers): array
-    {
-        /** @see DataMapper::getByCategoryIdentifiers() */
-        return $this->getFromDataMapper('getByCategoryIdentifiers', [$identifiers]);
     }
 }

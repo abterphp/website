@@ -29,11 +29,12 @@ $router->group(
             ],
             function (Router $router) {
                 $entities = [
+                    'blocks'         => 'Block',
+                    'blocklayouts'   => 'BlockLayout',
+                    'lists'          => 'ContentList',
                     'pages'          => 'Page',
                     'pagelayouts'    => 'PageLayout',
                     'pagecategories' => 'PageCategory',
-                    'blocks'         => 'Block',
-                    'blocklayouts'   => 'BlockLayout',
                 ];
 
                 foreach ($entities as $route => $controllerName) {
@@ -41,6 +42,7 @@ $router->group(
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\Block::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\BlockLayout::show() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\ContentList::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\Page::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\PageLayout::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\PageCategory::show() */
@@ -62,7 +64,8 @@ $router->group(
                     );
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Block::new() */
-                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::new() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\BlockLayout::new() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\ContentList::new() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Page::new() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::new() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::new() */
@@ -83,7 +86,8 @@ $router->group(
                     );
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Block::create() */
-                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\BlockLayout::create() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\ContentList::create() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Page::create() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::create() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::create() */
@@ -104,7 +108,8 @@ $router->group(
                     );
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Block::edit() */
-                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::edit() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\BlockLayout::edit() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\ContentList::edit() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\Page::edit() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::edit() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::edit() */
@@ -126,6 +131,7 @@ $router->group(
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\Block::update() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\BlockLayout::update() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\ContentList::update() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\Page::update() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageLayout::update() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageCategory::update() */
@@ -147,6 +153,7 @@ $router->group(
 
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\Block::delete() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\BlockLayout::delete() */
+                    /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\ContentList::delete() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\Page::delete() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageLayout::delete() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageCategory::delete() */
