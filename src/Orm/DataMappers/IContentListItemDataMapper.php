@@ -12,7 +12,7 @@ interface IContentListItemDataMapper extends IDataMapper
     /**
      * @param string $listId
      *
-     * @return Entity[]]
+     * @return Entity[]
      */
     public function getByListId(string $listId): array;
 

@@ -22,7 +22,7 @@ use AbterPhp\Framework\Html\Tag;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
-use AbterPhp\Website\Domain\Entities\ContentListItem;
+use AbterPhp\Website\Domain\Entities\ContentListItem; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use AbterPhp\Website\Domain\Entities\ContentListType;
 use AbterPhp\Website\Form\Factory\ContentList\Item;
 use AbterPhp\Website\Orm\ContentListItemRepo as ItemRepo;
