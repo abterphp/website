@@ -69,7 +69,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) GROUP BY pc.id'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -92,7 +92,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) GROUP BY pc.id LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -118,7 +118,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $orders     = ['pc.identifier ASC'];
         $conditions = ['pc.identifier LIKE \'abc%\'', 'pc.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.identifier LIKE \'abc%\') AND (pc.identifier LIKE \'%bca\') GROUP BY pc.id ORDER BY pc.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.identifier LIKE \'abc%\') AND (pc.identifier LIKE \'%bca\') GROUP BY pc.id ORDER BY pc.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -141,7 +141,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -167,7 +167,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $ugId0 = '92dcb09a-eb3b-49b8-96c2-1a37818c780c';
         $ugId1 = '2f962fe9-7e5b-4e06-a02f-bcd68152a83c';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -191,7 +191,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted = 0) AND (identifier = :identifier) GROUP BY pc.id'; // phpcs:ignore
+        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (identifier = :identifier) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
@@ -214,7 +214,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'bar';
         $name       = 'foo';
 
-        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values0    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
@@ -249,7 +249,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
 
         $this->sut->setIdGenerator(MockIdGeneratorFactory::create($this, $ugpc0, $ugpc1));
 
-        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql0       = 'UPDATE page_categories AS page_categories SET name = ?, identifier = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values0    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],

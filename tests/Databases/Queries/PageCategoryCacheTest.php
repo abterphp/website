@@ -25,7 +25,7 @@ class PageCategoryCacheTest extends QueryTestCase
         $identifiers = ['foo', 'bar'];
         $cacheTime   = 'baz';
 
-        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted = 0) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
+        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted_at IS NULL) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
         $valuesToBind = [
             [$identifiers[0], \PDO::PARAM_STR],
             [$identifiers[1], \PDO::PARAM_STR],
@@ -45,7 +45,7 @@ class PageCategoryCacheTest extends QueryTestCase
         $identifiers = ['foo', 'bar'];
         $cacheTime   = 'baz';
 
-        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted = 0) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
+        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted_at IS NULL) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
         $valuesToBind = [
             [$identifiers[0], \PDO::PARAM_STR],
             [$identifiers[1], \PDO::PARAM_STR],
@@ -69,7 +69,7 @@ class PageCategoryCacheTest extends QueryTestCase
         $this->expectException(Database::class);
         $this->expectExceptionCode($errorInfo[1]);
 
-        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted = 0) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
+        $sql          = 'SELECT COUNT(*) AS count FROM pages LEFT JOIN page_categories AS page_categories ON page_categories.id = pages.category_id WHERE (pages.deleted_at IS NULL) AND (page_categories.identifier IN (?,?)) AND (pages.updated_at > ?)'; // phpcs:ignore
         $valuesToBind = [
             [$identifiers[0], \PDO::PARAM_STR],
             [$identifiers[1], \PDO::PARAM_STR],

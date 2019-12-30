@@ -145,7 +145,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
                 ]
             )
             ->where('id = ?')
-            ->andWhere('deleted = 0')
+            ->andWhere('deleted_at IS NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 
         $statement = $this->writeConnection->prepare($query->getSql());
@@ -182,7 +182,7 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
                 'block_layouts.body'
             )
             ->from('block_layouts')
-            ->where('block_layouts.deleted = 0');
+            ->where('block_layouts.deleted_at IS NULL');
 
         return $query;
     }

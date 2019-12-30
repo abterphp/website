@@ -105,7 +105,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -134,7 +134,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -166,7 +166,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['blocks.identifier ASC'];
         $conditions = ['blocks.identifier LIKE \'abc%\'', 'blocks.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) AND (blocks.identifier LIKE \'abc%\') AND (blocks.identifier LIKE \'%bca\') ORDER BY blocks.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) AND (blocks.identifier LIKE \'abc%\') AND (blocks.identifier LIKE \'%bca\') ORDER BY blocks.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -195,7 +195,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) AND (blocks.id = :block_id)'; // phpcs:ignore
+        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) AND (blocks.id = :block_id)'; // phpcs:ignore
         $values       = ['block_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -224,7 +224,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted = 0) AND (blocks.identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) AND (blocks.identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => [$identifier, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -253,7 +253,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, COALESCE(layouts.body, blocks.layout) AS layout FROM blocks LEFT JOIN block_layouts AS layouts ON layouts.id = blocks.layout_id WHERE (blocks.deleted = 0) AND (layouts.deleted = 0 OR layouts.deleted IS NULL) AND (blocks.identifier IN (?))'; // phpcs:ignore
+        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, COALESCE(layouts.body, blocks.layout) AS layout FROM blocks LEFT JOIN block_layouts AS layouts ON layouts.id = blocks.layout_id WHERE (blocks.deleted_at IS NULL) AND (layouts.deleted_at IS NULL OR layouts.deleted IS NULL) AND (blocks.identifier IN (?))'; // phpcs:ignore
         $values       = [[$identifier, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -291,7 +291,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],
@@ -316,7 +316,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = '';
         $layoutId   = 'd7a7bcad-71bc-40a1-8a0d-dc2b28a54811';
 
-        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql       = 'UPDATE blocks AS blocks SET identifier = ?, title = ?, body = ?, layout = ?, layout_id = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$identifier, \PDO::PARAM_STR],
             [$title, \PDO::PARAM_STR],

@@ -152,7 +152,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         $query = (new QueryBuilder())
             ->update('page_categories', 'page_categories', $columnNamesToValues)
             ->where('id = ?')
-            ->andWhere('deleted = 0')
+            ->andWhere('deleted_at IS NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 
         $sql    = $query->getSql();
@@ -280,7 +280,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
             )
             ->from('page_categories', 'pc')
             ->leftJoin('user_groups_page_categories', 'ugpc', 'ugpc.page_category_id = pc.id')
-            ->where('pc.deleted = 0')
+            ->where('pc.deleted_at IS NULL')
             ->groupBy('pc.id');
 
         return $query;

@@ -34,8 +34,8 @@ class PageCategoryAuthLoader implements IAuthLoader
         $query = (new QueryBuilder())
             ->select('ug.identifier AS v0', 'pc.identifier AS v1')
             ->from('user_groups_page_categories', 'ugpc')
-            ->innerJoin('page_categories', 'pc', 'ugpc.page_category_id = pc.id AND pc.deleted = 0')
-            ->innerJoin('user_groups', 'ug', 'ugpc.user_group_id = ug.id AND ug.deleted = 0')
+            ->innerJoin('page_categories', 'pc', 'ugpc.page_category_id = pc.id AND pc.deleted_at IS NULL')
+            ->innerJoin('user_groups', 'ug', 'ugpc.user_group_id = ug.id AND ug.deleted_at IS NULL')
         ;
 
         $connection = $this->connectionPool->getReadConnection();

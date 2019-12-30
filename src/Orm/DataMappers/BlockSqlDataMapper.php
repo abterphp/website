@@ -185,7 +185,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
                 ]
             )
             ->where('id = ?')
-            ->andWhere('deleted = 0')
+            ->andWhere('deleted_at IS NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
         $statement = $this->writeConnection->prepare($query->getSql());
@@ -228,7 +228,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
                 'blocks.layout'
             )
             ->from('blocks')
-            ->where('blocks.deleted = 0');
+            ->where('blocks.deleted_at IS NULL');
 
         return $query;
     }
@@ -250,8 +250,8 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
             )
             ->from('blocks')
             ->leftJoin('block_layouts', 'layouts', 'layouts.id = blocks.layout_id')
-            ->where('blocks.deleted = 0')
-            ->andWhere('layouts.deleted = 0 OR layouts.deleted IS NULL');
+            ->where('blocks.deleted_at IS NULL')
+            ->andWhere('layouts.deleted_at IS NULL OR layouts.deleted IS NULL');
 
         return $query;
     }

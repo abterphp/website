@@ -40,7 +40,7 @@ class PageCategoryCache
             ->select('COUNT(*) AS count')
             ->from('pages')
             ->leftJoin('page_categories', 'page_categories', 'page_categories.id = pages.category_id')
-            ->where('pages.deleted = 0')
+            ->where('pages.deleted_at IS NULL')
             ->andWhere($conditions->in('page_categories.identifier', $identifiers))
             ->andWhere('pages.updated_at > ?')
             ->addUnnamedPlaceholderValue($cacheTime, \PDO::PARAM_STR)

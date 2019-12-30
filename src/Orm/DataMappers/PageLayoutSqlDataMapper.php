@@ -139,7 +139,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
         $query = (new QueryBuilder())
             ->update('page_layouts', 'page_layouts', $columnNamesToValues)
             ->where('id = ?')
-            ->andWhere('deleted = 0')
+            ->andWhere('deleted_at IS NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 
         $statement = $this->writeConnection->prepare($query->getSql());
@@ -246,7 +246,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
                 'page_layouts.js_files'
             )
             ->from('page_layouts')
-            ->where('page_layouts.deleted = 0');
+            ->where('page_layouts.deleted_at IS NULL');
 
         return $query;
     }

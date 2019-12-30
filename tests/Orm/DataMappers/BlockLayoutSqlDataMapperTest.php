@@ -71,7 +71,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -89,7 +89,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -110,7 +110,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['block_layouts.identifier ASC'];
         $conditions = ['block_layouts.identifier LIKE \'abc%\'', 'block_layouts.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) AND (block_layouts.identifier LIKE \'abc%\') AND (block_layouts.identifier LIKE \'%bca\') ORDER BY block_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) AND (block_layouts.identifier LIKE \'abc%\') AND (block_layouts.identifier LIKE \'%bca\') ORDER BY block_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -128,7 +128,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) AND (block_layouts.id = :layout_id)'; // phpcs:ignore
+        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) AND (block_layouts.id = :layout_id)'; // phpcs:ignore
         $values       = ['layout_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -146,7 +146,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted = 0) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -164,7 +164,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql       = 'UPDATE block_layouts AS block_layouts SET name = ?, identifier = ?, body = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql       = 'UPDATE block_layouts AS block_layouts SET name = ?, identifier = ?, body = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],

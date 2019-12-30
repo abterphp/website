@@ -195,7 +195,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
         $query = (new QueryBuilder())
             ->update('pages', 'pages', $columnNamesToValues)
             ->where('id = ?')
-            ->andWhere('deleted = 0')
+            ->andWhere('deleted_at IS NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 
         $sql    = $query->getSql();
@@ -432,7 +432,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.layout_id'
             )
             ->from('pages')
-            ->where('pages.deleted = 0');
+            ->where('pages.deleted_at IS NULL');
 
         return $query;
     }
@@ -456,7 +456,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             )
             ->from('pages')
             ->innerJoin('page_categories', 'page_categories', 'page_categories.id = pages.category_id')
-            ->where('pages.deleted = 0');
+            ->where('pages.deleted_at IS NULL');
 
         return $query;
     }
@@ -477,7 +477,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             )
             ->from('pages')
             ->leftJoin('page_categories', 'categories', 'categories.id = pages.category_id')
-            ->where('pages.deleted = 0');
+            ->where('pages.deleted_at IS NULL');
 
         return $query;
     }
@@ -513,7 +513,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.js_files'
             )
             ->from('pages')
-            ->where('pages.deleted = 0');
+            ->where('pages.deleted_at IS NULL');
 
         return $query;
     }
@@ -555,8 +555,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             )
             ->from('pages')
             ->leftJoin('page_layouts', 'layouts', 'layouts.id = pages.layout_id')
-            ->where('pages.deleted = 0')
-            ->andWhere('layouts.deleted = 0 OR layouts.deleted IS NULL');
+            ->where('pages.deleted_at IS NULL')
+            ->andWhere('layouts.deleted_at IS NULL OR layouts.deleted IS NULL');
 
         return $query;
     }

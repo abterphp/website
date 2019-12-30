@@ -75,7 +75,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -108,7 +108,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -144,7 +144,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['page_layouts.identifier ASC'];
         $conditions = ['page_layouts.identifier LIKE \'abc%\'', 'page_layouts.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -177,7 +177,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
         $values       = ['layout_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -210,7 +210,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted = 0) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
@@ -243,7 +243,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted = 0)'; // phpcs:ignore
+        $sql       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
