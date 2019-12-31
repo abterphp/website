@@ -46,6 +46,7 @@ CREATE TABLE `lists`
     `type_id`    char(36)     NOT NULL,
     `name`       varchar(160) NOT NULL,
     `identifier` varchar(160) NOT NULL,
+    `classes`    varchar(255) NOT NULL,
     `protected`  bool         NOT NULL,
     `with_image` bool         NOT NULL,
     `with_links` bool         NOT NULL,

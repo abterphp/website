@@ -77,7 +77,7 @@ class ContentList extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', false, false, false, false);
+        return new Entity($entityId, '', '', '', '', false, false, false, false);
     }
 
     /**
@@ -102,5 +102,6 @@ class ContentList extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/list.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
     }
 }

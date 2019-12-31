@@ -8,8 +8,8 @@ use AbterPhp\Admin\Form\Factory\Base;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Form\Component\Option;
-use AbterPhp\Framework\Form\Container\CheckboxGroup;
 use AbterPhp\Framework\Form\Container\FormGroup;
+use AbterPhp\Framework\Form\Container\Hideable;
 use AbterPhp\Framework\Form\Element\Input;
 use AbterPhp\Framework\Form\Element\Select;
 use AbterPhp\Framework\Form\Extra\DefaultButtons;
@@ -24,7 +24,8 @@ use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use AbterPhp\Website\Domain\Entities\ContentListType;
-use AbterPhp\Website\Form\Factory\ContentList\Item;
+use AbterPhp\Website\Form\Factory\ContentList\Advanced as AdvancedFactory;
+use AbterPhp\Website\Form\Factory\ContentList\Item as ItemFactory;
 use AbterPhp\Website\Orm\ContentListItemRepo as ItemRepo;
 use AbterPhp\Website\Orm\ContentListTypeRepo as TypeRepo;
 use Casbin\Enforcer;
@@ -45,6 +46,12 @@ class ContentList extends Base
     /** @var ItemRepo */
     protected $itemRepo;
 
+    /** @var AdvancedFactory */
+    protected $advancedFactory;
+
+    /** @var ItemFactory */
+    protected $itemFactory;
+
     /** @var Enforcer */
     protected $enforcer;
 
@@ -57,24 +64,30 @@ class ContentList extends Base
     /**
      * ContentList constructor.
      *
-     * @param ISession    $session
-     * @param ITranslator $translator
-     * @param TypeRepo    $typeRepo
-     * @param ItemRepo    $itemRepo
-     * @param Enforcer    $enforcer
+     * @param ISession        $session
+     * @param ITranslator     $translator
+     * @param TypeRepo        $typeRepo
+     * @param ItemRepo        $itemRepo
+     * @param AdvancedFactory $advancedFactory
+     * @param ItemFactory     $itemFactory
+     * @param Enforcer        $enforcer
      */
     public function __construct(
         ISession $session,
         ITranslator $translator,
         TypeRepo $typeRepo,
         ItemRepo $itemRepo,
+        AdvancedFactory $advancedFactory,
+        ItemFactory $itemFactory,
         Enforcer $enforcer
     ) {
         parent::__construct($session, $translator);
 
-        $this->typeRepo = $typeRepo;
-        $this->itemRepo = $itemRepo;
-        $this->enforcer = $enforcer;
+        $this->typeRepo        = $typeRepo;
+        $this->itemRepo        = $itemRepo;
+        $this->advancedFactory = $advancedFactory;
+        $this->itemFactory     = $itemFactory;
+        $this->enforcer        = $enforcer;
     }
 
     /**
@@ -117,10 +130,7 @@ class ContentList extends Base
             ->addTypeId($entity)
             ->addName($entity)
             ->addIdentifier($entity)
-            ->addProtected($entity)
-            ->addWithImage($entity)
-            ->addWithLinks($entity)
-            ->addWithHtml($entity)
+            ->addAdvanced($entity)
             ->addExistingItems($entity)
             ->addNewItems($entity)
             ->addAddBtn($entity)
@@ -249,121 +259,20 @@ class ContentList extends Base
      *
      * @return $this
      */
-    protected function addProtected(Entity $entity): ContentList
+    protected function addAdvanced(Entity $entity): ContentList
     {
         // Protected can not be set by non-advanced users
-        if (!$this->isAdvancedAllowed()) {
+        if (!$this->isAdvancedAllowed() && $entity->getId()) {
             return $this;
         }
 
-        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
-        if ($entity->isProtected()) {
-            $attributes[Html5::ATTR_CHECKED] = null;
-        }
-        $input = new Input(
-            'protected',
-            'protected',
-            '1',
-            [],
-            $attributes
-        );
-        $label = new Label('protected', 'website:contentListProtected');
-        $help  = new Help('website:contentListProtectedHelp');
-
-        $this->form[] = new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'protected-container']);
-
-        return $this;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addWithImage(Entity $entity): ContentList
-    {
-        // With image setting of protected lists can only be modified by advanced users
-        if ($entity->isProtected() && !$this->isAdvancedAllowed()) {
-            return $this;
+        $hideable   = new Hideable($this->translator->translate('website:contentListAdvanced'));
+        $components = $this->advancedFactory->create($entity);
+        foreach ($components as $component) {
+            $hideable[] = $component;
         }
 
-        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
-        if ($entity->isWithImage()) {
-            $attributes[Html5::ATTR_CHECKED] = null;
-        }
-        $input = new Input(
-            'with_image',
-            'with_image',
-            '1',
-            [],
-            $attributes
-        );
-        $label = new Label('with_image', 'website:contentListWithImage');
-        $help  = new Help('website:contentListWithImageHelp');
-
-        $this->form[] = new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'withImage-container']);
-
-        return $this;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addWithLinks(Entity $entity): ContentList
-    {
-        // With links setting of protected lists can only be modified by advanced users
-        if ($entity->isProtected() && !$this->isAdvancedAllowed()) {
-            return $this;
-        }
-
-        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
-        if ($entity->isWithLinks()) {
-            $attributes[Html5::ATTR_CHECKED] = null;
-        }
-        $input = new Input(
-            'with_links',
-            'with_links',
-            '1',
-            [],
-            $attributes
-        );
-        $label = new Label('with_links', 'website:contentListWithLinks');
-        $help  = new Help('website:contentListWithLinksHelp');
-
-        $this->form[] = new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'withLinks-container']);
-
-        return $this;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addWithHtml(Entity $entity): ContentList
-    {
-        // With HTML setting of protected lists can only be modified by advanced users
-        if ($entity->isProtected() && !$this->isAdvancedAllowed()) {
-            return $this;
-        }
-
-        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
-        if ($entity->isWithHtml()) {
-            $attributes[Html5::ATTR_CHECKED] = null;
-        }
-        $input = new Input(
-            'with_html',
-            'with_html',
-            '1',
-            [],
-            $attributes
-        );
-        $label = new Label('with_html', 'website:contentListWithHtml');
-        $help  = new Help('website:contentListWithHtmlHelp');
-
-        $this->form[] = new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'withHtml-container']);
+        $this->form[] = $hideable;
 
         return $this;
     }
@@ -380,18 +289,22 @@ class ContentList extends Base
             return $this;
         }
 
+        $isWithLinks = $entity->isWithLinks();
+        $isWithImage = $entity->isWithImage();
+        $isWithHtml  = $entity->isWithHtml();
+
         $containerAttribs = [Html5::ATTR_ID => static::EXISTING_ITEMS_CONTAINER_ID];
         $container        = new Component(null, [], $containerAttribs, Html5::TAG_SECTION);
-
-        $itemFormFactory = new Item($entity->isProtected(), $entity->isWithImage(), $entity->isWithLinks());
 
         /** @var ContentListItem[] $items */
         $items = $this->itemRepo->getByListId($entity->getId());
         foreach ($items as $item) {
             $fieldset   = new Component(null, [], [], Html5::TAG_FIELDSET);
             $fieldset[] = new Tag($item->getName(), [], [], Html5::TAG_LEGEND);
-            foreach ($itemFormFactory->create($item) as $node) {
-                $fieldset[] = $node;
+
+            $components = $this->itemFactory->create($item, $isWithLinks, $isWithImage, $isWithHtml);
+            foreach ($components as $component) {
+                $fieldset[] = $component;
             }
             $container[] = $fieldset;
         }
@@ -417,14 +330,19 @@ class ContentList extends Base
             return $this;
         }
 
+        $isWithLinks = $entity->isWithLinks();
+        $isWithImage = $entity->isWithImage();
+        $isWithHtml  = $entity->isWithHtml();
+
         $containerAttribs = [Html5::ATTR_ID => static::NEW_ITEMS_CONTAINER_ID];
         $container        = new Component(null, [], $containerAttribs, Html5::TAG_SECTION);
 
-        $itemAttribs     = [Html5::ATTR_CLASS => static::ITEM_TEMPLATE_CLASS];
-        $item            = new Component(null, [], $itemAttribs, Html5::TAG_FIELDSET);
-        $item[]          = new Tag(static::NEW_ITEM_NAME, [], [], Html5::TAG_LEGEND);
-        $itemFormFactory = new Item($entity->isProtected(), $entity->isWithImage(), $entity->isWithLinks());
-        foreach ($itemFormFactory->create() as $component) {
+        $itemAttribs = [Html5::ATTR_CLASS => static::ITEM_TEMPLATE_CLASS];
+        $item        = new Component(null, [], $itemAttribs, Html5::TAG_FIELDSET);
+        $item[]      = new Tag(static::NEW_ITEM_NAME, [], [], Html5::TAG_LEGEND);
+
+        $components = $this->itemFactory->create(null, $isWithLinks, $isWithImage, $isWithHtml);
+        foreach ($components as $component) {
             $item[] = $component;
         }
 

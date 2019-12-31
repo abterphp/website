@@ -2,6 +2,9 @@
 
 return [
     'contentList'               => 'Lista',
+    'contentListAdvanced'       => 'Haladó beállítások',
+    'contentListClasses'        => 'HTML class-ok',
+    'contentListClassesHelp'    => 'Szóközzel határolt HTML class lista',
     'contentListIdentifier'     => 'Azonosító',
     'contentListIdentifierHelp' => 'Automatikusan generálódik a névből',
     'contentListName'           => 'Név',

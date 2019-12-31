@@ -18,16 +18,7 @@ use AbterPhp\Website\Domain\Entities\ContentListItem as Entity;
 class Item
 {
     /** @var int */
-    protected static $existingCount = 1;
-
-    /** @var bool */
-    protected $protected;
-
-    /** @var bool */
-    protected $withImage;
-
-    /** @var bool */
-    protected $withLinks;
+    protected $count = 1;
 
     /** @var string */
     protected $id;
@@ -36,28 +27,18 @@ class Item
     protected $hiddenAttribs = [Html5::ATTR_TYPE => Input::TYPE_HIDDEN];
 
     /**
-     * Item constructor.
-     *
-     * @param bool $protected
-     * @param bool $withImage
-     * @param bool $withLinks
-     */
-    public function __construct(bool $protected, bool $withImage, bool $withLinks)
-    {
-        $this->protected = $protected;
-        $this->withImage = $withImage;
-        $this->withLinks = $withLinks;
-    }
-
-    /**
      * @param Entity|null $entity
+     * @param bool        $isWithLinks
+     * @param bool        $isWithImage
+     * @param bool        $isWithHtml
      *
      * @return INode[]
      */
-    public function create(?Entity $entity = null): array
+    public function create(?Entity $entity, bool $isWithLinks, bool $isWithImage, bool $isWithHtml): array
     {
-        $count    = static::$existingCount++;
-        $this->id = $entity ? "existing{$count}" : 'new';
+        $this->count++;
+
+        $this->id = $entity ? "existing{$this->count}" : 'new';
 
         $components = [];
 
@@ -66,12 +47,12 @@ class Item
         }
 
         $components[] = $this->addName($entity);
-        $components[] = $this->addNameHref($entity);
-        $components[] = $this->addBody($entity);
-        $components[] = $this->addBodyHref($entity);
-        $components[] = $this->addImgSrc($entity);
-        $components[] = $this->addImgAlt($entity);
-        $components[] = $this->addImgHref($entity);
+        $components[] = $this->addNameHref($entity, $isWithLinks);
+        $components[] = $this->addBody($entity, $isWithHtml);
+        $components[] = $this->addBodyHref($entity, $isWithLinks);
+        $components[] = $this->addImgSrc($entity, $isWithImage);
+        $components[] = $this->addImgAlt($entity, $isWithImage);
+        $components[] = $this->addImgHref($entity, $isWithLinks, $isWithHtml);
         $components[] = $this->addIsDeleted();
 
         return $components;
@@ -105,12 +86,13 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithLinks
      *
      * @return INode
      */
-    protected function addNameHref(?Entity $entity): INode
+    protected function addNameHref(?Entity $entity, bool $isWithLinks): INode
     {
-        if (!$this->withLinks) {
+        if (!$isWithLinks) {
             return new Input(
                 "item_name_href_{$this->id}",
                 "item_name_href[{$this->id}]",
@@ -131,14 +113,19 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithHtml
      *
      * @return INode
      */
-    protected function addBody(?Entity $entity): INode
+    protected function addBody(?Entity $entity, bool $isWithHtml): INode
     {
-        $body = $entity ? $entity->getBody() : '';
+        $body    = $entity ? $entity->getBody() : '';
+        $attribs = [];
+        if ($isWithHtml) {
+            $attribs = [Html5::ATTR_CLASS => 'wysiwyg', Html5::ATTR_ROWS => '15'];
+        }
 
-        $input = new Textarea("item_body_{$this->id}", "{$this->id}[body]", $body);
+        $input = new Textarea("item_body_{$this->id}", "{$this->id}[body]", $body, [], $attribs);
         $label = new Label("item_body_{$this->id}", 'website:contentListItemBody');
         $help  = new Help('website:contentListItemBodyHelp');
 
@@ -147,12 +134,13 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addBodyHref(?Entity $entity): INode
+    protected function addBodyHref(?Entity $entity, bool $isWithImage): INode
     {
-        if (!$this->withLinks) {
+        if (!$isWithImage) {
             return new Input("item_body_href_{$this->id}", "{$this->id}[body_href]", '', [], $this->hiddenAttribs);
         }
 
@@ -167,12 +155,13 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgSrc(?Entity $entity): INode
+    protected function addImgSrc(?Entity $entity, bool $isWithImage): INode
     {
-        if (!$this->withImage) {
+        if (!$isWithImage) {
             return new Input("item_img_src_{$this->id}", "{$this->id}[img_src]", '', [], $this->hiddenAttribs);
         }
 
@@ -187,12 +176,13 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgAlt(?Entity $entity): INode
+    protected function addImgAlt(?Entity $entity, bool $isWithImage): INode
     {
-        if (!$this->withImage) {
+        if (!$isWithImage) {
             return new Input("item_img_alt_{$this->id}", "{$this->id}[img_alt]", '', [], $this->hiddenAttribs);
         }
 
@@ -207,12 +197,14 @@ class Item
 
     /**
      * @param Entity|null $entity
+     * @param bool        $isWithLinks
+     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgHref(?Entity $entity): INode
+    protected function addImgHref(?Entity $entity, bool $isWithLinks, bool $isWithImage): INode
     {
-        if (!$this->withImage || !$this->withLinks) {
+        if (!$isWithLinks || !$isWithImage) {
             return new Input("item_img_href_{$this->id}", "{$this->id}[img_href]", '', [], $this->hiddenAttribs);
         }
 

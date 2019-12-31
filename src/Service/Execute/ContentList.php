@@ -66,7 +66,7 @@ class ContentList extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', false, false, false, false);
+        return new Entity($entityId, '', '', '', '', false, false, false, false);
     }
 
     /**
@@ -90,6 +90,8 @@ class ContentList extends RepoServiceAbstract
         $identifier = empty($postData['identifier']) ? $name : (string)$postData['identifier'];
         $identifier = $this->slugify->slugify($identifier);
 
+        $classes = $postData['classes'];
+
         $protected = empty($postData['protected']) ? false : (bool)$postData['protected'];
         $withImage = empty($postData['with_image']) ? false : (bool)$postData['with_image'];
         $withLinks = empty($postData['with_links']) ? false : (bool)$postData['with_links'];
@@ -98,15 +100,13 @@ class ContentList extends RepoServiceAbstract
         $entity
             ->setTypeId($typeId)
             ->setIdentifier($identifier)
+            ->setClasses($classes)
             ->setName($name)
             ->setProtected($protected)
             ->setWithImage($withImage)
             ->setWithLinks($withLinks)
-            ->setWithHtml($withHtml);
-
-        if ($entity->getId()) {
-            $entity->setItems($this->createItems($postData, $entity->getId()));
-        }
+            ->setWithHtml($withHtml)
+            ->setItems($this->createItems($postData, $entity->getId()));
 
         return $entity;
     }
@@ -159,6 +159,8 @@ class ContentList extends RepoServiceAbstract
         while (isset($postData["new$i"])) {
             $d = $postData["new$i"];
 
+            $i++;
+
             if (!empty($d['is_deleted'])) {
                 continue;
             }
@@ -174,8 +176,6 @@ class ContentList extends RepoServiceAbstract
                 $d['img_alt'],
                 $d['img_href']
             );
-
-            $i++;
         }
 
         $i = 1;

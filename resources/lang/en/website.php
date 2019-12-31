@@ -2,6 +2,9 @@
 
 return [
     'contentList'               => 'List',
+    'contentListAdvanced'       => 'Advanced',
+    'contentListClasses'        => 'HTML classes',
+    'contentListClassesHelp'    => 'Space separated list of classes for the list container',
     'contentListIdentifier'     => 'Identifier',
     'contentListIdentifierHelp' => 'Automatically generated from the title',
     'contentListName'           => 'Name',

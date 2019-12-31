@@ -25,6 +25,9 @@ class ContentList implements IStringerEntity
     /** @var string */
     protected $identifier;
 
+    /** @var string */
+    protected $classes;
+
     /** @var bool */
     protected $protected;
 
@@ -50,6 +53,7 @@ class ContentList implements IStringerEntity
      * @param string                 $typeId
      * @param string                 $name
      * @param string                 $identifier
+     * @param string                 $classes
      * @param bool                   $protected
      * @param bool                   $withImage
      * @param bool                   $withLinks
@@ -62,6 +66,7 @@ class ContentList implements IStringerEntity
         string $typeId,
         string $name,
         string $identifier,
+        string $classes,
         bool $protected,
         bool $withImage,
         bool $withLinks,
@@ -73,6 +78,7 @@ class ContentList implements IStringerEntity
         $this->typeId     = $typeId;
         $this->name       = $name;
         $this->identifier = $identifier;
+        $this->classes    = $classes;
         $this->protected  = $protected;
         $this->withImage  = $withImage;
         $this->withLinks  = $withLinks;
@@ -133,6 +139,26 @@ class ContentList implements IStringerEntity
     public function setIdentifier(string $identifier): ContentList
     {
         $this->identifier = $identifier;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClasses(): string
+    {
+        return $this->classes;
+    }
+
+    /**
+     * @param string $classes
+     *
+     * @return $this
+     */
+    public function setClasses(string $classes): ContentList
+    {
+        $this->classes = $classes;
 
         return $this;
     }
