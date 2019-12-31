@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = false;
 DELETE FROM `admin_resources` WHERE `identifier` IN ('blocklayouts', 'pagelayouts', 'pages', 'blocks', 'pagecategories');
+DELETE FROM `casbin_rule` WHERE `v1` = 'blocks' AND `v2` = 'advanced-write';
 DELETE FROM `casbin_rule` WHERE `v1` = 'pages' AND `v2` = 'advanced-write';
 DROP TABLE IF EXISTS `blocks`;
 DROP TABLE IF EXISTS `block_layouts`;

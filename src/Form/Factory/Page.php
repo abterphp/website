@@ -105,7 +105,7 @@ class Page extends Base
         $advancedAllowed = $this->enforcer->enforce(
             $username,
             Authorization::RESOURCE_PAGES,
-            Authorization::ROLE_PAGES_ADVANCED_WRITE
+            Authorization::ROLE_ADVANCED_WRITE
         );
 
         $this->createForm($action, $method)

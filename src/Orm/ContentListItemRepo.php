@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
-use AbterPhp\Website\Domain\Entities\BlockLayout as Entity;
-use AbterPhp\Website\Orm\DataMappers\BlockLayoutSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
+use AbterPhp\Website\Domain\Entities\ContentListItem as Entity;
+use AbterPhp\Website\Orm\DataMappers\ContentListItemSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
-class BlockLayoutRepo extends Repository implements IGridRepo
+class ContentListItemRepo extends Repository implements IGridRepo
 {
     /**
      * @param int      $limitFrom
@@ -28,14 +28,14 @@ class BlockLayoutRepo extends Repository implements IGridRepo
     }
 
     /**
-     * @param string $identifier
+     * @param string $listId
      *
-     * @return Entity|null
+     * @return Entity[]
      * @throws \Opulence\Orm\OrmException
      */
-    public function getByIdentifier(string $identifier): ?Entity
+    public function getByListId(string $listId): array
     {
-        /** @see DataMapper::getByIdentifier() */
-        return $this->getFromDataMapper('getByIdentifier', [$identifier]);
+        /** @see DataMapper::getByListId() */
+        return $this->getFromDataMapper('getByListId', [$listId]);
     }
 }

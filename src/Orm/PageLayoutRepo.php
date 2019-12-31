@@ -6,7 +6,7 @@ namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
-use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
+use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
 class PageLayoutRepo extends Repository implements IGridRepo
@@ -23,7 +23,7 @@ class PageLayoutRepo extends Repository implements IGridRepo
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
-        /** @see PageLayoutSqlDataMapper::getPage() */
+        /** @see DataMapper::getPage() */
         return $this->getFromDataMapper('getPage', [$limitFrom, $pageSize, $orders, $conditions, $params]);
     }
 
@@ -35,7 +35,7 @@ class PageLayoutRepo extends Repository implements IGridRepo
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
-        /** @see PageLayoutSqlDataMapper::getByIdentifier() */
+        /** @see DataMapper::getByIdentifier() */
         return $this->getFromDataMapper('getByIdentifier', [$identifier]);
     }
 }

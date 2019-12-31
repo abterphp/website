@@ -64,4 +64,13 @@ class Routes extends FrameworkRoutes
     const PATH_PAGE_CATEGORIES_NEW     = '/pagecategory/new';
     const PATH_PAGE_CATEGORIES_EDIT    = '/pagecategory/:id/edit';
     const PATH_PAGE_CATEGORIES_DELETE  = '/pagecategory/:id/delete';
+
+    const ROUTE_CONTENT_LISTS        = 'lists';
+    const ROUTE_CONTENT_LISTS_NEW    = 'lists-new';
+    const ROUTE_CONTENT_LISTS_EDIT   = 'lists-edit';
+    const ROUTE_CONTENT_LISTS_DELETE = 'lists-delete';
+    const PATH_CONTENT_LISTS         = '/lists';
+    const PATH_CONTENT_LISTS_NEW     = '/lists/new';
+    const PATH_CONTENT_LISTS_EDIT    = '/lists/:id/edit';
+    const PATH_CONTENT_LISTS_DELETE  = '/lists/:id/delete';
 }

@@ -6,7 +6,7 @@ namespace AbterPhp\Website\Orm;
 
 use AbterPhp\Framework\Orm\IGridRepo;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
-use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
+use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper as DataMapper; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use Opulence\Orm\Repositories\Repository;
 
 class BlockRepo extends Repository implements IGridRepo
@@ -23,7 +23,7 @@ class BlockRepo extends Repository implements IGridRepo
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
-        /** @see BlockSqlDataMapper::getPage() */
+        /** @see DataMapper::getPage() */
         return $this->getFromDataMapper('getPage', [$limitFrom, $pageSize, $orders, $conditions, $params]);
     }
 
@@ -35,7 +35,7 @@ class BlockRepo extends Repository implements IGridRepo
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
-        /** @see BlockSqlDataMapper::getByIdentifier() */
+        /** @see DataMapper::getByIdentifier() */
         return $this->getFromDataMapper('getByIdentifier', [$identifier]);
     }
 
@@ -47,7 +47,7 @@ class BlockRepo extends Repository implements IGridRepo
      */
     public function getWithLayoutByIdentifiers(array $identifiers): array
     {
-        /** @see BlockSqlDataMapper::getWithLayoutByIdentifiers() */
+        /** @see DataMapper::getWithLayoutByIdentifiers() */
         return $this->getFromDataMapper('getWithLayoutByIdentifiers', [$identifiers]);
     }
 }

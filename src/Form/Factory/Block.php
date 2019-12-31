@@ -69,14 +69,14 @@ class Block extends Base
         $username        = $this->session->get(Session::USERNAME);
         $advancedAllowed = $this->enforcer->enforce(
             $username,
-            Authorization::RESOURCE_PAGES,
-            Authorization::ROLE_PAGES_ADVANCED_WRITE
+            Authorization::RESOURCE_BLOCKS,
+            Authorization::ROLE_ADVANCED_WRITE
         );
 
         $this->createForm($action, $method)
             ->addDefaultElements()
-            ->addIdentifier($entity)
             ->addTitle($entity)
+            ->addIdentifier($entity)
             ->addBody($entity)
             ->addLayoutId($entity)
             ->addLayout($entity, $advancedAllowed)
@@ -94,13 +94,12 @@ class Block extends Base
      *
      * @return $this
      */
-    protected function addIdentifier(Entity $entity): Block
+    protected function addTitle(Entity $entity): Block
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
-        $label = new Label('title', 'website:blockIdentifier');
-        $help  = new Help('website:blockIdentifierHelp');
+        $input = new Input('title', 'title', $entity->getTitle());
+        $label = new Label('title', 'website:blockTitle');
 
-        $this->form[] = new FormGroup($input, $label, $help);
+        $this->form[] = new FormGroup($input, $label);
 
         return $this;
     }
@@ -110,12 +109,13 @@ class Block extends Base
      *
      * @return $this
      */
-    protected function addTitle(Entity $entity): Block
+    protected function addIdentifier(Entity $entity): Block
     {
-        $input = new Input('title', 'title', $entity->getTitle());
-        $label = new Label('title', 'website:blockTitle');
+        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $label = new Label('title', 'website:blockIdentifier');
+        $help  = new Help('website:blockIdentifierHelp');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }
