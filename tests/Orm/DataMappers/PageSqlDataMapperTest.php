@@ -175,8 +175,8 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $id     = '2fdfb4aa-b199-40d6-86bd-06eed25bff43';
         $entity = $this->createEntity($id);
 
-        $sql       = 'UPDATE pages AS pages SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values    = [[1, \PDO::PARAM_INT], [$entity->getId(), \PDO::PARAM_STR]];
+        $sql       = 'UPDATE pages AS pages SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[$entity->getId(), \PDO::PARAM_STR]];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
@@ -403,7 +403,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $assets   = $entity->getAssets();
         $layoutId = '3f98d8ae-06b3-4fd3-8539-284b377f741b';
 
-        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, COALESCE(layouts.body, pages.layout) AS layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header AS header, pages.footer AS footer, pages.css_files AS css_files, pages.js_files AS js_files, layouts.identifier AS layout_identifier, layouts.header AS layout_header, layouts.footer AS layout_footer, layouts.css_files AS layout_css_files, layouts.js_files AS layout_js_files FROM pages LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id WHERE (pages.deleted_at IS NULL) AND (layouts.deleted_at IS NULL OR layouts.deleted IS NULL) AND ((pages.identifier = :identifier OR pages.id = :identifier))';  // phpcs:ignore
+        $sql          = 'SELECT pages.id, pages.identifier, pages.title, pages.lead, pages.body, pages.is_draft, pages.category_id, pages.layout_id, COALESCE(layouts.body, pages.layout) AS layout, pages.meta_description, pages.meta_robots, pages.meta_author, pages.meta_copyright, pages.meta_keywords, pages.meta_og_title, pages.meta_og_image, pages.meta_og_description, pages.header AS header, pages.footer AS footer, pages.css_files AS css_files, pages.js_files AS js_files, layouts.identifier AS layout_identifier, layouts.header AS layout_header, layouts.footer AS layout_footer, layouts.css_files AS layout_css_files, layouts.js_files AS layout_js_files FROM pages LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id AND layouts.deleted_at IS NULL WHERE (pages.deleted_at IS NULL) AND ((pages.identifier = :identifier OR pages.id = :identifier))';  // phpcs:ignore
         $values       = ['identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR]];
         $expectedData = [
             [

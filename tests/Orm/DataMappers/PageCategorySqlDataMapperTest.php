@@ -48,8 +48,8 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql0       = 'UPDATE page_categories AS page_categories SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values0    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $sql0       = 'UPDATE page_categories AS page_categories SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
+        $values0    = [[$id, \PDO::PARAM_STR]];
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 

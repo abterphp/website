@@ -24,7 +24,7 @@ class Block implements ILoader
     protected $cache;
 
     /**
-     * BlockLoader constructor.
+     * Block constructor.
      *
      * @param BlockRepo  $repo
      * @param BlockCache $cache

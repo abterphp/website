@@ -9,7 +9,8 @@ use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
-use AbterPhp\Website\Domain\Entities\ContentListItem;
+use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
+use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use AbterPhp\Website\Orm\ContentListRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\ContentList as ValidatorFactory;
 use Casbin\Enforcer;
@@ -28,11 +29,11 @@ class ContentList extends RepoServiceAbstract
     /** @var GridRepo */
     protected $repo;
 
-    /** @var Enforcer */
-    protected $enforcer;
-
     /** @var ISession */
     protected $session;
+
+    /** @var Enforcer */
+    protected $enforcer;
 
     /**
      * ContentList constructor.
@@ -42,6 +43,8 @@ class ContentList extends RepoServiceAbstract
      * @param IUnitOfWork      $unitOfWork
      * @param IEventDispatcher $eventDispatcher
      * @param Slugify          $slugify
+     * @param ISession         $session
+     * @param Enforcer         $enforcer
      */
     public function __construct(
         GridRepo $repo,
@@ -66,7 +69,7 @@ class ContentList extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', '', false, false, false, false);
+        return new Entity($entityId, '', '', '', false, false, false, false, false);
     }
 
     /**
@@ -84,8 +87,9 @@ class ContentList extends RepoServiceAbstract
 
         $postData = $this->protectPostData($entity, $postData);
 
-        $typeId = (string)$postData['type_id'];
-        $name   = (string)$postData['name'];
+        $type = new Type((string)$postData['type_id'], '', '');
+
+        $name = (string)$postData['name'];
 
         $identifier = empty($postData['identifier']) ? $name : (string)$postData['identifier'];
         $identifier = $this->slugify->slugify($identifier);
@@ -98,7 +102,7 @@ class ContentList extends RepoServiceAbstract
         $withHtml  = empty($postData['with_html']) ? false : (bool)$postData['with_html'];
 
         $entity
-            ->setTypeId($typeId)
+            ->setType($type)
             ->setIdentifier($identifier)
             ->setClasses($classes)
             ->setName($name)
@@ -135,7 +139,7 @@ class ContentList extends RepoServiceAbstract
             return $postData;
         }
 
-        $postData['type_id']    = $entity->getTypeId();
+        $postData['type_id']    = $entity->getType()->getId();
         $postData['identifier'] = $entity->getIdentifier();
         $postData['protected']  = $entity->isProtected();
         $postData['with_image'] = $entity->isWithImage();
@@ -149,7 +153,7 @@ class ContentList extends RepoServiceAbstract
      * @param array  $postData
      * @param string $listId
      *
-     * @return ContentListItem[]
+     * @return Item[]
      */
     protected function createItems(array $postData, string $listId): array
     {
@@ -165,7 +169,7 @@ class ContentList extends RepoServiceAbstract
                 continue;
             }
 
-            $items[] = new ContentListItem(
+            $items[] = new Item(
                 '',
                 $listId,
                 $d['name'],
@@ -184,7 +188,7 @@ class ContentList extends RepoServiceAbstract
 
             $deletedAt = empty($d['is_deleted']) ? null : new DateTime();
 
-            $items[] = new ContentListItem(
+            $items[] = new Item(
                 $d['id'],
                 $listId,
                 $d['name'],

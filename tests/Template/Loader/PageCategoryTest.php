@@ -137,9 +137,7 @@ class PageCategoryTest extends TestCase
             ->willReturn([$page]);
 
         $parsedTemplates = [
-            $identifier => [
-                new ParsedTemplate('pagecategory', $identifier, ['builder' => 'nope']),
-            ],
+            $identifier => [new ParsedTemplate('pagecategory', $identifier, ['builder' => 'nope'])],
         ];
 
         $this->sut->load($parsedTemplates);
@@ -161,9 +159,7 @@ class PageCategoryTest extends TestCase
         $this->sut->addBuilder('detailed', $builderMock);
 
         $parsedTemplates = [
-            $identifier => [
-                new ParsedTemplate('pagecategory', $identifier, ['builder' => 'detailed']),
-            ],
+            $identifier => [new ParsedTemplate('pagecategory', $identifier, ['builder' => 'detailed'])],
         ];
 
         $actualResult = $this->sut->load($parsedTemplates);

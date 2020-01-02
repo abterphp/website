@@ -17,6 +17,8 @@ return [
     'contentListTypeOrdered'    => 'Ordered (&lt;ol&gt;)',
     'contentListTypeSection'    => 'Section (&lt;section&gt;)',
     'contentListTypeUnordered'  => 'Unordered (&lt;ul&gt;)',
+    'contentListWithBody'       => 'With content',
+    'contentListWithBodyHelp'   => '',
     'contentListWithHtml'       => 'With HTML content',
     'contentListWithHtmlHelp'   => 'Item content supports HTML',
     'contentListWithImage'      => 'With image',

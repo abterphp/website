@@ -6,7 +6,6 @@ namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\Helper\DateHelper;
-use DateTime;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -40,9 +39,6 @@ class ContentListItem implements IStringerEntity
     /** @var string */
     protected $imgAlt;
 
-    /** @var DateTime|null */
-    protected $deletedAt;
-
     /**
      * ContentListItem constructor.
      *
@@ -55,7 +51,6 @@ class ContentListItem implements IStringerEntity
      * @param string        $imgSrc
      * @param string        $imgHref
      * @param string        $imgAlt
-     * @param DateTime|null $deletedAt
      */
     public function __construct(
         string $id,
@@ -66,8 +61,7 @@ class ContentListItem implements IStringerEntity
         string $bodyHref,
         string $imgSrc,
         string $imgHref,
-        string $imgAlt,
-        ?DateTime $deletedAt = null
+        string $imgAlt
     ) {
         $this->id        = $id;
         $this->listId    = $listId;
@@ -78,7 +72,6 @@ class ContentListItem implements IStringerEntity
         $this->imgSrc    = $imgSrc;
         $this->imgHref   = $imgHref;
         $this->imgAlt    = $imgAlt;
-        $this->deletedAt = $deletedAt;
     }
 
     /**
@@ -258,26 +251,6 @@ class ContentListItem implements IStringerEntity
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDeletedAt(): ?DateTime
-    {
-        return $this->deletedAt;
-    }
-
-    /**
-     * @param DateTime|null $deletedAt
-     *
-     * @return $this
-     */
-    public function setDeletedAt(?DateTime $deletedAt): ContentListItem
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function __toString(): string
@@ -286,9 +259,9 @@ class ContentListItem implements IStringerEntity
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function toJSON(): string
+    public function getData(): array
     {
         $data = [
             'id'        => $this->getId(),
@@ -302,10 +275,14 @@ class ContentListItem implements IStringerEntity
             'img_alt'   => $this->getImgAlt(),
         ];
 
-        if ($this->getDeletedAt()) {
-            $data['deleted_at'] = DateHelper::formatDateTime($this->getDeletedAt());
-        }
+        return $data;
+    }
 
-        return json_encode($data);
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        return json_encode($this->getData());
     }
 }

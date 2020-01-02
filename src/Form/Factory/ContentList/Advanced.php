@@ -43,8 +43,9 @@ class Advanced
 
         $components[] = $this->addClasses($entity);
         $components[] = $this->addProtected($entity);
-        $components[] = $this->addWithImage($entity);
         $components[] = $this->addWithLinks($entity);
+        $components[] = $this->addWithImage($entity);
+        $components[] = $this->addWithBody($entity);
         $components[] = $this->addWithHtml($entity);
 
         return $components;
@@ -134,6 +135,30 @@ class Advanced
         $help  = new Help('website:contentListWithLinksHelp');
 
         return new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'withLinks-container']);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return INode
+     */
+    protected function addWithBody(Entity $entity): INode
+    {
+        $attributes = [Html5::ATTR_TYPE => Input::TYPE_CHECKBOX];
+        if ($entity->isWithBody()) {
+            $attributes[Html5::ATTR_CHECKED] = null;
+        }
+        $input = new Input(
+            'with_body',
+            'with_body',
+            '1',
+            [],
+            $attributes
+        );
+        $label = new Label('with_body', 'website:contentListWithBody');
+        $help  = new Help('website:contentListWithBodyHelp');
+
+        return new CheckboxGroup($input, $label, $help, [], [Html5::ATTR_ID => 'withBody-container']);
     }
 
     /**

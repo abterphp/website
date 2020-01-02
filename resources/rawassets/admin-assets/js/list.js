@@ -3,7 +3,13 @@ $(document).ready(function () {
         itemTemplate = $('.item-template').hide().eq(0),
         addBtn = $('#add-item-container > button'),
         count = 0,
-        isDeletedInputs = $('.item_is_deleted');
+        isDeletedInputs = $('.item_is_deleted'),
+        withBodyInput = $('#with_body'),
+        withHtmlContainer = $('#withHtml-container').hide();
+
+    withBodyInput.click(function () {
+        withHtmlContainer.toggle($(this).is(':checked'));
+    });
 
     if (itemTemplate.length == 0) {
         return;
@@ -52,5 +58,5 @@ $(document).ready(function () {
                 $inputs.css('background-color', '#000');
             }
         });
-    })
+    });
 });

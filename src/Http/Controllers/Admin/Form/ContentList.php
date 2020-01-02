@@ -77,7 +77,7 @@ class ContentList extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', '', false, false, false, false);
+        return new Entity($entityId, '', '', '', false, false, false, false, false);
     }
 
     /**

@@ -17,6 +17,13 @@ interface IContentListItemDataMapper extends IDataMapper
     public function getByListId(string $listId): array;
 
     /**
+     * @param string[] $listIds
+     *
+     * @return Entity[]
+     */
+    public function getByListIds(array $listIds): array;
+
+    /**
      * @param int      $limitFrom
      * @param int      $pageSize
      * @param string[] $orders

@@ -6,6 +6,8 @@ namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\Helper\DateHelper;
+use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
+use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use DateTime;
 
 /**
@@ -15,9 +17,6 @@ class ContentList implements IStringerEntity
 {
     /** @var string */
     protected $id;
-
-    /** @var string */
-    protected $typeId;
 
     /** @var string */
     protected $name;
@@ -38,53 +37,56 @@ class ContentList implements IStringerEntity
     protected $withLinks;
 
     /** @var bool */
+    protected $withBody;
+
+    /** @var bool */
     protected $withHtml;
 
-    /** @var ContentListItem[]|null */
-    protected $items;
+    /** @var Type */
+    protected $type;
 
-    /** @var DateTime|null */
-    protected $deletedAt;
+    /** @var Item[]|null */
+    protected $items;
 
     /**
      * ContentList constructor.
      *
-     * @param string                 $id
-     * @param string                 $typeId
-     * @param string                 $name
-     * @param string                 $identifier
-     * @param string                 $classes
-     * @param bool                   $protected
-     * @param bool                   $withImage
-     * @param bool                   $withLinks
-     * @param bool                   $withHtml
-     * @param ContentListItem[]|null $items
-     * @param DateTime|null          $deletedAt
+     * @param string        $id
+     * @param string        $name
+     * @param string        $identifier
+     * @param string        $classes
+     * @param bool          $protected
+     * @param bool          $withLinks
+     * @param bool          $withImage
+     * @param bool          $withBody
+     * @param bool          $withHtml
+     * @param Type          $type
+     * @param Item[]|null   $items
      */
     public function __construct(
         string $id,
-        string $typeId,
         string $name,
         string $identifier,
         string $classes,
         bool $protected,
-        bool $withImage,
         bool $withLinks,
+        bool $withImage,
+        bool $withBody,
         bool $withHtml,
-        array $items = null,
-        ?DateTime $deletedAt = null
+        ?Type $type = null,
+        array $items = null
     ) {
         $this->id         = $id;
-        $this->typeId     = $typeId;
         $this->name       = $name;
         $this->identifier = $identifier;
         $this->classes    = $classes;
         $this->protected  = $protected;
-        $this->withImage  = $withImage;
         $this->withLinks  = $withLinks;
+        $this->withImage  = $withImage;
+        $this->withBody   = $withBody;
         $this->withHtml   = $withHtml;
+        $this->type       = $type ?: new Type('', '', '');
         $this->items      = $items;
-        $this->deletedAt  = $deletedAt;
     }
 
     /**
@@ -101,26 +103,6 @@ class ContentList implements IStringerEntity
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeId(): string
-    {
-        return $this->typeId;
-    }
-
-    /**
-     * @param string $typeId
-     *
-     * @return $this
-     */
-    public function setTypeId(string $typeId): ContentList
-    {
-        $this->typeId = $typeId;
-
-        return $this;
     }
 
     /**
@@ -246,6 +228,26 @@ class ContentList implements IStringerEntity
     /**
      * @return bool
      */
+    public function isWithBody(): bool
+    {
+        return $this->withBody;
+    }
+
+    /**
+     * @param bool $withBody
+     *
+     * @return $this
+     */
+    public function setWithBody(bool $withBody): ContentList
+    {
+        $this->withBody = $withBody;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
     public function isWithHtml(): bool
     {
         return $this->withHtml;
@@ -264,7 +266,27 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @return ContentListItem[]|null
+     * @return Type
+     */
+    public function getType(): Type
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param Type $type
+     *
+     * @return $this
+     */
+    public function setType(Type $type): ContentList
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Item[]|null
      */
     public function getItems(): ?array
     {
@@ -272,7 +294,7 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @param ContentListItem[]|null $items
+     * @param Item[]|null $items
      *
      * @return $this
      */
@@ -284,21 +306,13 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDeletedAt(): ?DateTime
-    {
-        return $this->deletedAt;
-    }
-
-    /**
-     * @param DateTime|null $deletedAt
+     * @param Item $item
      *
-     * @return $this
+     * @return ContentList
      */
-    public function setDeletedAt(?DateTime $deletedAt): ContentList
+    public function addItem(Item $item): ContentList
     {
-        $this->deletedAt = $deletedAt;
+        $this->items[] = $item;
 
         return $this;
     }
@@ -312,32 +326,38 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function toJSON(): string
+    public function getData(): array
     {
         $data = [
             'id'         => $this->getId(),
             'name'       => $this->getName(),
             'identifier' => $this->getIdentifier(),
+            'classes'    => $this->getClasses(),
             'protected'  => $this->isProtected(),
-            'with_image' => $this->isWithImage(),
             'with_links' => $this->isWithLinks(),
+            'with_image' => $this->isWithImage(),
+            'with_body'  => $this->withBody(),
             'with_html'  => $this->isWithHtml(),
         ];
 
         if ($this->items !== null) {
             $items = [];
             foreach ($this->items as $item) {
-                $items[] = json_decode($item->toJSON(), true);
+                $items[] = $item->getData();
             }
             $data['items'] = $items;
         }
 
-        if ($this->getDeletedAt()) {
-            $data['deleted_at'] = DateHelper::formatDateTime($this->getDeletedAt());
-        }
+        return $data;
+    }
 
-        return json_encode($data);
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        return json_encode($this->getData());
     }
 }

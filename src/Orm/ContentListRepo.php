@@ -38,4 +38,16 @@ class ContentListRepo extends Repository implements IGridRepo
         /** @see DataMapper::getByIdentifier() */
         return $this->getFromDataMapper('getByIdentifier', [$identifier]);
     }
+
+    /**
+     * @param string[] $identifiers
+     *
+     * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
+     */
+    public function getByIdentifiers(array $identifiers): array
+    {
+        /** @see DataMapper::getByIdentifiers() */
+        return $this->getFromDataMapper('getByIdentifiers', [$identifiers]);
+    }
 }

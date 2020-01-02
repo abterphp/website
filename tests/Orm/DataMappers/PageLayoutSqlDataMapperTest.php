@@ -54,8 +54,8 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql       = 'UPDATE page_layouts AS page_layouts SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $sql       = 'UPDATE page_layouts AS page_layouts SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[$id, \PDO::PARAM_STR]];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 

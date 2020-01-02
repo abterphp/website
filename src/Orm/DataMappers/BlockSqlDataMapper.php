@@ -8,6 +8,7 @@ use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 use PDO;
@@ -55,7 +56,7 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('blocks', 'blocks', ['deleted' => [1, PDO::PARAM_INT]])
+            ->update('blocks', 'blocks', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
@@ -249,9 +250,8 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
                 'COALESCE(layouts.body, blocks.layout) AS layout'
             )
             ->from('blocks')
-            ->leftJoin('block_layouts', 'layouts', 'layouts.id = blocks.layout_id')
-            ->where('blocks.deleted_at IS NULL')
-            ->andWhere('layouts.deleted_at IS NULL OR layouts.deleted IS NULL');
+            ->leftJoin('block_layouts', 'layouts', 'layouts.id = blocks.layout_id AND layouts.deleted_at IS NULL')
+            ->where('blocks.deleted_at IS NULL');
 
         return $query;
     }

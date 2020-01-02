@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Orm\DataMappers;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\ContentListType as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 use PDO;
@@ -48,7 +49,7 @@ class ContentListTypeSqlDataMapper extends SqlDataMapper implements IContentList
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('list_types', 'list_types', ['deleted' => [1, PDO::PARAM_INT]])
+            ->update('list_types', 'list_types', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
@@ -117,23 +118,6 @@ class ContentListTypeSqlDataMapper extends SqlDataMapper implements IContentList
         $sql = $query->getSql();
 
         return $this->read($sql, $parameters, self::VALUE_TYPE_ENTITY, true);
-    }
-
-    /**
-     * @param string $identifier
-     *
-     * @return Entity|null
-     * @throws \Opulence\Orm\OrmException
-     */
-    public function getByIdentifier(string $identifier): ?Entity
-    {
-        $query = $this->getBaseQuery()->andWhere('list_types.identifier = :identifier');
-
-        $parameters = [
-            'identifier' => [$identifier, PDO::PARAM_STR],
-        ];
-
-        return $this->read($query->getSql(), $parameters, self::VALUE_TYPE_ENTITY, true);
     }
 
     /**

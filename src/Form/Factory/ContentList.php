@@ -156,7 +156,7 @@ class ContentList extends Base
         }
 
         $allTypes = $this->getAllTypes();
-        $typeId   = $entity->getTypeId();
+        $typeId   = $entity->getType()->getId();
 
         $options = $this->createTypeIdOptions($allTypes, $typeId);
 
@@ -225,6 +225,11 @@ class ContentList extends Base
      */
     protected function addName(Entity $entity): ContentList
     {
+        // Identifier of protected lists can only be set by advanced users
+        if ($entity->isProtected() && !$this->isAdvancedAllowed()) {
+            return $this;
+        }
+
         $input = new Input('name', 'name', $entity->getName());
         $label = new Label('name', 'website:contentListName');
 
@@ -262,7 +267,7 @@ class ContentList extends Base
     protected function addAdvanced(Entity $entity): ContentList
     {
         // Protected can not be set by non-advanced users
-        if (!$this->isAdvancedAllowed() && $entity->getId()) {
+        if ($entity->isProtected() && !$this->isAdvancedAllowed() && $entity->getId()) {
             return $this;
         }
 
@@ -289,9 +294,10 @@ class ContentList extends Base
             return $this;
         }
 
-        $isWithLinks = $entity->isWithLinks();
-        $isWithImage = $entity->isWithImage();
-        $isWithHtml  = $entity->isWithHtml();
+        $withLinks = $entity->isWithLinks();
+        $withImage = $entity->isWithImage();
+        $withBody  = $entity->isWithBody();
+        $withHtml  = $entity->isWithHtml();
 
         $containerAttribs = [Html5::ATTR_ID => static::EXISTING_ITEMS_CONTAINER_ID];
         $container        = new Component(null, [], $containerAttribs, Html5::TAG_SECTION);
@@ -302,7 +308,7 @@ class ContentList extends Base
             $fieldset   = new Component(null, [], [], Html5::TAG_FIELDSET);
             $fieldset[] = new Tag($item->getName(), [], [], Html5::TAG_LEGEND);
 
-            $components = $this->itemFactory->create($item, $isWithLinks, $isWithImage, $isWithHtml);
+            $components = $this->itemFactory->create($item, $withLinks, $withImage, $withBody, $withHtml);
             foreach ($components as $component) {
                 $fieldset[] = $component;
             }
@@ -330,9 +336,10 @@ class ContentList extends Base
             return $this;
         }
 
-        $isWithLinks = $entity->isWithLinks();
-        $isWithImage = $entity->isWithImage();
-        $isWithHtml  = $entity->isWithHtml();
+        $withLinks = $entity->isWithLinks();
+        $withImage = $entity->isWithImage();
+        $withBody  = $entity->isWithBody();
+        $withHtml  = $entity->isWithHtml();
 
         $containerAttribs = [Html5::ATTR_ID => static::NEW_ITEMS_CONTAINER_ID];
         $container        = new Component(null, [], $containerAttribs, Html5::TAG_SECTION);
@@ -341,7 +348,7 @@ class ContentList extends Base
         $item        = new Component(null, [], $itemAttribs, Html5::TAG_FIELDSET);
         $item[]      = new Tag(static::NEW_ITEM_NAME, [], [], Html5::TAG_LEGEND);
 
-        $components = $this->itemFactory->create(null, $isWithLinks, $isWithImage, $isWithHtml);
+        $components = $this->itemFactory->create(null, $withLinks, $withImage, $withBody, $withHtml);
         foreach ($components as $component) {
             $item[] = $component;
         }

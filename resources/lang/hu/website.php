@@ -17,6 +17,8 @@ return [
     'contentListTypeOrdered'    => 'Sorszámozott (&lt;ol&gt;)',
     'contentListTypeSection'    => 'Szemantikus szekció (&lt;section&gt;)',
     'contentListTypeUnordered'  => 'Sorszámozatlan (&lt;ul&gt;)',
+    'contentListWithBody'       => 'Tartalommal',
+    'contentListWithBodyHelp'   => '',
     'contentListWithHtml'       => 'HTML tartalommal',
     'contentListWithHtmlHelp'   => 'A lista elemek támogatják a HTML tartalmat',
     'contentListWithImage'      => 'Képpel',

@@ -7,20 +7,20 @@ namespace AbterPhp\Website\Orm\DataMapper;
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
-use AbterPhp\Website\Domain\Entities\Block;
-use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper;
+use AbterPhp\Website\Domain\Entities\Block as Entity;
+use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper as DataMapper;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class BlockSqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var BlockSqlDataMapper - System Under Test */
+    /** @var DataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->sut = new BlockSqlDataMapper($this->readConnectionMock, $this->writeConnectionMock);
+        $this->sut = new DataMapper($this->readConnectionMock, $this->writeConnectionMock);
     }
 
     public function testAddWithoutLayoutId()
@@ -44,7 +44,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new Block($nextId, $identifier, $title, $body, $layout, $layoutId);
+        $entity = new Entity($nextId, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->add($entity);
 
@@ -71,7 +71,8 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
-        $entity = new Block($nextId, $identifier, $title, $body, $layout, $layoutId);
+
+        $entity = new Entity($nextId, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->add($entity);
 
@@ -87,11 +88,12 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql       = 'UPDATE blocks AS blocks SET deleted = ? WHERE (id = ?)'; // phpcs:ignore
-        $values    = [[1, \PDO::PARAM_INT], [$id, \PDO::PARAM_STR]];
+        $sql       = 'UPDATE blocks AS blocks SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
+        $values    = [[$id, \PDO::PARAM_STR]];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
-        $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
+
+        $entity = new Entity($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->delete($entity);
     }
@@ -253,7 +255,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, COALESCE(layouts.body, blocks.layout) AS layout FROM blocks LEFT JOIN block_layouts AS layouts ON layouts.id = blocks.layout_id WHERE (blocks.deleted_at IS NULL) AND (layouts.deleted_at IS NULL OR layouts.deleted IS NULL) AND (blocks.identifier IN (?))'; // phpcs:ignore
+        $sql          = 'SELECT blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, COALESCE(layouts.body, blocks.layout) AS layout FROM blocks LEFT JOIN block_layouts AS layouts ON layouts.id = blocks.layout_id AND layouts.deleted_at IS NULL WHERE (blocks.deleted_at IS NULL) AND (blocks.identifier IN (?))'; // phpcs:ignore
         $values       = [[$identifier, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -302,7 +304,8 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
-        $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
+
+        $entity = new Entity($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->update($entity);
     }
@@ -328,7 +331,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new Block($id, $identifier, $title, $body, $layout, $layoutId);
+        $entity = new Entity($id, $identifier, $title, $body, $layout, $layoutId);
 
         $this->sut->update($entity);
     }
@@ -365,11 +368,11 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
 
     /**
      * @param array $expectedData
-     * @param Block $entity
+     * @param Entity $entity
      */
     protected function assertEntity(array $expectedData, $entity)
     {
-        $this->assertInstanceOf(Block::class, $entity);
+        $this->assertInstanceOf(Entity::class, $entity);
         $this->assertSame($expectedData['id'], $entity->getId());
         $this->assertSame($expectedData['identifier'], $entity->getIdentifier());
         $this->assertSame($expectedData['title'], $entity->getTitle());

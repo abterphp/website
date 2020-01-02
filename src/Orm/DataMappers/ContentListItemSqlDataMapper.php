@@ -7,6 +7,8 @@ namespace AbterPhp\Website\Orm\DataMappers;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Conditions\ConditionFactory;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 use PDO;
@@ -54,7 +56,7 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('list_items', 'list_items', ['deleted' => [1, PDO::PARAM_INT]])
+            ->update('list_items', 'list_items', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
@@ -140,6 +142,24 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
         ];
 
         return $this->read($query->getSql(), $parameters, self::VALUE_TYPE_ARRAY);
+    }
+
+    /**
+     * @param string[] $listIds
+     *
+     * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
+     */
+    public function getByListIds(array $listIds): array
+    {
+        if (count($listIds) === 0) {
+            return [];
+        }
+
+        $conditions = new ConditionFactory();
+        $query = $this->getBaseQuery()->andWhere($conditions->in('list_items.list_id', $listIds));
+
+        return $this->read($query->getSql(), $query->getParameters(), self::VALUE_TYPE_ARRAY);
     }
 
     /**

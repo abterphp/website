@@ -20,6 +20,7 @@ return [
     ],
     Module::HTTP_BOOTSTRAPPERS => [
         Bootstrappers\Http\Views\BuildersBootstrapper::class,
+        Bootstrappers\Template\Loader\ContentListBootstrapper::class,
         Bootstrappers\Template\Loader\PageCategoryBootstrapper::class,
     ],
     Module::EVENTS             => [

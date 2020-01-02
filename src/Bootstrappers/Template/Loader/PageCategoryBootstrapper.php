@@ -40,7 +40,7 @@ class PageCategoryBootstrapper extends Bootstrapper implements ILazyBootstrapper
         $detailedBuilder = $container->resolve(DetailedBuilder::class);
 
         $builders = [
-            $simpleBuilder->getIdentifier() => $simpleBuilder,
+            $simpleBuilder->getIdentifier()   => $simpleBuilder,
             $detailedBuilder->getIdentifier() => $detailedBuilder,
         ];
 

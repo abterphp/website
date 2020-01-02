@@ -19,23 +19,18 @@ class ContentListType implements IStringerEntity
     /** @var string */
     protected $label;
 
-    /** @var DateTime|null */
-    protected $deletedAt;
-
     /**
      * ContentListType constructor.
      *
-     * @param string        $id
-     * @param string        $name
-     * @param string        $label
-     * @param DateTime|null $deletedAt
+     * @param string $id
+     * @param string $name
+     * @param string $label
      */
-    public function __construct(string $id, string $name, string $label, ?DateTime $deletedAt = null)
+    public function __construct(string $id, string $name, string $label)
     {
-        $this->id        = $id;
-        $this->name      = $name;
-        $this->label     = $label;
-        $this->deletedAt = $deletedAt;
+        $this->id    = $id;
+        $this->name  = $name;
+        $this->label = $label;
     }
 
     /**
@@ -95,26 +90,6 @@ class ContentListType implements IStringerEntity
     }
 
     /**
-     * @return DateTime|null
-     */
-    public function getDeletedAt(): ?DateTime
-    {
-        return $this->deletedAt;
-    }
-
-    /**
-     * @param DateTime|null $deletedAt
-     *
-     * @return $this
-     */
-    public function setDeletedAt(?DateTime $deletedAt): ContentListType
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function __toString(): string
@@ -132,10 +107,6 @@ class ContentListType implements IStringerEntity
             'name'  => $this->getName(),
             'label' => $this->getLabel(),
         ];
-
-        if ($this->getDeletedAt()) {
-            $data['deleted_at'] = DateHelper::formatDateTime($this->getDeletedAt());
-        }
 
         return json_encode($data);
     }

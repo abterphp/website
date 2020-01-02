@@ -28,6 +28,9 @@ class ContentList extends ValidatorFactory
             ->required();
 
         $validator
+            ->field('classes');
+
+        $validator
             ->field('protected')
             ->min(1)
             ->max(1);
@@ -39,6 +42,11 @@ class ContentList extends ValidatorFactory
 
         $validator
             ->field('with_links')
+            ->min(1)
+            ->max(1);
+
+        $validator
+            ->field('with_html')
             ->min(1)
             ->max(1);
 

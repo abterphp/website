@@ -40,9 +40,9 @@ class BlockRepo extends Repository implements IGridRepo
     }
 
     /**
-     * @param array $identifiers
+     * @param string[] $identifiers
      *
-     * @return array
+     * @return Entity[]
      * @throws \Opulence\Orm\OrmException
      */
     public function getWithLayoutByIdentifiers(array $identifiers): array

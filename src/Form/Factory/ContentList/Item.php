@@ -28,13 +28,13 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithLinks
-     * @param bool        $isWithImage
-     * @param bool        $isWithHtml
+     * @param bool        $withLinks
+     * @param bool        $withImage
+     * @param bool        $withHtml
      *
      * @return INode[]
      */
-    public function create(?Entity $entity, bool $isWithLinks, bool $isWithImage, bool $isWithHtml): array
+    public function create(?Entity $entity, bool $withLinks, bool $withImage, bool $withBody, bool $withHtml): array
     {
         $this->count++;
 
@@ -47,12 +47,22 @@ class Item
         }
 
         $components[] = $this->addName($entity);
-        $components[] = $this->addNameHref($entity, $isWithLinks);
-        $components[] = $this->addBody($entity, $isWithHtml);
-        $components[] = $this->addBodyHref($entity, $isWithLinks);
-        $components[] = $this->addImgSrc($entity, $isWithImage);
-        $components[] = $this->addImgAlt($entity, $isWithImage);
-        $components[] = $this->addImgHref($entity, $isWithLinks, $isWithHtml);
+        if ($withLinks) {
+            $components[] = $this->addNameHref($entity);
+        }
+        if ($withBody) {
+            $components[] = $this->addBody($entity, $withHtml);
+            if ($withLinks) {
+                $components[] = $this->addBodyHref($entity);
+            }
+        }
+        if ($withImage) {
+            $components[] = $this->addImgSrc($entity);
+            $components[] = $this->addImgAlt($entity);
+            if ($withLinks) {
+                $components[] = $this->addImgHref($entity);
+            }
+        }
         $components[] = $this->addIsDeleted();
 
         return $components;
@@ -86,22 +96,11 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithLinks
      *
      * @return INode
      */
-    protected function addNameHref(?Entity $entity, bool $isWithLinks): INode
+    protected function addNameHref(?Entity $entity): INode
     {
-        if (!$isWithLinks) {
-            return new Input(
-                "item_name_href_{$this->id}",
-                "item_name_href[{$this->id}]",
-                '',
-                [],
-                $this->hiddenAttribs
-            );
-        }
-
         $nameHref = $entity ? $entity->getNameHref() : '';
 
         $input = new Input("item_name_href_{$this->id}", "{$this->id}[name_href]", $nameHref);
@@ -113,15 +112,15 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithHtml
+     * @param bool        $withHtml
      *
      * @return INode
      */
-    protected function addBody(?Entity $entity, bool $isWithHtml): INode
+    protected function addBody(?Entity $entity, bool $withHtml): INode
     {
         $body    = $entity ? $entity->getBody() : '';
         $attribs = [];
-        if ($isWithHtml) {
+        if ($withHtml) {
             $attribs = [Html5::ATTR_CLASS => 'wysiwyg', Html5::ATTR_ROWS => '15'];
         }
 
@@ -134,16 +133,11 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addBodyHref(?Entity $entity, bool $isWithImage): INode
+    protected function addBodyHref(?Entity $entity): INode
     {
-        if (!$isWithImage) {
-            return new Input("item_body_href_{$this->id}", "{$this->id}[body_href]", '', [], $this->hiddenAttribs);
-        }
-
         $bodyHref = $entity ? $entity->getBodyHref() : '';
 
         $input = new Input("item_body_href_{$this->id}", "{$this->id}[body_href]", $bodyHref);
@@ -155,16 +149,11 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgSrc(?Entity $entity, bool $isWithImage): INode
+    protected function addImgSrc(?Entity $entity): INode
     {
-        if (!$isWithImage) {
-            return new Input("item_img_src_{$this->id}", "{$this->id}[img_src]", '', [], $this->hiddenAttribs);
-        }
-
         $imgSrc = $entity ? $entity->getImgSrc() : '';
 
         $input = new Input("item_img_src_{$this->id}", "{$this->id}[img_src]", $imgSrc);
@@ -176,16 +165,11 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgAlt(?Entity $entity, bool $isWithImage): INode
+    protected function addImgAlt(?Entity $entity): INode
     {
-        if (!$isWithImage) {
-            return new Input("item_img_alt_{$this->id}", "{$this->id}[img_alt]", '', [], $this->hiddenAttribs);
-        }
-
         $imgAlt = $entity ? $entity->getImgAlt() : '';
 
         $input = new Input("item_img_alt_{$this->id}", "{$this->id}[img_alt]", $imgAlt);
@@ -197,17 +181,11 @@ class Item
 
     /**
      * @param Entity|null $entity
-     * @param bool        $isWithLinks
-     * @param bool        $isWithImage
      *
      * @return INode
      */
-    protected function addImgHref(?Entity $entity, bool $isWithLinks, bool $isWithImage): INode
+    protected function addImgHref(?Entity $entity): INode
     {
-        if (!$isWithLinks || !$isWithImage) {
-            return new Input("item_img_href_{$this->id}", "{$this->id}[img_href]", '', [], $this->hiddenAttribs);
-        }
-
         $imgHref = $entity ? $entity->getImgHref() : '';
 
         $input = new Input("item_img_href_{$this->id}", "{$this->id}[img_href]", $imgHref);

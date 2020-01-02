@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Orm\DataMappers;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
@@ -39,7 +40,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('page_layouts', 'page_layouts', ['deleted' => [1, \PDO::PARAM_INT]])
+            ->update('page_layouts', 'page_layouts', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 

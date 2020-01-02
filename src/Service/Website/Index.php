@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Service\Website;
 
 use AbterPhp\Admin\Orm\UserRepo;
+use AbterPhp\Framework\Helper\StringHelper;
 use AbterPhp\Framework\Template\Engine;
 use AbterPhp\Website\Constant\Event;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
@@ -70,7 +71,10 @@ class Index
 
         $page = $pageEvent->getPage();
 
-        $vars      = ['title' => $page->getTitle()];
+        $vars      = [
+            'title' => $page->getTitle(),
+            'lead'  => StringHelper::plainToHtml($page->getLead(), '<strong>', '</strong>'),
+        ];
         $templates = [
             'body'   => $page->getBody(),
             'layout' => $page->getLayout(),

@@ -123,7 +123,7 @@ class PageCategoryRepoTest extends RepoTestCase
         $this->assertSame($entities, $actualResult);
     }
 
-    public function testGetIdentifier()
+    public function testGetByIdentifier()
     {
         $identifier = 'foo-0';
 

@@ -45,7 +45,7 @@ class BlockTest extends TestCase
             ->willReturn([$entity]);
 
         $parsedTemplates = [
-            $identifier => new ParsedTemplate('block', $identifier),
+            $identifier => [new ParsedTemplate('block', $identifier)],
         ];
 
         $templateDataCollection = $this->sut->load($parsedTemplates);

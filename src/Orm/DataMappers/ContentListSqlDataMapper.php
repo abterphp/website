@@ -8,8 +8,11 @@ use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\Helper\DateHelper;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
-use AbterPhp\Website\Domain\Entities\ContentListItem;
+use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
+use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Conditions\ConditionFactory;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 use Opulence\QueryBuilders\Query;
@@ -34,13 +37,14 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
                 'lists',
                 [
                     'id'         => [$entity->getId(), PDO::PARAM_STR],
-                    'type_id'    => [$entity->getTypeId(), PDO::PARAM_STR],
+                    'type_id'    => [$entity->getType()->getId(), PDO::PARAM_STR],
                     'name'       => [$entity->getName(), PDO::PARAM_STR],
                     'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
                     'classes'    => [$entity->getClasses(), PDO::PARAM_STR],
                     'protected'  => [$entity->isProtected(), PDO::PARAM_BOOL],
-                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
                     'with_links' => [$entity->isWithLinks(), PDO::PARAM_BOOL],
+                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
+                    'with_body'  => [$entity->isWithBody(), PDO::PARAM_BOOL],
                     'with_html'  => [$entity->isWithHtml(), PDO::PARAM_BOOL],
                 ]
             );
@@ -62,7 +66,7 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('lists', 'lists', ['deleted_at' => [(new \DateTime())->format(\DATE_RFC3339), \PDO::PARAM_STR]])
+            ->update('lists', 'lists', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), PDO::PARAM_STR);
 
@@ -124,10 +128,10 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
      */
     public function getById($id)
     {
-        $query = $this->getBaseQuery()->andWhere('lists.id = :list_id');
+        $query = $this->getBaseQuery()->andWhere('lists.id = :id');
 
         $parameters = [
-            'list_id' => [$id, PDO::PARAM_STR],
+            'id' => [$id, PDO::PARAM_STR],
         ];
 
         $sql = $query->getSql();
@@ -153,6 +157,24 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
     }
 
     /**
+     * @param string[] $identifiers
+     *
+     * @return Entity[]
+     * @throws \Opulence\Orm\OrmException
+     */
+    public function getByIdentifiers(array $identifiers): array
+    {
+        if (count($identifiers) === 0) {
+            return [];
+        }
+
+        $conditions = new ConditionFactory();
+        $query = $this->getBaseQuery()->andWhere($conditions->in('lists.identifier', $identifiers));
+
+        return $this->read($query->getSql(), $query->getParameters(), self::VALUE_TYPE_ARRAY);
+    }
+
+    /**
      * @param IStringerEntity $entity
      *
      * @throws \Opulence\QueryBuilders\InvalidQueryException
@@ -166,13 +188,14 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
                 'lists',
                 'lists',
                 [
-                    'type_id'    => [$entity->getTypeId(), PDO::PARAM_STR],
+                    'type_id'    => [$entity->getType()->getId(), PDO::PARAM_STR],
                     'name'       => [$entity->getName(), PDO::PARAM_STR],
                     'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
                     'classes'    => [$entity->getClasses(), PDO::PARAM_STR],
                     'protected'  => [$entity->isProtected(), PDO::PARAM_BOOL],
-                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
                     'with_links' => [$entity->isWithLinks(), PDO::PARAM_BOOL],
+                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
+                    'with_body'  => [$entity->isWithBody(), PDO::PARAM_BOOL],
                     'with_html'  => [$entity->isWithHtml(), PDO::PARAM_BOOL],
                 ]
             )
@@ -188,23 +211,36 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
     }
 
     /**
-     * @param array $hash
+     * @param string[] $hash
      *
      * @return Entity
      */
     protected function loadEntity(array $hash)
     {
+        $type = $this->loadType($hash);
+
         return new Entity(
             $hash['id'],
-            $hash['type_id'],
             $hash['name'],
             $hash['identifier'],
             $hash['classes'],
             (bool)$hash['protected'],
-            (bool)$hash['with_image'],
             (bool)$hash['with_links'],
-            (bool)$hash['with_html']
+            (bool)$hash['with_image'],
+            (bool)$hash['with_body'],
+            (bool)$hash['with_html'],
+            $type
         );
+    }
+
+    /**
+     * @param string[] $hash
+     *
+     * @return Type
+     */
+    protected function loadType(array $hash): Type
+    {
+        return new Type($hash['type_id'], $hash['type_name'], $hash['type_label']);
     }
 
     /**
@@ -221,11 +257,15 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
                 'lists.identifier',
                 'lists.classes',
                 'lists.protected',
-                'lists.with_image',
                 'lists.with_links',
-                'lists.with_html'
+                'lists.with_image',
+                'lists.with_body',
+                'lists.with_html',
+                'list_types.name AS type_name',
+                'list_types.label AS type_label'
             )
             ->from('lists')
+            ->innerJoin('list_types', 'list_types', 'list_types.id = lists.type_id AND list_types.deleted_at IS NULL')
             ->where('lists.deleted_at IS NULL');
 
         return $query;
@@ -236,6 +276,10 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
      */
     protected function upsertItems(Entity $entity)
     {
+        if (!$entity->getItems()) {
+            return;
+        }
+
         foreach ($entity->getItems() as $item) {
             if (!$item->getId() && $item->getDeletedAt()) {
                 continue;
@@ -252,11 +296,11 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
     }
 
     /**
-     * @param ContentListItem $item
+     * @param Item $item
      *
      * @return Query
      */
-    protected function createUpdateQuery(ContentListItem $item): Query
+    protected function createUpdateQuery(Item $item): Query
     {
         $deletedAt = $item->getDeletedAt()
             ? [DateHelper::mysqlDateTime($item->getDeletedAt()), \PDO::PARAM_STR]
@@ -283,11 +327,11 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
     }
 
     /**
-     * @param ContentListItem $item
+     * @param Item $item
      *
      * @return Query
      */
-    protected function createInsertQuery(ContentListItem $item): Query
+    protected function createInsertQuery(Item $item): Query
     {
         return (new QueryBuilder())
             ->insert(
@@ -312,7 +356,7 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
     protected function deleteItems(Entity $entity)
     {
         $query = (new QueryBuilder())
-            ->update('list_items', 'list_items', ['deleted_at' => [DateHelper::mysqlDateTime(), \PDO::PARAM_STR]])
+            ->update('list_items', 'list_items', ['deleted_at' => new Expression('NOW()')])
             ->where('list_id = ?')
             ->andWhere('deleted_at IS NOT NULL')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);

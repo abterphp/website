@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AbterPhp\Website\Template\Builder\PageCategory;
 
 use AbterPhp\Framework\Constant\Html5;
@@ -58,7 +60,7 @@ class Detailed implements IBuilder
      *
      * @return Data
      */
-    public function build(array $pages): IData
+    public function build($pages): IData
     {
         if (count($pages) === 0) {
             throw new \InvalidArgumentException();

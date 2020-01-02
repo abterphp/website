@@ -11,6 +11,7 @@ use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
@@ -46,7 +47,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('pages', 'pages', ['deleted' => [1, \PDO::PARAM_INT]])
+            ->update('pages', 'pages', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 
@@ -554,9 +555,8 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'layouts.js_files AS layout_js_files'
             )
             ->from('pages')
-            ->leftJoin('page_layouts', 'layouts', 'layouts.id = pages.layout_id')
-            ->where('pages.deleted_at IS NULL')
-            ->andWhere('layouts.deleted_at IS NULL OR layouts.deleted IS NULL');
+            ->leftJoin('page_layouts', 'layouts', 'layouts.id = pages.layout_id AND layouts.deleted_at IS NULL')
+            ->where('pages.deleted_at IS NULL');
 
         return $query;
     }

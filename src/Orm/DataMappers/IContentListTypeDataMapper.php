@@ -10,13 +10,6 @@ use Opulence\Orm\DataMappers\IDataMapper;
 interface IContentListTypeDataMapper extends IDataMapper
 {
     /**
-     * @param string $identifier
-     *
-     * @return Entity|null
-     */
-    public function getByIdentifier(string $identifier): ?Entity;
-
-    /**
      * @param int      $limitFrom
      * @param int      $pageSize
      * @param string[] $orders

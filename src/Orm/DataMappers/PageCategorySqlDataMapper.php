@@ -9,6 +9,7 @@ use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
@@ -49,7 +50,7 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $query = (new QueryBuilder())
-            ->update('page_categories', 'page_categories', ['deleted' => [1, \PDO::PARAM_INT]])
+            ->update('page_categories', 'page_categories', ['deleted_at' => new Expression('NOW()')])
             ->where('id = ?')
             ->addUnnamedPlaceholderValue($entity->getId(), \PDO::PARAM_STR);
 

@@ -33,7 +33,7 @@ class PageCategory implements ILoader
     protected $builders;
 
     /**
-     * PageCategoryLoader constructor.
+     * PageCategory constructor.
      *
      * @param PageRepo          $pageRepo
      * @param PageCategoryCache $pageCategoryCache
@@ -60,7 +60,7 @@ class PageCategory implements ILoader
     }
 
     /**
-     * @param ParsedTemplate[][] $parsedTemplates
+     * @param array<string,ParsedTemplate[]> $parsedTemplates
      *
      * @return IData[]
      * @throws OrmException
@@ -69,9 +69,7 @@ class PageCategory implements ILoader
     {
         $identifiers = array_keys($parsedTemplates);
 
-        $pages = $this->pageRepo->getByCategoryIdentifiers($identifiers);
-
-        $groupedPages = $this->groupPages($pages);
+        $groupedPages = $this->loadPages($identifiers);
 
         $templateData = $this->createTemplateData($parsedTemplates, $groupedPages);
 
@@ -79,8 +77,25 @@ class PageCategory implements ILoader
     }
 
     /**
-     * @param ParsedTemplate[][] $parsedTemplates
-     * @param Page[][]           $groupedPages
+     * @param string[] $identifiers
+     *
+     * @return array<string,Page[]>
+     */
+    protected function loadPages(array $identifiers): array
+    {
+        $pages = $this->pageRepo->getByCategoryIdentifiers($identifiers);
+
+        $groupedPages = [];
+        foreach ($pages as $page) {
+            $groupedPages[$page->getCategory()->getIdentifier()][] = $page;
+        }
+
+        return $groupedPages;
+    }
+
+    /**
+     * @param array<string,ParsedTemplate[]> $parsedTemplates
+     * @param Page[][]                       $groupedPages
      *
      * @return IData[]
      */
@@ -107,21 +122,6 @@ class PageCategory implements ILoader
         }
 
         return $templateData;
-    }
-
-    /**
-     * @param array $pages
-     *
-     * @return array<string,Page[]>
-     */
-    protected function groupPages(array $pages): array
-    {
-        $groupedPages = [];
-        foreach ($pages as $page) {
-            $groupedPages[$page->getCategory()->getIdentifier()][] = $page;
-        }
-
-        return $groupedPages;
     }
 
     /**

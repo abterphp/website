@@ -10,7 +10,6 @@ use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
 
 /** @phan-file-suppress PhanTypeMismatchArgument */
-
 class BlockCache
 {
     /** @var ConnectionPool */
