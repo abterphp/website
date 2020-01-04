@@ -9,6 +9,8 @@ use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 
 trait ItemTrait
 {
+    abstract public function getIdentifier(): string;
+
     /**
      * @param Item   $item
      * @param Entity $list
@@ -81,6 +83,8 @@ trait ItemTrait
     }
 
     /**
+     * @SuppressWarnings(PHPMD.PhanUndeclaredConstant)
+     *
      * @param Entity $list
      * @param string $listTag
      * @param string $itemTag
@@ -92,7 +96,7 @@ trait ItemTrait
         $content = $this->joinItems($list, $itemTag);
 
         $classes = array_merge(
-            [static::IDENTIFIER, $list->getType()->getName()],
+            [$this->getIdentifier(), $list->getType()->getName()],
             explode(' ', $list->getClasses())
         );
 

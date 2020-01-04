@@ -15,7 +15,6 @@ use AbterPhp\Website\Orm\ContentListRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\ContentList as ValidatorFactory;
 use Casbin\Enforcer;
 use Cocur\Slugify\Slugify;
-use DateTime;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
@@ -186,8 +185,6 @@ class ContentList extends RepoServiceAbstract
         while (isset($postData["existing$i"])) {
             $d = $postData["existing$i"];
 
-            $deletedAt = empty($d['is_deleted']) ? null : new DateTime();
-
             $items[] = new Item(
                 $d['id'],
                 $listId,
@@ -198,7 +195,7 @@ class ContentList extends RepoServiceAbstract
                 $d['img_src'],
                 $d['img_alt'],
                 $d['img_href'],
-                $deletedAt
+                !empty($d['is_deleted'])
             );
 
             $i++;

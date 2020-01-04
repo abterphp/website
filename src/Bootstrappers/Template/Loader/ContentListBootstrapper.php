@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Bootstrappers\Template\Loader;
 
 use AbterPhp\Website\Databases\Queries\ContentListCache as Cache;
+use AbterPhp\Website\Orm\ContentListItemRepo as ItemRepo;
 use AbterPhp\Website\Orm\ContentListRepo as Repo;
 use AbterPhp\Website\Template\Builder\ContentList\Natural as NaturalBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Ordered as OrderedBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Section as SectionBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Unordered as UnorderedBuilder;
-use AbterPhp\Website\Template\Loader\ContentListCategory as Loader;
+use AbterPhp\Website\Template\Loader\ContentList as Loader;
 use Opulence\Ioc\Bootstrappers\Bootstrapper;
 use Opulence\Ioc\Bootstrappers\ILazyBootstrapper;
 use Opulence\Ioc\IContainer;
@@ -32,8 +33,9 @@ class ContentListBootstrapper extends Bootstrapper implements ILazyBootstrapper
      */
     public function registerBindings(IContainer $container)
     {
-        $cache = $container->resolve(Cache::class);
-        $repo  = $container->resolve(Repo::class);
+        $repo     = $container->resolve(Repo::class);
+        $itemRepo = $container->resolve(ItemRepo::class);
+        $cache    = $container->resolve(Cache::class);
 
         /** @var NaturalBuilder $naturalBuilder */
         $naturalBuilder = $container->resolve(NaturalBuilder::class);
@@ -54,7 +56,7 @@ class ContentListBootstrapper extends Bootstrapper implements ILazyBootstrapper
             $unorderedBuilder->getIdentifier() => $unorderedBuilder,
         ];
 
-        $loader = new Loader($repo, $cache, $builders);
+        $loader = new Loader($repo, $itemRepo, $cache, $builders);
 
         $container->bindInstance(Loader::class, $loader);
     }

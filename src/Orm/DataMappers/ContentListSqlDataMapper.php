@@ -6,7 +6,6 @@ namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Helper\DateHelper;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 use AbterPhp\Website\Domain\Entities\ContentListType as Type;
@@ -169,7 +168,7 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
         }
 
         $conditions = new ConditionFactory();
-        $query = $this->getBaseQuery()->andWhere($conditions->in('lists.identifier', $identifiers));
+        $query      = $this->getBaseQuery()->andWhere($conditions->in('lists.identifier', $identifiers));
 
         return $this->read($query->getSql(), $query->getParameters(), self::VALUE_TYPE_ARRAY);
     }
@@ -281,7 +280,7 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
         }
 
         foreach ($entity->getItems() as $item) {
-            if (!$item->getId() && $item->getDeletedAt()) {
+            if (!$item->getId() && $item->isDeleted()) {
                 continue;
             }
 
@@ -302,8 +301,8 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
      */
     protected function createUpdateQuery(Item $item): Query
     {
-        $deletedAt = $item->getDeletedAt()
-            ? [DateHelper::mysqlDateTime($item->getDeletedAt()), \PDO::PARAM_STR]
+        $deletedAt = $item->isDeleted()
+            ? new Expression('NOW()')
             : [null, \PDO::PARAM_STR];
 
         return (new QueryBuilder())

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Helper\DateHelper;
-use DateTime;
 
 class ContentListType implements IStringerEntity
 {
@@ -98,16 +96,22 @@ class ContentListType implements IStringerEntity
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function toJSON(): string
+    public function toData(): ?array
     {
-        $data = [
+        return [
             'id'    => $this->getId(),
             'name'  => $this->getName(),
             'label' => $this->getLabel(),
         ];
+    }
 
-        return json_encode($data);
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        return json_encode($this->toData());
     }
 }

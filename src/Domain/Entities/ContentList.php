@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Helper\DateHelper;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 use AbterPhp\Website\Domain\Entities\ContentListType as Type;
-use DateTime;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -51,17 +49,17 @@ class ContentList implements IStringerEntity
     /**
      * ContentList constructor.
      *
-     * @param string        $id
-     * @param string        $name
-     * @param string        $identifier
-     * @param string        $classes
-     * @param bool          $protected
-     * @param bool          $withLinks
-     * @param bool          $withImage
-     * @param bool          $withBody
-     * @param bool          $withHtml
-     * @param Type          $type
-     * @param Item[]|null   $items
+     * @param string      $id
+     * @param string      $name
+     * @param string      $identifier
+     * @param string      $classes
+     * @param bool        $protected
+     * @param bool        $withLinks
+     * @param bool        $withImage
+     * @param bool        $withBody
+     * @param bool        $withHtml
+     * @param Type|null   $type
+     * @param Item[]|null $items
      */
     public function __construct(
         string $id,
@@ -326,9 +324,9 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getData(): array
+    public function toData(): ?array
     {
         $data = [
             'id'         => $this->getId(),
@@ -338,14 +336,14 @@ class ContentList implements IStringerEntity
             'protected'  => $this->isProtected(),
             'with_links' => $this->isWithLinks(),
             'with_image' => $this->isWithImage(),
-            'with_body'  => $this->withBody(),
+            'with_body'  => $this->isWithBody(),
             'with_html'  => $this->isWithHtml(),
         ];
 
         if ($this->items !== null) {
             $items = [];
             foreach ($this->items as $item) {
-                $items[] = $item->getData();
+                $items[] = $item->toData();
             }
             $data['items'] = $items;
         }
@@ -358,6 +356,6 @@ class ContentList implements IStringerEntity
      */
     public function toJSON(): string
     {
-        return json_encode($this->getData());
+        return json_encode($this->toData());
     }
 }

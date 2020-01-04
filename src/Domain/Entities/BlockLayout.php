@@ -121,16 +121,22 @@ class BlockLayout implements IStringerEntity
     }
 
     /**
+     * @return array|null
+     */
+    public function toData(): ?array
+    {
+        return [
+            'id'         => $this->getId(),
+            'identifier' => $this->getIdentifier(),
+            'body'       => $this->getBody(),
+        ];
+    }
+
+    /**
      * @return string
      */
     public function toJSON(): string
     {
-        return json_encode(
-            [
-                'id'         => $this->getId(),
-                'identifier' => $this->getIdentifier(),
-                'body'       => $this->getBody(),
-            ]
-        );
+        return json_encode($this->toData());
     }
 }

@@ -177,19 +177,25 @@ class Block implements IStringerEntity
     }
 
     /**
+     * @return array|null
+     */
+    public function toData(): ?array
+    {
+        return [
+            'id'         => $this->getId(),
+            'identifier' => $this->getIdentifier(),
+            'title'      => $this->getTitle(),
+            'body'       => $this->getBody(),
+            'layout'     => $this->getLayout(),
+            'layout_id'  => $this->getLayoutId(),
+        ];
+    }
+
+    /**
      * @return string
      */
     public function toJSON(): string
     {
-        return json_encode(
-            [
-                'id'         => $this->getId(),
-                'identifier' => $this->getIdentifier(),
-                'title'      => $this->getTitle(),
-                'body'       => $this->getBody(),
-                'layout'     => $this->getLayout(),
-                'layout_id'  => $this->getLayoutId(),
-            ]
-        );
+        return json_encode($this->toData());
     }
 }

@@ -85,7 +85,7 @@ class ContentList implements ILoader
     /**
      * @param string[] $identifiers
      *
-     * @return <string,Entity>
+     * @return array<string,Entity>
      * @throws \Opulence\Orm\OrmException
      */
     protected function loadWithItems(array $identifiers): array

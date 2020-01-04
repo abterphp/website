@@ -147,9 +147,9 @@ class PageLayout implements IStringerEntity
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function toJSON(): string
+    public function toData(): ?array
     {
         $assetsData = null;
         if ($this->getAssets()) {
@@ -164,13 +164,19 @@ class PageLayout implements IStringerEntity
             ];
         }
 
-        return json_encode(
-            [
-                'id'         => $this->getId(),
-                'identifier' => $this->getIdentifier(),
-                'body'       => $this->getBody(),
-                'assets'     => $assetsData,
-            ]
-        );
+        return [
+            'id'         => $this->getId(),
+            'identifier' => $this->getIdentifier(),
+            'body'       => $this->getBody(),
+            'assets'     => $assetsData,
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        return json_encode($this->toData());
     }
 }

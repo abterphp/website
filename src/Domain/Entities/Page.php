@@ -347,9 +347,9 @@ class Page implements IStringerEntity
     }
 
     /**
-     * @return string
+     * @return array|null
      */
-    public function toJSON(): string
+    public function toData(): ?array
     {
         $meta   = $this->getMeta();
         $assets = $this->getAssets();
@@ -401,6 +401,14 @@ class Page implements IStringerEntity
             $data['rendered'] = $this->getRenderedBody();
         }
 
-        return json_encode($data);
+        return $data;
+    }
+
+    /**
+     * @return string
+     */
+    public function toJSON(): string
+    {
+        return json_encode($this->toData());
     }
 }

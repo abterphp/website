@@ -100,31 +100,33 @@ class ContentListTest extends TestCase
     /**
      * @param string $typeName
      * @param string $identifier
-     * @param string ...$itemIds
+     * @param string ...$itemPostixes
      *
      * @return Entity
      */
-    protected function createEntity(string $typeName, string $identifier, string ...$itemIds): Entity
+    protected function createEntity(string $typeName, string $identifier, string ...$itemPostixes): Entity
     {
+        $entityId = "list-$identifier";
 
         $type   = new Type("type-$identifier", $typeName, '');
-        $entity = new Entity("list-$identifier", '', $identifier, '', false, false, false, false, false, $type);
+        $entity = new Entity($entityId, '', $identifier, '', false, false, false, false, false, $type);
         $items  = [];
-        foreach ($itemIds as $itemId) {
-            $entity->addItem($this->createItem("item-$itemId", $itemId));
+        foreach ($itemPostixes as $postfix) {
+            $entity->addItem($this->createItem($postfix, $entityId));
         }
 
         return $entity;
     }
 
     /**
-     * @param string $id
      * @param string $postfix
+     * @param string $listId
      *
      * @return Item
      */
-    protected function createItem(string $id, string $postfix): Item
+    protected function createItem(string $postfix, string $listId): Item
     {
+        $id       = "item-$postfix";
         $name     = "Foo $postfix";
         $nameHref = "/foo-$postfix";
         $body     = "Bar $postfix";
@@ -133,7 +135,7 @@ class ContentListTest extends TestCase
         $imgHref  = "/baz1-$postfix";
         $imgAlt   = "Baz $postfix";
 
-        return new Item($id, $id, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        return new Item($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
     }
 
     public function testHasAnyChangedSinceCallsBlockCache()

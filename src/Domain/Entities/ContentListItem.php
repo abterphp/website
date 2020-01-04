@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
-use AbterPhp\Framework\Helper\DateHelper;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -39,18 +38,22 @@ class ContentListItem implements IStringerEntity
     /** @var string */
     protected $imgAlt;
 
+    /** @var bool */
+    protected $deleted;
+
     /**
      * ContentListItem constructor.
      *
-     * @param string        $id
-     * @param string        $listId
-     * @param string        $name
-     * @param string        $nameHref
-     * @param string        $body
-     * @param string        $bodyHref
-     * @param string        $imgSrc
-     * @param string        $imgHref
-     * @param string        $imgAlt
+     * @param string $id
+     * @param string $listId
+     * @param string $name
+     * @param string $nameHref
+     * @param string $body
+     * @param string $bodyHref
+     * @param string $imgSrc
+     * @param string $imgHref
+     * @param string $imgAlt
+     * @param bool   $isDeleted
      */
     public function __construct(
         string $id,
@@ -61,17 +64,19 @@ class ContentListItem implements IStringerEntity
         string $bodyHref,
         string $imgSrc,
         string $imgHref,
-        string $imgAlt
+        string $imgAlt,
+        bool $isDeleted = false
     ) {
-        $this->id        = $id;
-        $this->listId    = $listId;
-        $this->name      = $name;
-        $this->nameHref  = $nameHref;
-        $this->body      = $body;
-        $this->bodyHref  = $bodyHref;
-        $this->imgSrc    = $imgSrc;
-        $this->imgHref   = $imgHref;
-        $this->imgAlt    = $imgAlt;
+        $this->id       = $id;
+        $this->listId   = $listId;
+        $this->name     = $name;
+        $this->nameHref = $nameHref;
+        $this->body     = $body;
+        $this->bodyHref = $bodyHref;
+        $this->imgSrc   = $imgSrc;
+        $this->imgHref  = $imgHref;
+        $this->imgAlt   = $imgAlt;
+        $this->deleted  = $isDeleted;
     }
 
     /**
@@ -251,6 +256,24 @@ class ContentListItem implements IStringerEntity
     }
 
     /**
+     * @return bool
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted(bool $deleted): ContentListItem
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string
@@ -259,10 +282,14 @@ class ContentListItem implements IStringerEntity
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getData(): array
+    public function toData(): ?array
     {
+        if ($this->deleted) {
+            return null;
+        }
+
         $data = [
             'id'        => $this->getId(),
             'list_id'   => $this->getListId(),
@@ -283,6 +310,6 @@ class ContentListItem implements IStringerEntity
      */
     public function toJSON(): string
     {
-        return json_encode($this->getData());
+        return json_encode($this->toData());
     }
 }
