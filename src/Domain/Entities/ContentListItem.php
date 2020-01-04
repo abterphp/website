@@ -33,10 +33,10 @@ class ContentListItem implements IStringerEntity
     protected $imgSrc;
 
     /** @var string */
-    protected $imgHref;
+    protected $imgAlt;
 
     /** @var string */
-    protected $imgAlt;
+    protected $imgHref;
 
     /** @var bool */
     protected $deleted;
@@ -51,8 +51,8 @@ class ContentListItem implements IStringerEntity
      * @param string $body
      * @param string $bodyHref
      * @param string $imgSrc
-     * @param string $imgHref
      * @param string $imgAlt
+     * @param string $imgHref
      * @param bool   $isDeleted
      */
     public function __construct(
@@ -63,8 +63,8 @@ class ContentListItem implements IStringerEntity
         string $body,
         string $bodyHref,
         string $imgSrc,
-        string $imgHref,
         string $imgAlt,
+        string $imgHref,
         bool $isDeleted = false
     ) {
         $this->id       = $id;
@@ -74,8 +74,8 @@ class ContentListItem implements IStringerEntity
         $this->body     = $body;
         $this->bodyHref = $bodyHref;
         $this->imgSrc   = $imgSrc;
-        $this->imgHref  = $imgHref;
         $this->imgAlt   = $imgAlt;
+        $this->imgHref  = $imgHref;
         $this->deleted  = $isDeleted;
     }
 
@@ -218,26 +218,6 @@ class ContentListItem implements IStringerEntity
     /**
      * @return string
      */
-    public function getImgHref(): string
-    {
-        return $this->imgHref;
-    }
-
-    /**
-     * @param string $imgHref
-     *
-     * @return $this
-     */
-    public function setImgHref(string $imgHref): ContentListItem
-    {
-        $this->imgHref = $imgHref;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
     public function getImgAlt(): string
     {
         return $this->imgAlt;
@@ -251,6 +231,26 @@ class ContentListItem implements IStringerEntity
     public function setImgAlt(string $imgAlt): ContentListItem
     {
         $this->imgAlt = $imgAlt;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getImgHref(): string
+    {
+        return $this->imgHref;
+    }
+
+    /**
+     * @param string $imgHref
+     *
+     * @return $this
+     */
+    public function setImgHref(string $imgHref): ContentListItem
+    {
+        $this->imgHref = $imgHref;
 
         return $this;
     }

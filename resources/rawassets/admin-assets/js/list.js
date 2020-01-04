@@ -6,7 +6,7 @@ $(document).ready(function () {
         isDeletedInputs = $('.item_is_deleted'),
         withBodyInput = $('#with_body'),
         withHtmlInput = $('#with_html'),
-        withHtmlContainer = $('#withHtml-container').hide();
+        withHtmlContainer = $('#withHtml-container').toggle(withBodyInput.is(':checked'));
 
     withBodyInput.click(function () {
         withHtmlContainer.toggle($(this).is(':checked'));

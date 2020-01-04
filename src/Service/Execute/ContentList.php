@@ -95,10 +95,13 @@ class ContentList extends RepoServiceAbstract
 
         $classes = $postData['classes'];
 
-        $protected = empty($postData['protected']) ? false : (bool)$postData['protected'];
-        $withImage = empty($postData['with_image']) ? false : (bool)$postData['with_image'];
-        $withLinks = empty($postData['with_links']) ? false : (bool)$postData['with_links'];
-        $withHtml  = empty($postData['with_html']) ? false : (bool)$postData['with_html'];
+        $protected = !empty($postData['protected']);
+        $withLinks = !empty($postData['with_links']);
+        $withImage = !empty($postData['with_image']);
+        $withBody  = !empty($postData['with_body']);
+        $withHtml  = !empty($postData['with_html']);
+
+        $items = $this->createItems($postData, $entity->getId());
 
         $entity
             ->setType($type)
@@ -108,8 +111,9 @@ class ContentList extends RepoServiceAbstract
             ->setProtected($protected)
             ->setWithImage($withImage)
             ->setWithLinks($withLinks)
+            ->setWithBody($withBody)
             ->setWithHtml($withHtml)
-            ->setItems($this->createItems($postData, $entity->getId()));
+            ->setItems($items);
 
         return $entity;
     }
@@ -143,6 +147,7 @@ class ContentList extends RepoServiceAbstract
         $postData['protected']  = $entity->isProtected();
         $postData['with_image'] = $entity->isWithImage();
         $postData['with_links'] = $entity->isWithLinks();
+        $postData['with_body']  = $entity->isWithBody();
         $postData['with_html']  = $entity->isWithHtml();
 
         return $postData;
@@ -160,47 +165,56 @@ class ContentList extends RepoServiceAbstract
 
         $i = 1;
         while (isset($postData["new$i"])) {
-            $d = $postData["new$i"];
+            $itemData = $postData["new$i"];
 
             $i++;
 
-            if (!empty($d['is_deleted'])) {
+            if (!empty($itemData['is_deleted'])) {
                 continue;
             }
 
-            $items[] = new Item(
-                '',
-                $listId,
-                $d['name'],
-                $d['name_href'],
-                $d['body'],
-                $d['body_href'],
-                $d['img_src'],
-                $d['img_alt'],
-                $d['img_href']
-            );
+            $items[] = $this->createItem($itemData, $listId);
         }
 
         $i = 1;
         while (isset($postData["existing$i"])) {
-            $d = $postData["existing$i"];
-
-            $items[] = new Item(
-                $d['id'],
-                $listId,
-                $d['name'],
-                $d['name_href'],
-                $d['body'],
-                $d['body_href'],
-                $d['img_src'],
-                $d['img_alt'],
-                $d['img_href'],
-                !empty($d['is_deleted'])
-            );
+            $items[] = $this->createItem($postData["existing$i"], $listId);
 
             $i++;
         }
 
         return $items;
+    }
+
+    /**
+     * @param array  $itemData
+     * @param string $listId
+     *
+     * @return Item
+     */
+    protected function createItem(array $itemData, string $listId): Item
+    {
+        $itemId   = $itemData['id'] ?? '';
+        $name     = $itemData['name'] ?? '';
+        $nameHref = $itemData['name_href'] ?? '';
+        $body     = $itemData['body'] ?? '';
+        $bodyHref = $itemData['body_href'] ?? '';
+        $imgSrc   = $itemData['img_src'] ?? '';
+        $imgAlt   = $itemData['img_alt'] ?? '';
+        $imgHref  = $itemData['img_href'] ?? '';
+        $deleted  = !empty($itemData['is_deleted']);
+
+        return new Item(
+            $itemId,
+            $listId,
+            $name,
+            $nameHref,
+            $body,
+            $bodyHref,
+            $imgSrc,
+            $imgAlt,
+            $imgHref,
+            $deleted
+        );
     }
 }

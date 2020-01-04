@@ -32,10 +32,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql       = 'INSERT INTO list_items (id, list_id, name, name_href, body, body_href, img_src, img_href, img_alt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $sql       = 'INSERT INTO list_items (id, list_id, name, name_href, body, body_href, img_src, img_alt, img_href) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
         $values    = [
             [$nextId, \PDO::PARAM_STR],
             [$listId, \PDO::PARAM_STR],
@@ -44,13 +44,13 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
             [$body, \PDO::PARAM_STR],
             [$bodyHref, \PDO::PARAM_STR],
             [$imgSrc, \PDO::PARAM_STR],
-            [$imgHref, \PDO::PARAM_STR],
             [$imgAlt, \PDO::PARAM_STR],
+            [$imgHref, \PDO::PARAM_STR],
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new Entity($nextId, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        $entity = new Entity($nextId, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgAlt, $imgHref);
 
         $this->sut->add($entity);
 
@@ -74,7 +74,7 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new Entity($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        $entity = new Entity($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgAlt, $imgHref);
 
         $this->sut->delete($entity);
     }
@@ -88,10 +88,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_href, list_items.img_alt FROM list_items WHERE (list_items.deleted_at IS NULL)'; // phpcs:ignore
+        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_alt, list_items.img_href FROM list_items WHERE (list_items.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -102,8 +102,8 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
                 'body'      => $body,
                 'body_href' => $bodyHref,
                 'img_src'   => $imgSrc,
-                'img_href'  => $imgHref,
                 'img_alt'   => $imgAlt,
+                'img_href'  => $imgHref,
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -123,10 +123,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_href, list_items.img_alt FROM list_items WHERE (list_items.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_alt, list_items.img_href FROM list_items WHERE (list_items.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -137,8 +137,8 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
                 'body'      => $body,
                 'body_href' => $bodyHref,
                 'img_src'   => $imgSrc,
-                'img_href'  => $imgHref,
                 'img_alt'   => $imgAlt,
+                'img_href'  => $imgHref,
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -158,10 +158,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_href, list_items.img_alt FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.id = :list_item_id)'; // phpcs:ignore
+        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_alt, list_items.img_href FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.id = :list_item_id)'; // phpcs:ignore
         $values       = ['list_item_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -172,8 +172,8 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
                 'body'      => $body,
                 'body_href' => $bodyHref,
                 'img_src'   => $imgSrc,
-                'img_href'  => $imgHref,
                 'img_alt'   => $imgAlt,
+                'img_href'  => $imgHref,
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -193,10 +193,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_href, list_items.img_alt FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.list_id = :list_id)'; // phpcs:ignore
+        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_alt, list_items.img_href FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.list_id = :list_id)'; // phpcs:ignore
         $values       = ['list_id' => [$listId, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -207,8 +207,8 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
                 'body'      => $body,
                 'body_href' => $bodyHref,
                 'img_src'   => $imgSrc,
-                'img_href'  => $imgHref,
                 'img_alt'   => $imgAlt,
+                'img_href'  => $imgHref,
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -228,12 +228,12 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
         $listId1 = '51ec9310-9a6d-4fdc-a26b-3a83dd373a18';
 
-        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_href, list_items.img_alt FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.list_id IN (?,?))'; // phpcs:ignore
+        $sql          = 'SELECT list_items.id, list_items.list_id, list_items.name, list_items.name_href, list_items.body, list_items.body_href, list_items.img_src, list_items.img_alt, list_items.img_href FROM list_items WHERE (list_items.deleted_at IS NULL) AND (list_items.list_id IN (?,?))'; // phpcs:ignore
         $values       = [[$listId0, \PDO::PARAM_STR], [$listId1, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -244,8 +244,8 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
                 'body'      => $body,
                 'body_href' => $bodyHref,
                 'img_src'   => $imgSrc,
-                'img_href'  => $imgHref,
                 'img_alt'   => $imgAlt,
+                'img_href'  => $imgHref,
             ],
         ];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
@@ -265,10 +265,10 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $body     = 'Bar';
         $bodyHref = 'bar';
         $imgSrc   = 'baz';
-        $imgHref  = 'qux';
-        $imgAlt   = 'quix';
+        $imgAlt   = 'qux';
+        $imgHref  = 'quix';
 
-        $sql       = 'UPDATE list_items AS list_items SET list_id = ?, name = ?, name_href = ?, body = ?, body_href = ?, img_src = ?, img_href = ?, img_alt = ? WHERE (id = ?) AND (list_items.deleted_at IS NULL)'; // phpcs:ignore
+        $sql       = 'UPDATE list_items AS list_items SET list_id = ?, name = ?, name_href = ?, body = ?, body_href = ?, img_src = ?, img_alt = ?, img_href = ? WHERE (id = ?) AND (list_items.deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$listId, \PDO::PARAM_STR],
             [$name, \PDO::PARAM_STR],
@@ -276,14 +276,14 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
             [$body, \PDO::PARAM_STR],
             [$bodyHref, \PDO::PARAM_STR],
             [$imgSrc, \PDO::PARAM_STR],
-            [$imgHref, \PDO::PARAM_STR],
             [$imgAlt, \PDO::PARAM_STR],
+            [$imgHref, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new Entity($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        $entity = new Entity($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgAlt, $imgHref);
 
         $this->sut->update($entity);
     }
@@ -332,7 +332,7 @@ class ContentListItemSqlDataMapperTest extends DataMapperTestCase
         $this->assertSame($expectedData['body'], $entity->getBody());
         $this->assertSame($expectedData['body_href'], $entity->getBodyHref());
         $this->assertSame($expectedData['img_src'], $entity->getImgSrc());
-        $this->assertSame($expectedData['img_href'], $entity->getImgHref());
         $this->assertSame($expectedData['img_alt'], $entity->getImgAlt());
+        $this->assertSame($expectedData['img_href'], $entity->getImgHref());
     }
 }

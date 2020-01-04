@@ -36,8 +36,8 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
                     'body'      => [$entity->getBody(), PDO::PARAM_STR],
                     'body_href' => [$entity->getBodyHref(), PDO::PARAM_STR],
                     'img_src'   => [$entity->getImgSrc(), PDO::PARAM_STR],
-                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
                     'img_alt'   => [$entity->getImgAlt(), PDO::PARAM_STR],
+                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
                 ]
             );
 
@@ -182,8 +182,8 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
                     'body'      => [$entity->getBody(), PDO::PARAM_STR],
                     'body_href' => [$entity->getBodyHref(), PDO::PARAM_STR],
                     'img_src'   => [$entity->getImgSrc(), PDO::PARAM_STR],
-                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
                     'img_alt'   => [$entity->getImgAlt(), PDO::PARAM_STR],
+                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
                 ]
             )
             ->where('id = ?')
@@ -210,8 +210,8 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
             $hash['body'],
             $hash['body_href'],
             $hash['img_src'],
-            $hash['img_href'],
-            $hash['img_alt']
+            $hash['img_alt'],
+            $hash['img_href']
         );
     }
 
@@ -230,8 +230,8 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
                 'list_items.body',
                 'list_items.body_href',
                 'list_items.img_src',
-                'list_items.img_href',
-                'list_items.img_alt'
+                'list_items.img_alt',
+                'list_items.img_href'
             )
             ->from('list_items')
             ->where('list_items.deleted_at IS NULL');

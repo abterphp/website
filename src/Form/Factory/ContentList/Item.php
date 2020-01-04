@@ -36,8 +36,6 @@ class Item
      */
     public function create(?Entity $entity, bool $withLinks, bool $withImage, bool $withBody, bool $withHtml): array
     {
-        $this->count++;
-
         $this->id = $entity ? "existing{$this->count}" : 'new';
 
         $components = [];
@@ -64,6 +62,8 @@ class Item
             }
         }
         $components[] = $this->addIsDeleted();
+
+        $this->count++;
 
         return $components;
     }
