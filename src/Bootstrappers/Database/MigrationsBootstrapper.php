@@ -8,7 +8,6 @@ use AbterPhp\Admin\Bootstrappers\Database\MigrationsBootstrapper as AdminBootstr
 use AbterPhp\Admin\Bootstrappers\Filesystem\FileFinderBootstrapper;
 use AbterPhp\Framework\Filesystem\IFileFinder; // @phan-suppress-current-line PhanUnreferencedUseNormal
 use AbterPhp\Website\Databases\Migrations\Init;
-use AbterPhp\Website\Databases\Migrations\WebsiteLists;
 use Opulence\Databases\IConnection;
 use Opulence\Ioc\IContainer;
 
@@ -21,7 +20,6 @@ class MigrationsBootstrapper extends AdminBootstrapper
     {
         return [
             Init::class,
-            WebsiteLists::class,
         ];
     }
 
@@ -39,6 +37,5 @@ class MigrationsBootstrapper extends AdminBootstrapper
         $fileFinder = $container->resolve(FileFinderBootstrapper::MIGRATION_FILE_FINDER);
 
         $container->bindInstance(Init::class, new Init($connection, $fileFinder));
-        $container->bindInstance(WebsiteLists::class, new WebsiteLists($connection, $fileFinder));
     }
 }
