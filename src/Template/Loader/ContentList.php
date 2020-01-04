@@ -132,7 +132,7 @@ class ContentList implements ILoader
 
                 $typeName = $list->getType()->getName();
                 if ($typeName && array_key_exists($typeName, $this->builders)) {
-                    $templateData[] = $this->builders[$typeName]->build($list);
+                    $templateData[] = $this->builders[$typeName]->build($list, $parsedTemplate);
 
                     continue;
                 }

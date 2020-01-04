@@ -10,6 +10,7 @@ use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Template\Data;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
+use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Constant\Event;
 use AbterPhp\Website\Constant\Routes;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
@@ -56,11 +57,14 @@ class Detailed implements IBuilder
     }
 
     /**
-     * @param Entity[] $pages
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity[]            $pages
+     * @param ParsedTemplate|null $template
      *
      * @return Data
      */
-    public function build($pages): IData
+    public function build($pages, ?ParsedTemplate $template = null): IData
     {
         if (count($pages) === 0) {
             throw new \InvalidArgumentException();

@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/admin.git",
-                "reference": "7d7fa8c41edb1826de3ca85558c4f2e49bccf94a"
+                "reference": "2c100def8694d2782aa512fadb0c6ae779d7ab5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/admin/zipball/7d7fa8c41edb1826de3ca85558c4f2e49bccf94a",
-                "reference": "7d7fa8c41edb1826de3ca85558c4f2e49bccf94a",
+                "url": "https://api.github.com/repos/abterphp/admin/zipball/2c100def8694d2782aa512fadb0c6ae779d7ab5c",
+                "reference": "2c100def8694d2782aa512fadb0c6ae779d7ab5c",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                 }
             ],
             "description": "Admin module for AbterPHP",
-            "time": "2019-12-29T17:41:04+00:00"
+            "time": "2019-12-31T20:15:59+00:00"
         },
         {
             "name": "abterphp/framework",
@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/framework.git",
-                "reference": "0ab8be6f8944ea1cc7e58787c3f2d06006a92748"
+                "reference": "4279640e1d7f1b6cc2e5bd078c5d2f235ec64e03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/framework/zipball/0ab8be6f8944ea1cc7e58787c3f2d06006a92748",
-                "reference": "0ab8be6f8944ea1cc7e58787c3f2d06006a92748",
+                "url": "https://api.github.com/repos/abterphp/framework/zipball/4279640e1d7f1b6cc2e5bd078c5d2f235ec64e03",
+                "reference": "4279640e1d7f1b6cc2e5bd078c5d2f235ec64e03",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +124,7 @@
                 }
             ],
             "description": "Foundations for AbterPHP",
-            "time": "2019-12-29T17:34:24+00:00"
+            "time": "2020-01-04T08:53:23+00:00"
         },
         {
             "name": "bjeavons/zxcvbn-php",
@@ -508,27 +508,26 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.12",
+            "version": "2.1.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "a6255605af39f2db7f5cb62e672bd8a7bad8d208"
+                "reference": "834593d5900615639208417760ba6a17299e2497"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/a6255605af39f2db7f5cb62e672bd8a7bad8d208",
-                "reference": "a6255605af39f2db7f5cb62e672bd8a7bad8d208",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/834593d5900615639208417760ba6a17299e2497",
+                "reference": "834593d5900615639208417760ba6a17299e2497",
                 "shasum": ""
             },
             "require": {
                 "doctrine/lexer": "^1.0.1",
-                "php": ">= 5.5"
+                "php": ">=5.5"
             },
             "require-dev": {
-                "dominicsayers/isemail": "dev-master",
-                "phpunit/phpunit": "^4.8.35||^5.7||^6.0",
-                "satooshi/php-coveralls": "^1.0.1",
-                "symfony/phpunit-bridge": "^4.4@dev"
+                "dominicsayers/isemail": "^3.0.7",
+                "phpunit/phpunit": "^4.8.36|^7.5.15",
+                "satooshi/php-coveralls": "^1.0.1"
             },
             "suggest": {
                 "ext-intl": "PHP Internationalization Libraries are required to use the SpoofChecking validation"
@@ -562,7 +561,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2019-12-20T12:49:39+00:00"
+            "time": "2019-12-30T08:14:25+00:00"
         },
         {
             "name": "filp/whoops",

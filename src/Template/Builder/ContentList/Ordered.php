@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Template\Builder\ContentList;
 use AbterPhp\Framework\Template\Data;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
+use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 
 class Ordered implements IBuilder
@@ -24,11 +25,14 @@ class Ordered implements IBuilder
     }
 
     /**
-     * @param Entity $list
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity              $list
+     * @param ParsedTemplate|null $template
      *
      * @return Data
      */
-    public function build($list): IData
+    public function build($list, ?ParsedTemplate $template = null): IData
     {
         $html = $this->buildItems($list, 'ol', 'li');
 

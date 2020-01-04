@@ -103,6 +103,7 @@ class PageCategory implements ILoader
     {
         $templateData = [];
         foreach ($parsedTemplates as $identifier => $identifierTemplates) {
+            /** @var ParsedTemplate $parsedTemplate */
             foreach ($identifierTemplates as $parsedTemplate) {
                 if (!array_key_exists($identifier, $groupedPages)) {
                     continue;
@@ -112,7 +113,7 @@ class PageCategory implements ILoader
 
                 $builderName = $parsedTemplate->getAttribute('builder');
                 if ($builderName && array_key_exists($builderName, $this->builders)) {
-                    $templateData[] = $this->builders[$builderName]->build($pages);
+                    $templateData[] = $this->builders[$builderName]->build($pages, $parsedTemplate);
 
                     continue;
                 }
