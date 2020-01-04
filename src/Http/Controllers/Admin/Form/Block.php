@@ -25,6 +25,8 @@ class Block extends FormAbstract
     const ENTITY_TITLE_SINGULAR = 'website:block';
     const ENTITY_TITLE_PLURAL   = 'website:blocks';
 
+    const ROUTING_PATH = 'blocks';
+
     /** @var AssetManager */
     protected $assets;
 

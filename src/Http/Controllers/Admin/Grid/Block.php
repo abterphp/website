@@ -20,6 +20,8 @@ class Block extends GridAbstract
 
     const ENTITY_TITLE_PLURAL = 'website:blocks';
 
+    const ROUTING_PATH = 'blocks';
+
     /** @var string */
     protected $resource = 'blocks';
 

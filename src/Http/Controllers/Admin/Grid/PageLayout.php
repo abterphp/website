@@ -20,6 +20,8 @@ class PageLayout extends GridAbstract
 
     const ENTITY_TITLE_PLURAL = 'website:pageLayouts';
 
+    const ROUTING_PATH = 'page-layouts';
+
     /** @var string */
     protected $resource = 'page_layouts';
 

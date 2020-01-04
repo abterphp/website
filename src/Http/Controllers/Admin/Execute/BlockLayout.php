@@ -20,6 +20,8 @@ class BlockLayout extends ExecuteAbstract
     const ENTITY_TITLE_SINGULAR = 'website:blockLayout';
     const ENTITY_TITLE_PLURAL   = 'website:blockLayouts';
 
+    const ROUTING_PATH = 'block-layouts';
+
     /**
      * BlockLayout constructor.
      *

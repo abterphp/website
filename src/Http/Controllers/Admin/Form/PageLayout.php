@@ -25,6 +25,8 @@ class PageLayout extends FormAbstract
     const ENTITY_TITLE_SINGULAR = 'website:pageLayout';
     const ENTITY_TITLE_PLURAL   = 'website:pageLayouts';
 
+    const ROUTING_PATH = 'page-layouts';
+
     /** @var AssetManager */
     protected $assetManager;
 

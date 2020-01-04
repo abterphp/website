@@ -20,6 +20,8 @@ class Page extends GridAbstract
 
     const ENTITY_TITLE_PLURAL = 'website:pages';
 
+    const ROUTING_PATH = 'pages';
+
     /** @var string */
     protected $resource = 'pages';
 

@@ -20,6 +20,8 @@ class BlockLayout extends GridAbstract
 
     const ENTITY_TITLE_PLURAL = 'website:blockLayouts';
 
+    const ROUTING_PATH = 'block-layouts';
+
     /** @var string */
     protected $resource = 'block_layouts';
 

@@ -25,6 +25,8 @@ class ContentList extends FormAbstract
     const ENTITY_TITLE_SINGULAR = 'website:contentList';
     const ENTITY_TITLE_PLURAL   = 'website:contentLists';
 
+    const ROUTING_PATH = 'lists';
+
     /** @var AssetManager */
     protected $assetManager;
 

@@ -29,17 +29,15 @@ $router->group(
             ],
             function (Router $router) {
                 $entities = [
-                    'blocks'         => 'Block',
-                    'blocklayouts'   => 'BlockLayout',
-                    'lists'          => 'ContentList',
-                    'pages'          => 'Page',
-                    'pagelayouts'    => 'PageLayout',
-                    'pagecategories' => 'PageCategory',
+                    'blocks'          => 'Block',
+                    'block-layouts'   => 'BlockLayout',
+                    'lists'           => 'ContentList',
+                    'pages'           => 'Page',
+                    'page-layouts'    => 'PageLayout',
+                    'page-categories' => 'PageCategory',
                 ];
 
                 foreach ($entities as $route => $controllerName) {
-                    $path = strtolower($controllerName);
-
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\Block::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\BlockLayout::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\ContentList::show() */
@@ -47,7 +45,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\PageLayout::show() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Grid\PageCategory::show() */
                     $router->get(
-                        "/${path}",
+                        "/${route}",
                         "Admin\Grid\\${controllerName}@show",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}",
@@ -70,7 +68,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::new() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::new() */
                     $router->get(
-                        "/${path}/new",
+                        "/${route}/new",
                         "Admin\Form\\${controllerName}@new",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}-new",
@@ -92,7 +90,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::create() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::create() */
                     $router->post(
-                        "/${path}/new",
+                        "/${route}/new",
                         "Admin\Execute\\${controllerName}@create",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}-create",
@@ -114,7 +112,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageLayout::edit() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Form\PageCategory::edit() */
                     $router->get(
-                        "/${path}/:entityId/edit",
+                        "/${route}/:entityId/edit",
                         "Admin\Form\\${controllerName}@edit",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}-edit",
@@ -136,7 +134,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageLayout::update() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageCategory::update() */
                     $router->put(
-                        "/${path}/:entityId/edit",
+                        "/${route}/:entityId/edit",
                         "Admin\Execute\\${controllerName}@update",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}-update",
@@ -158,7 +156,7 @@ $router->group(
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageLayout::delete() */
                     /** @see \AbterPhp\Website\Http\Controllers\Admin\Execute\PageCategory::delete() */
                     $router->get(
-                        "/${path}/:entityId/delete",
+                        "/${route}/:entityId/delete",
                         "Admin\Execute\\${controllerName}@delete",
                         [
                             RoutesConstant::OPTION_NAME       => "${route}-delete",

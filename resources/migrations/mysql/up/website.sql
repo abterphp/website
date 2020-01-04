@@ -3,11 +3,11 @@
 --
 
 INSERT INTO `admin_resources` (`id`, `identifier`)
-VALUES (UUID(), 'blocklayouts'),
-       (UUID(), 'pagelayouts'),
+VALUES (UUID(), 'block-layouts'),
+       (UUID(), 'page-layouts'),
        (UUID(), 'pages'),
        (UUID(), 'blocks'),
-       (UUID(), 'pagecategories');
+       (UUID(), 'page-categories');
 
 --
 -- Table data for table `casbin_rule`
@@ -196,7 +196,7 @@ WHERE `user_groups`.`identifier` IN ('admin', 'content-editor', 'layout-editor')
 INSERT IGNORE INTO `user_groups_admin_resources` (`id`, `user_group_id`, `admin_resource_id`)
 SELECT UUID(), user_groups.id AS user_group_id, admin_resources.id AS admin_resource_id
 FROM user_groups
-         INNER JOIN admin_resources ON admin_resources.identifier IN ('blocklayouts', 'pagelayouts', 'pages', 'blocks')
+         INNER JOIN admin_resources ON admin_resources.identifier IN ('block-layouts', 'page-layouts', 'pages', 'blocks')
 WHERE user_groups.identifier = 'layout-editor';
 
 -- Provide access to relevant admin pages for content editors

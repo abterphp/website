@@ -24,6 +24,8 @@ class PageCategory extends FormAbstract
     const ENTITY_TITLE_SINGULAR = 'website:pageCategory';
     const ENTITY_TITLE_PLURAL   = 'website:pageCategories';
 
+    const ROUTING_PATH = 'page-categories';
+
     /** @var string */
     protected $resource = 'page_categories';
 

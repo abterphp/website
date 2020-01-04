@@ -20,6 +20,8 @@ class Page extends ExecuteAbstract
     const ENTITY_TITLE_SINGULAR = 'website:page';
     const ENTITY_TITLE_PLURAL   = 'website:pages';
 
+    const ROUTING_PATH = 'pages';
+
     /**
      * Page constructor.
      *

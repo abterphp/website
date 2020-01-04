@@ -20,6 +20,8 @@ class ContentList extends GridAbstract
 
     const ENTITY_TITLE_PLURAL   = 'website:contentLists';
 
+    const ROUTING_PATH = 'lists';
+
     /** @var string */
     protected $resource = 'lists';
 

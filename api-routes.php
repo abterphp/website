@@ -26,10 +26,10 @@ $router->group(
             function (Router $router) {
                 $entities = [
                     'pages'          => 'Page',
-                    'pagelayouts'    => 'PageLayout',
-                    'pagecategories' => 'PageCategory',
+                    'page-layouts'    => 'PageLayout',
+                    'page-categories' => 'PageCategory',
                     'blocks'         => 'Block',
-                    'blocklayouts'   => 'BlockLayout',
+                    'block-layouts'   => 'BlockLayout',
                 ];
 
                 foreach ($entities as $route => $controllerName) {

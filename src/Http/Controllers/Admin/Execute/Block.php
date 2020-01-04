@@ -20,6 +20,8 @@ class Block extends ExecuteAbstract
     const ENTITY_TITLE_SINGULAR = 'website:block';
     const ENTITY_TITLE_PLURAL   = 'website:blocks';
 
+    const ROUTING_PATH = 'blocks';
+
     /**
      * Block constructor.
      *

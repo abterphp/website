@@ -20,6 +20,8 @@ class ContentList extends ExecuteAbstract
     const ENTITY_TITLE_SINGULAR = 'website:contentList';
     const ENTITY_TITLE_PLURAL   = 'website:contentLists';
 
+    const ROUTING_PATH = 'lists';
+
     /**
      * ContentList constructor.
      *
