@@ -48,7 +48,7 @@ CREATE TABLE `block_layouts`
 
 INSERT INTO `block_layouts` (`id`, `name`, `identifier`, `body`)
 VALUES (UUID(), 'Index Text Section', 'index-text-section',
-        '                <div><hr class=\"section-heading-spacer\"></div>\r\n                <div class=\"clearfix\"></div>\r\n                <h2 class=\"section-heading\">{{var/title}}</h2>\r\n                <div class=\"lead\">{{var/body}}</div>'),
+        '                <div><hr class=\"section-heading-spacer\"></div>\r\n                <div class=\"clearfix\"></div>\r\n                <h2 class=\"section-heading\">{{var/title}}</h2>\r\n                <div class=\"lead\">{{var/lead}}</div>\r\n                <div class=\"body\">{{var/body}}</div>'),
        (UUID(), 'Empty', 'empty', '{{var/body}}');
 
 --

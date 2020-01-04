@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Service\Website;
 
 use AbterPhp\Admin\Orm\UserRepo;
-use AbterPhp\Framework\Helper\StringHelper;
+use AbterPhp\Framework\Constant\Html5;
+use AbterPhp\Framework\Html\Helper\StringHelper;
 use AbterPhp\Framework\Template\Engine;
 use AbterPhp\Website\Constant\Event;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
@@ -69,11 +70,13 @@ class Index
             return null;
         }
 
-        $page = $pageEvent->getPage();
+        $page      = $pageEvent->getPage();
+        $leadLines = StringHelper::wrapByLines($page->getLead(), Html5::TAG_P);
+        $lead      = StringHelper::wrapInTag($leadLines, Html5::TAG_DIV, [Html5::ATTR_CLASS => 'strong']);
 
         $vars      = [
             'title' => $page->getTitle(),
-            'lead'  => StringHelper::plainToHtml($page->getLead(), '<strong>', '</strong>'),
+            'lead'  => $lead,
         ];
         $templates = [
             'body'   => $page->getBody(),
