@@ -4,12 +4,27 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Builder\ContentList;
 
+use AbterPhp\Framework\Constant\Html5;
+use AbterPhp\Framework\Html\Helper\StringHelper;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 
 trait ItemTrait
 {
+    /**
+     * @return string
+     */
     abstract public function getIdentifier(): string;
+
+    /**
+     * @return string[]
+     */
+    abstract public function getPartClassesByOrder(): array;
+
+    /**
+     * @return string[]
+     */
+    abstract public function wrapperTags(): array;
 
     /**
      * @param Item   $item
@@ -21,12 +36,15 @@ trait ItemTrait
     {
         $name  = $item->getName();
         $body  = $item->getBody();
-        $image = sprintf('<img src="%s" alt="%s">', $item->getImgSrc(), $item->getImgAlt());
+        $image = StringHelper::createTag(
+            Html5::TAG_IMG,
+            [Html5::ATTR_SRC => $item->getImgSrc(), Html5::ATTR_ALT => $item->getImgAlt()]
+        );
 
         if ($list->isWithLinks()) {
-            $name  = sprintf('<a href="%s">%s</a>', $item->getNameHref(), $name);
-            $body  = sprintf('<a href="%s">%s</a>', $item->getBodyHref(), $body);
-            $image = sprintf('<a href="%s">%s</a>', $item->getImgHref(), $image);
+            $name  = StringHelper::wrapInTag($name, Html5::TAG_A, [Html5::ATTR_HREF => $item->getNameHref()]);
+            $body  = StringHelper::wrapInTag($body, Html5::TAG_A, [Html5::ATTR_HREF => $item->getBodyHref()]);
+            $image  = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $item->getImgHref()]);
         }
 
         if (!$list->isWithBody()) {
@@ -41,20 +59,21 @@ trait ItemTrait
     }
 
     /**
-     * @param array $parts
-     * @param int[] $order
+     * @param string[] $parts
      *
      * @return string
      */
-    protected function joinItem(array $parts, array $order): string
+    protected function joinItem(array $parts): string
     {
+        $tags = $this->wrapperTags();
+
         $ordered = [];
-        foreach ($order as $i) {
-            if (empty($parts[$i])) {
+        foreach ($this->getPartClassesByOrder() as $i => $class) {
+            if (empty($parts[$i]) || empty($tags[$i])) {
                 continue;
             }
 
-            $ordered[] = $parts[$i];
+            $ordered[] = StringHelper::wrapInTag($parts[$i], $tags[$i], [Html5::ATTR_CLASS => $class]);
         }
 
         return implode('', $ordered);
@@ -75,7 +94,7 @@ trait ItemTrait
         $htmlParts = [];
         foreach ($list->getItems() as $item) {
             $parts       = $this->buildParts($item, $list);
-            $joined      = $this->joinItem($parts, [0, 1, 2]);
+            $joined      = $this->joinItem($parts);
             $htmlParts[] = sprintf("<$tag>%s</$tag>\n", $joined);
         }
 
@@ -83,8 +102,6 @@ trait ItemTrait
     }
 
     /**
-     * @SuppressWarnings(PHPMD.PhanUndeclaredConstant)
-     *
      * @param Entity $list
      * @param string $listTag
      * @param string $itemTag
@@ -95,18 +112,15 @@ trait ItemTrait
     {
         $content = $this->joinItems($list, $itemTag);
 
-        $classes = array_merge(
-            [$this->getIdentifier(), $list->getType()->getName()],
-            explode(' ', $list->getClasses())
-        );
+        $classes = [$this->getIdentifier(), $list->getType()->getName()];
+        if ($list->getClasses()) {
+            $classes = array_merge($classes, explode(' ', $list->getClasses()));
+        }
 
-        $html = sprintf(
-            '<%s id="%s" class="%s">%s</%s>' . PHP_EOL,
-            $listTag,
-            $list->getIdentifier(),
-            implode(' ', $classes),
+        $html = StringHelper::wrapInTag(
             $content,
-            $listTag
+            $listTag,
+            [Html5::ATTR_ID => $list->getIdentifier(), Html5::ATTR_CLASS => implode(' ', $classes)]
         );
 
         return $html;

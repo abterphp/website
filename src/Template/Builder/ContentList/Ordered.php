@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Builder\ContentList;
 
+use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Template\Data;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
@@ -14,7 +15,7 @@ class Ordered implements IBuilder
 {
     use ItemTrait;
 
-    const IDENTIFIER = 'ordered';
+    const IDENTIFIER = 'ordered-list';
 
     /**
      * @return string
@@ -22,6 +23,22 @@ class Ordered implements IBuilder
     public function getIdentifier(): string
     {
         return static::IDENTIFIER;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPartClassesByOrder(): array
+    {
+        return ['item-name', 'item-body', 'item-image'];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function wrapperTags(): array
+    {
+        return [Html5::TAG_SPAN, Html5::TAG_SPAN, Html5::TAG_SPAN];
     }
 
     /**
@@ -34,7 +51,7 @@ class Ordered implements IBuilder
      */
     public function build($list, ?ParsedTemplate $template = null): IData
     {
-        $html = $this->buildItems($list, 'ol', 'li');
+        $html = $this->buildItems($list, Html5::TAG_OL, Html5::TAG_LI);
 
         return new Data(
             $list->getIdentifier(),
