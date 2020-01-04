@@ -5,10 +5,12 @@ $(document).ready(function () {
         count = 0,
         isDeletedInputs = $('.item_is_deleted'),
         withBodyInput = $('#with_body'),
+        withHtmlInput = $('#with_html'),
         withHtmlContainer = $('#withHtml-container').hide();
 
     withBodyInput.click(function () {
         withHtmlContainer.toggle($(this).is(':checked'));
+        withHtmlInput.prop('checked', false);
     });
 
     if (itemTemplate.length == 0) {
