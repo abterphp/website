@@ -152,8 +152,14 @@ class Page extends Base
      */
     protected function addIdentifier(Entity $entity): Page
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
-        $label = new Label('title', 'website:pageIdentifier');
+        $input = new Input(
+            'identifier',
+            'identifier',
+            $entity->getIdentifier(),
+            [],
+            [Html5::ATTR_CLASS => 'semi-auto']
+        );
+        $label = new Label('identifier', 'website:pageIdentifier');
         $help  = new Help('website:pageIdentifierHelp');
 
         $this->form[] = new FormGroup($input, $label, $help);

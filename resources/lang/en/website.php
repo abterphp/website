@@ -6,7 +6,7 @@ return [
     'contentListClasses'        => 'HTML classes',
     'contentListClassesHelp'    => 'Space separated list of classes for the list container',
     'contentListIdentifier'     => 'Identifier',
-    'contentListIdentifierHelp' => 'Automatically generated from the title',
+    'contentListIdentifierHelp' => 'Automatically generated from the name',
     'contentListName'           => 'Name',
     'contentListProtected'      => 'Protected list',
     'contentListProtectedHelp'  => 'Content editors are only allowed to change the content of the items',

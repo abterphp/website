@@ -111,8 +111,14 @@ class Block extends Base
      */
     protected function addIdentifier(Entity $entity): Block
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
-        $label = new Label('title', 'website:blockIdentifier');
+        $input = new Input(
+            'identifier',
+            'identifier',
+            $entity->getIdentifier(),
+            [],
+            [Html5::ATTR_CLASS => 'semi-auto']
+        );
+        $label = new Label('identifier', 'website:blockIdentifier');
         $help  = new Help('website:blockIdentifierHelp');
 
         $this->form[] = new FormGroup($input, $label, $help);

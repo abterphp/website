@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
+use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
@@ -26,6 +27,9 @@ class PageCategory extends FormAbstract
 
     const ROUTING_PATH = 'page-categories';
 
+    /** @var AssetManager */
+    protected $assetManager;
+
     /** @var string */
     protected $resource = 'page_categories';
 
@@ -40,6 +44,7 @@ class PageCategory extends FormAbstract
      * @param ISession         $session
      * @param FormFactory      $formFactory
      * @param IEventDispatcher $eventDispatcher
+     * @param AssetManager     $assetManager
      */
     public function __construct(
         FlashService $flashService,
@@ -49,7 +54,8 @@ class PageCategory extends FormAbstract
         Repo $repo,
         ISession $session,
         FormFactory $formFactory,
-        IEventDispatcher $eventDispatcher
+        IEventDispatcher $eventDispatcher,
+        AssetManager $assetManager
     ) {
         parent::__construct(
             $flashService,
@@ -61,6 +67,8 @@ class PageCategory extends FormAbstract
             $formFactory,
             $eventDispatcher
         );
+
+        $this->assetManager = $assetManager;
     }
 
     /**
@@ -71,5 +79,22 @@ class PageCategory extends FormAbstract
     protected function createEntity(string $entityId): IStringerEntity
     {
         return new Entity($entityId, '', '');
+    }
+
+    /**
+     * @param IStringerEntity|null $entity
+     *
+     * @throws \League\Flysystem\FileNotFoundException
+     */
+    protected function addCustomAssets(?IStringerEntity $entity = null)
+    {
+        parent::addCustomAssets($entity);
+
+        if (!($entity instanceof Entity)) {
+            return;
+        }
+
+        $footer = $this->getResourceName(static::RESOURCE_FOOTER);
+        $this->assetManager->addJs($footer, '/admin-assets/js/semi-auto.js');
     }
 }

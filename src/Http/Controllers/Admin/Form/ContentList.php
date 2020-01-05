@@ -105,5 +105,6 @@ class ContentList extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/list.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/semi-auto.js');
     }
 }

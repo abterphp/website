@@ -87,7 +87,13 @@ class PageLayout extends Base
      */
     protected function addIdentifier(Entity $entity): PageLayout
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $input = new Input(
+            'identifier',
+            'identifier',
+            $entity->getIdentifier(),
+            [],
+            [Html5::ATTR_CLASS => 'semi-auto']
+        );
         $label = new Label('identifier', 'website:pageLayoutIdentifier');
         $help  = new Help('website:pageLayoutIdentifierHelp');
 

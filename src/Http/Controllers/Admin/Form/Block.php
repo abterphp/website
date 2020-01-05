@@ -28,7 +28,7 @@ class Block extends FormAbstract
     const ROUTING_PATH = 'blocks';
 
     /** @var AssetManager */
-    protected $assets;
+    protected $assetManager;
 
     /** @var string */
     protected $resource = 'blocks';
@@ -68,8 +68,8 @@ class Block extends FormAbstract
             $eventDispatcher
         );
 
-        $this->formFactory = $formFactory;
-        $this->assets      = $assetManager;
+        $this->formFactory  = $formFactory;
+        $this->assetManager = $assetManager;
     }
 
     /**
@@ -96,12 +96,13 @@ class Block extends FormAbstract
         }
 
         $styles = $this->getResourceName(static::RESOURCE_DEFAULT);
-        $this->assets->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
+        $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
 
         $footer = $this->getResourceName(static::RESOURCE_FOOTER);
-        $this->assets->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
-        $this->assets->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
-        $this->assets->addJs($footer, '/admin-assets/js/editor.js');
-        $this->assets->addJs($footer, '/admin-assets/js/layout-or-id.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/layout-or-id.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/semi-auto.js');
     }
 }

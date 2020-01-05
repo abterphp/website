@@ -88,7 +88,13 @@ class PageCategory extends Base
      */
     protected function addIdentifier(Entity $entity): PageCategory
     {
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $input = new Input(
+            'identifier',
+            'identifier',
+            $entity->getIdentifier(),
+            [],
+            [Html5::ATTR_CLASS => 'semi-auto']
+        );
         $label = new Label('identifier', 'website:pageCategoryIdentifier');
         $help  = new Help('website:pageCategoryIdentifierHelp');
 

@@ -250,7 +250,13 @@ class ContentList extends Base
             return $this;
         }
 
-        $input = new Input('identifier', 'identifier', $entity->getIdentifier());
+        $input = new Input(
+            'identifier',
+            'identifier',
+            $entity->getIdentifier(),
+            [],
+            [Html5::ATTR_CLASS => 'semi-auto']
+        );
         $label = new Label('identifier', 'website:contentListIdentifier');
         $help  = new Help('website:contentListIdentifierHelp');
 
