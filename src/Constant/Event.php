@@ -6,9 +6,9 @@ namespace AbterPhp\Website\Constant;
 
 class Event
 {
-    const WEBSITE_READY = 'website.ready';
+    public const WEBSITE_READY = 'website.ready';
 
-    const PAGE_CATEGORY_READY = 'page-category.ready';
+    public const PAGE_CATEGORY_READY = 'page-category.ready';
 
-    const PAGE_VIEWED = 'page.viewed';
+    public const PAGE_VIEWED = 'page.viewed';
 }

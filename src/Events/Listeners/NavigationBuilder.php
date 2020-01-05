@@ -10,7 +10,8 @@ use AbterPhp\Framework\Html\Component\ButtonFactory;
 use AbterPhp\Framework\Navigation\Dropdown;
 use AbterPhp\Framework\Navigation\Item;
 use AbterPhp\Framework\Navigation\Navigation;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Resource;
+use AbterPhp\Website\Constant\Route;
 
 class NavigationBuilder
 {
@@ -66,8 +67,8 @@ class NavigationBuilder
         $text = 'website:pages';
         $icon = 'bookmark_border';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGES, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_PAGES);
+        $button   = $this->buttonFactory->createFromName($text, Route::PAGES_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::PAGES);
 
         $item = new Item($button);
         $item->setResource($resource);
@@ -84,8 +85,8 @@ class NavigationBuilder
         $text = 'website:pageCategories';
         $icon = 'collections_bookmark';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGE_CATEGORIES, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_PAGE_CATEGORIES);
+        $button   = $this->buttonFactory->createFromName($text, Route::PAGE_CATEGORIES_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::PAGE_CATEGORIES);
 
         $item = new Item($button);
         $item->setResource($resource);
@@ -102,8 +103,8 @@ class NavigationBuilder
         $text = 'website:pageLayouts';
         $icon = 'view_compact';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_PAGE_LAYOUTS, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_PAGE_LAYOUTS);
+        $button   = $this->buttonFactory->createFromName($text, Route::PAGE_LAYOUTS_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::PAGE_LAYOUTS);
 
         $item = new Item($button);
         $item->setResource($resource);
@@ -120,8 +121,8 @@ class NavigationBuilder
         $text = 'website:blocks';
         $icon = 'view_module';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_BLOCKS, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_BLOCKS);
+        $button   = $this->buttonFactory->createFromName($text, Route::BLOCKS_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::BLOCKS);
 
         $item = new Item($button);
         $item->setResource($resource);
@@ -138,8 +139,8 @@ class NavigationBuilder
         $text = 'website:blockLayouts';
         $icon = 'view_compact';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_BLOCK_LAYOUTS, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_BLOCK_LAYOUTS);
+        $button   = $this->buttonFactory->createFromName($text, Route::BLOCK_LAYOUTS_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::BLOCK_LAYOUTS);
 
         $item = new Item($button);
         $item->setResource($resource);
@@ -156,8 +157,8 @@ class NavigationBuilder
         $text = 'website:contentLists';
         $icon = 'format_align_left';
 
-        $button   = $this->buttonFactory->createFromName($text, Routes::ROUTE_CONTENT_LISTS, [], $icon);
-        $resource = $this->getAdminResource(Routes::ROUTE_CONTENT_LISTS);
+        $button   = $this->buttonFactory->createFromName($text, Route::CONTENT_LISTS_LIST, [], $icon);
+        $resource = $this->getAdminResource(Resource::CONTENT_LISTS);
 
         $item = new Item($button);
         $item->setResource($resource);

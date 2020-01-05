@@ -8,11 +8,11 @@ use AbterPhp\Admin\Grid\Factory\Table\HeaderFactory;
 
 class ContentList extends HeaderFactory
 {
-    const GROUP_IDENTIFIER = 'contentList-identifier';
-    const GROUP_NAME       = 'contentList-name';
+    public const GROUP_IDENTIFIER = 'contentList-identifier';
+    public const GROUP_NAME       = 'contentList-name';
 
-    const HEADER_IDENTIFIER = 'website:contentListIdentifier';
-    const HEADER_NAME       = 'website:contentListName';
+    private const HEADER_IDENTIFIER = 'website:contentListIdentifier';
+    private const HEADER_NAME       = 'website:contentListName';
 
     /** @var array */
     protected $headers = [

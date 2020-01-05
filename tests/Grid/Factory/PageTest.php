@@ -68,7 +68,7 @@ class PageTest extends TestCase
 
         $actualResult = $this->sut->getCategoryName($entity);
 
-        $this->assertSame('', $actualResult);
+        $this->assertSame('<i class="material-icons pmd-sm">remove</i>', $actualResult);
     }
 
     public function testGetCategoryReturnsCategoryNameIfSet()

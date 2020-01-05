@@ -8,27 +8,27 @@ use AbterPhp\Admin\Grid\Factory\Table\HeaderFactory;
 
 class Block extends HeaderFactory
 {
-    const GROUP_IDENTIFIER = 'block-identifier';
-    const GROUP_TITLE      = 'block-title';
+    public const GROUP_TITLE      = 'block-title';
+    public const GROUP_IDENTIFIER = 'block-identifier';
 
-    const HEADER_IDENTIFIER = 'website:blockIdentifier';
-    const HEADER_TITLE      = 'website:blockTitle';
+    private const HEADER_TITLE      = 'website:blockTitle';
+    private const HEADER_IDENTIFIER = 'website:blockIdentifier';
 
     /** @var array */
     protected $headers = [
-        self::GROUP_IDENTIFIER => self::HEADER_IDENTIFIER,
         self::GROUP_TITLE      => self::HEADER_TITLE,
+        self::GROUP_IDENTIFIER => self::HEADER_IDENTIFIER,
     ];
 
     /** @var array */
     protected $inputNames = [
-        self::GROUP_IDENTIFIER => 'identifier',
         self::GROUP_TITLE      => 'title',
+        self::GROUP_IDENTIFIER => 'identifier',
     ];
 
     /** @var array */
     protected $fieldNames = [
-        self::GROUP_IDENTIFIER => 'blocks.identifier',
         self::GROUP_TITLE      => 'blocks.title',
+        self::GROUP_IDENTIFIER => 'blocks.identifier',
     ];
 }

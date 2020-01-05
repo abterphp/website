@@ -10,7 +10,7 @@ use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Http\Controllers\ControllerAbstract;
 use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Constant\Env;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
@@ -100,8 +100,8 @@ class Index extends ControllerAbstract
         }
 
         // @phan-suppress-next-line PhanTypeMismatchArgument
-        $pageUrl     = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $identifier);
-        $homepageUrl = $this->urlGenerator->createFromName(Routes::ROUTE_INDEX);
+        $pageUrl     = $this->urlGenerator->createFromName(Route::FALLBACK, $identifier);
+        $homepageUrl = $this->urlGenerator->createFromName(Route::INDEX);
 
         $this->view->setVar('body', $page->getRenderedBody());
         $this->view->setVar('siteTitle', $this->siteTitle);

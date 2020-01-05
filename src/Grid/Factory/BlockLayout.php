@@ -10,18 +10,15 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Grid\Factory\Table\Header\BlockLayout as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\BlockLayout as TableFactory;
 use AbterPhp\Website\Grid\Filters\BlockLayout as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class BlockLayout extends BaseFactory
 {
-    const GROUP_NAME       = 'blockLayout-name';
-    const GROUP_IDENTIFIER = 'blockLayout-identifier';
-
-    const GETTER_NAME       = 'getName';
-    const GETTER_IDENTIFIER = 'getIdentifier';
+    private const GETTER_NAME = 'getName';
 
     /**
      * BlockLayout constructor.
@@ -48,8 +45,7 @@ class BlockLayout extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_NAME       => static::GETTER_NAME,
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
+            HeaderFactory::GROUP_NAME => static::GETTER_NAME,
         ];
     }
 
@@ -61,10 +57,10 @@ class BlockLayout extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF => Routes::ROUTE_BLOCK_LAYOUTS_EDIT,
+            Html5::ATTR_HREF => Route::BLOCK_LAYOUTS_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF => Routes::ROUTE_BLOCK_LAYOUTS_DELETE,
+            Html5::ATTR_HREF => Route::BLOCK_LAYOUTS_DELETE,
         ];
 
         $cellActions   = new Actions();

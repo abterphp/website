@@ -10,18 +10,16 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Grid\Factory\Table\Header\Block as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\Block as TableFactory;
 use AbterPhp\Website\Grid\Filters\Block as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class Block extends BaseFactory
 {
-    const GROUP_IDENTIFIER = 'block-identifier';
-    const GROUP_TITLE      = 'block-title';
-
-    const GETTER_IDENTIFIER = 'getIdentifier';
-    const GETTER_TITLE      = 'getTitle';
+    private const GETTER_IDENTIFIER = 'getIdentifier';
+    private const GETTER_TITLE      = 'getTitle';
 
     /**
      * Block constructor.
@@ -48,8 +46,8 @@ class Block extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
-            static::GROUP_TITLE      => static::GETTER_TITLE,
+            HeaderFactory::GROUP_TITLE      => static::GETTER_TITLE,
+            HeaderFactory::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }
 
@@ -61,10 +59,10 @@ class Block extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF  => Routes::ROUTE_BLOCKS_EDIT,
+            Html5::ATTR_HREF  => Route::BLOCKS_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF  => Routes::ROUTE_BLOCKS_DELETE,
+            Html5::ATTR_HREF  => Route::BLOCKS_DELETE,
         ];
 
         $cellActions   = new Actions();

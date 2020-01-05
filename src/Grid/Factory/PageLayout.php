@@ -10,18 +10,15 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Grid\Factory\Table\Header\PageLayout as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\PageLayout as TableFactory;
 use AbterPhp\Website\Grid\Filters\PageLayout as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class PageLayout extends BaseFactory
 {
-    const GROUP_NAME       = 'pageLayout-name';
-    const GROUP_IDENTIFIER = 'pageLayout-identifier';
-
-    const GETTER_NAME       = 'getName';
-    const GETTER_IDENTIFIER = 'getIdentifier';
+    private const GETTER_NAME = 'getName';
 
     /**
      * PageLayout constructor.
@@ -48,8 +45,7 @@ class PageLayout extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_NAME       => static::GETTER_NAME,
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
+            HeaderFactory::GROUP_NAME => static::GETTER_NAME,
         ];
     }
 
@@ -61,10 +57,10 @@ class PageLayout extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGE_LAYOUTS_EDIT,
+            Html5::ATTR_HREF => Route::PAGE_LAYOUTS_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGE_LAYOUTS_DELETE,
+            Html5::ATTR_HREF => Route::PAGE_LAYOUTS_DELETE,
         ];
 
         $cellActions   = new Actions();

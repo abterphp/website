@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use AbterPhp\Website\Constant\Routes as RoutesConstant;
+use AbterPhp\Website\Constant\Route as RouteConstant;
 use Opulence\Routing\Router;
 
 /**
@@ -17,18 +17,18 @@ $router->group(
     function (Router $router) {
         /** @see \AbterPhp\Website\Http\Controllers\Website\Index::index() */
         $router->get(
-            RoutesConstant::PATH_INDEX,
+            '/',
             'Website\Index@index',
-            [RoutesConstant::OPTION_NAME => RoutesConstant::ROUTE_INDEX]
+            [RouteConstant::OPTION_NAME => RouteConstant::INDEX]
         );
 
         /** @see \AbterPhp\Website\Http\Controllers\Website\Index::fallback() */
         $router->get(
-            RoutesConstant::PATH_FALLBACK,
+            '/:identifier',
             'Website\Index@fallback',
             [
-                RoutesConstant::OPTION_NAME => RoutesConstant::ROUTE_FALLBACK,
-                RoutesConstant::OPTION_VARS => [RoutesConstant::VAR_ANYTHING => '[\w\d\-]+'],
+                RouteConstant::OPTION_NAME => RouteConstant::FALLBACK,
+                RouteConstant::OPTION_VARS => [RouteConstant::VAR_ANYTHING => '[\w\d\-]+'],
             ]
         );
     }

@@ -10,18 +10,16 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Grid\Factory\Table\Header\PageCategory as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\PageCategory as TableFactory;
 use AbterPhp\Website\Grid\Filters\PageCategory as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class PageCategory extends BaseFactory
 {
-    const GROUP_NAME       = 'pageCategory-name';
-    const GROUP_IDENTIFIER = 'pageCategory-identifier';
-
-    const GETTER_NAME       = 'getName';
-    const GETTER_IDENTIFIER = 'getIdentifier';
+    private const GETTER_NAME       = 'getName';
+    private const GETTER_IDENTIFIER = 'getIdentifier';
 
     /**
      * PageCategory constructor.
@@ -48,8 +46,8 @@ class PageCategory extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_NAME       => static::GETTER_NAME,
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
+            HeaderFactory::GROUP_NAME       => static::GETTER_NAME,
+            HeaderFactory::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
         ];
     }
 
@@ -61,10 +59,10 @@ class PageCategory extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGE_CATEGORIES_EDIT,
+            Html5::ATTR_HREF => Route::PAGE_CATEGORIES_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGE_CATEGORIES_DELETE,
+            Html5::ATTR_HREF => Route::PAGE_CATEGORIES_DELETE,
         ];
 
         $cellActions   = new Actions();

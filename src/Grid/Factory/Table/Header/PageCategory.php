@@ -8,11 +8,11 @@ use AbterPhp\Admin\Grid\Factory\Table\HeaderFactory;
 
 class PageCategory extends HeaderFactory
 {
-    const GROUP_NAME       = 'pageCategory-name';
-    const GROUP_IDENTIFIER = 'pageCategory-identifier';
+    public const GROUP_NAME       = 'pageCategory-name';
+    public const GROUP_IDENTIFIER = 'pageCategory-identifier';
 
-    const HEADER_NAME       = 'website:pageCategoryName';
-    const HEADER_IDENTIFIER = 'website:pageCategoryIdentifier';
+    private const HEADER_NAME       = 'website:pageCategoryName';
+    private const HEADER_IDENTIFIER = 'website:pageCategoryIdentifier';
 
     /** @var array */
     protected $headers = [

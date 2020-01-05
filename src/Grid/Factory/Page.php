@@ -10,21 +10,21 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
+use AbterPhp\Website\Grid\Factory\Table\Header\Page as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\Page as TableFactory;
 use AbterPhp\Website\Grid\Filters\Page as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class Page extends BaseFactory
 {
-    const GROUP_IDENTIFIER   = 'page-identifier';
-    const GROUP_TITLE        = 'page-title';
-    const GROUP_CATEGORY     = 'page-category';
-    const GROUP_IS_PUBLISHED = 'page-isPublished';
+    public const LAYOUT_OKAY    = 'OK';
+    public const LAYOUT_MISSING = '!';
 
-    const GETTER_IDENTIFIER   = 'getIdentifier';
-    const GETTER_TITLE        = 'getTitle';
+    public const TARGET_PREVIEW = 'page-preview';
+
+    private const GETTER_TITLE = 'getTitle';
 
     /**
      * Page constructor.
@@ -51,10 +51,10 @@ class Page extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_IDENTIFIER   => static::GETTER_IDENTIFIER,
-            static::GROUP_TITLE        => static::GETTER_TITLE,
-            static::GROUP_CATEGORY     => [$this, 'getCategoryName'],
-            static::GROUP_IS_PUBLISHED => [$this, 'isPublished'],
+            HeaderFactory::GROUP_TITLE        => static::GETTER_TITLE,
+            HeaderFactory::GROUP_CATEGORY     => [$this, 'getCategoryName'],
+            HeaderFactory::GROUP_LAYOUT       => [$this, 'getLayout'],
+            HeaderFactory::GROUP_IS_PUBLISHED => [$this, 'isPublished'],
         ];
     }
 
@@ -69,7 +69,25 @@ class Page extends BaseFactory
             return $entity->getCategory()->getName();
         }
 
-        return '';
+        return '<i class="material-icons pmd-sm">remove</i>';
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return string
+     */
+    public function getLayout(Entity $entity): string
+    {
+        if ($entity->getLayoutId()) {
+            return $entity->getLayout();
+        }
+
+        if ($entity->getLayout()) {
+            return '<i class="material-icons pmd-sm">remove</i>';
+        }
+
+        return '<i class="material-icons is-danger pmd-sm">warning</i>';
     }
 
     /**
@@ -80,10 +98,10 @@ class Page extends BaseFactory
     public function isPublished(Entity $entity): string
     {
         if ($entity->isDraft()) {
-            return '<i class="material-icons pmd-md is-danger">warning</i>';
+            return '<i class="material-icons is-danger pmd-sm">warning</i>';
         }
 
-        return '<i class="material-icons pmd-md is-success">check circle</i>';
+        return '<i class="material-icons is-success pmd-sm">check circle</i>';
     }
 
     /**
@@ -94,10 +112,10 @@ class Page extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGES_EDIT,
+            Html5::ATTR_HREF => Route::PAGES_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF => Routes::ROUTE_PAGES_DELETE,
+            Html5::ATTR_HREF => Route::PAGES_DELETE,
         ];
 
         $cellActions   = new Actions();
@@ -115,7 +133,36 @@ class Page extends BaseFactory
             $attributeCallbacks,
             Html5::TAG_A
         );
+        $cellActions[] = new Action(
+            static::LABEL_VIEW,
+            $this->viewIntents,
+            [Html5::ATTR_TARGET => static::TARGET_PREVIEW],
+            $this->getViewAttributeCallbacks(),
+            Html5::TAG_A
+        );
 
         return $cellActions;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     *
+     * @return callable[]
+     */
+    protected function getViewAttributeCallbacks(): array
+    {
+        $urlGenerator = $this->urlGenerator;
+
+        // @phan-suppress-next-line PhanUnusedVariable
+        $hrefClosure = function ($attribute, Entity $entity) use ($urlGenerator) {
+            // @phan-suppress-next-line PhanTypeMismatchArgument
+            return $urlGenerator->createFromName(Route::FALLBACK, $entity->getIdentifier());
+        };
+
+        $attributeCallbacks = [
+            Html5::ATTR_HREF => $hrefClosure,
+        ];
+
+        return $attributeCallbacks;
     }
 }

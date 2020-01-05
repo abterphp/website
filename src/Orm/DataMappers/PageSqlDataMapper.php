@@ -16,7 +16,6 @@ use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
 /** @phan-file-suppress PhanTypeMismatchArgument */
-
 class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 {
     /**
@@ -474,10 +473,13 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.identifier',
                 'pages.title',
                 'pages.is_draft',
-                'categories.name AS category_name'
+                'categories.name AS category_name',
+                'pages.layout_id',
+                "IF(layouts.name <> '', layouts.name, pages.layout) AS layout"
             )
             ->from('pages')
             ->leftJoin('page_categories', 'categories', 'categories.id = pages.category_id')
+            ->leftJoin('page_layouts', 'layouts', 'layouts.id = pages.layout_id')
             ->where('pages.deleted_at IS NULL');
 
         return $query;

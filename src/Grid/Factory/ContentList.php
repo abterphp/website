@@ -10,18 +10,16 @@ use AbterPhp\Admin\Grid\Factory\PaginationFactory;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Grid\Action\Action;
 use AbterPhp\Framework\Grid\Component\Actions;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Grid\Factory\Table\Header\ContentList as HeaderFactory;
 use AbterPhp\Website\Grid\Factory\Table\ContentList as TableFactory;
 use AbterPhp\Website\Grid\Filters\ContentList as Filters;
 use Opulence\Routing\Urls\UrlGenerator;
 
 class ContentList extends BaseFactory
 {
-    const GROUP_IDENTIFIER = 'contentList-identifier';
-    const GROUP_NAME       = 'contentList-name';
-
-    const GETTER_IDENTIFIER = 'getIdentifier';
-    const GETTER_NAME       = 'getName';
+    private const GETTER_IDENTIFIER = 'getIdentifier';
+    private const GETTER_NAME       = 'getName';
 
     /**
      * ContentList constructor.
@@ -48,8 +46,8 @@ class ContentList extends BaseFactory
     public function getGetters(): array
     {
         return [
-            static::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
-            static::GROUP_NAME       => static::GETTER_NAME,
+            HeaderFactory::GROUP_IDENTIFIER => static::GETTER_IDENTIFIER,
+            HeaderFactory::GROUP_NAME       => static::GETTER_NAME,
         ];
     }
 
@@ -61,10 +59,10 @@ class ContentList extends BaseFactory
         $attributeCallbacks = $this->getAttributeCallbacks();
 
         $editAttributes   = [
-            Html5::ATTR_HREF => Routes::ROUTE_CONTENT_LISTS_EDIT,
+            Html5::ATTR_HREF => Route::CONTENT_LISTS_EDIT,
         ];
         $deleteAttributes = [
-            Html5::ATTR_HREF => Routes::ROUTE_CONTENT_LISTS_DELETE,
+            Html5::ATTR_HREF => Route::CONTENT_LISTS_DELETE,
         ];
 
         $cellActions   = new Actions();

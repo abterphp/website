@@ -6,9 +6,9 @@ namespace AbterPhp\Website\Constant;
 
 class Authorization
 {
-    const RESOURCE_PAGES  = 'pages';
-    const RESOURCE_BLOCKS = 'blocks';
-    const RESOURCE_LISTS  = 'lists';
+    public const RESOURCE_PAGES  = 'pages';
+    public const RESOURCE_BLOCKS = 'blocks';
+    public const RESOURCE_LISTS  = 'lists';
 
-    const ROLE_ADVANCED_WRITE = 'advanced-write';
+    public const ROLE_ADVANCED_WRITE = 'advanced-write';
 }

@@ -11,7 +11,7 @@ use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Constant\Event;
-use AbterPhp\Website\Constant\Routes;
+use AbterPhp\Website\Constant\Route;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
@@ -92,14 +92,14 @@ class Simple implements IBuilder
         $list = new Component(null, [], [], Html5::TAG_UL);
         foreach ($pages as $page) {
             // @phan-suppress-next-line PhanTypeMismatchArgument
-            $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $page->getIdentifier());
+            $url = $this->urlGenerator->createFromName(Route::FALLBACK, $page->getIdentifier());
             $a   = new Component($page->getTitle(), [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
             $list[] = new Component($a, [], [], Html5::TAG_LI);
         }
 
         // @phan-suppress-next-line PhanTypeMismatchArgument
-        $url = $this->urlGenerator->createFromName(Routes::ROUTE_FALLBACK, $categoryIdentifier);
+        $url = $this->urlGenerator->createFromName(Route::FALLBACK, $categoryIdentifier);
         $a   = new Component($categoryName, [], [Html5::ATTR_HREF => $url], Html5::TAG_A);
 
         $container[] = new Component($a, [], [], Html5::TAG_H2);
