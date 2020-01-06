@@ -99,7 +99,7 @@ class Block extends Base
         $input = new Input('title', 'title', $entity->getTitle());
         $label = new Label('title', 'website:blockTitle');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, null, [], [Html5::ATTR_CLASS => FormGroup::CLASS_REQUIRED]);
 
         return $this;
     }
@@ -221,7 +221,7 @@ class Block extends Base
     protected function addLayout(Entity $entity, bool $advancedAllowed): Block
     {
         if (!$advancedAllowed) {
-            return $this->addLayoutHidden($entity);
+            return $this;
         }
 
         return $this->addLayoutTextarea($entity);

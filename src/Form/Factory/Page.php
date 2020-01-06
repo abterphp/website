@@ -140,7 +140,7 @@ class Page extends Base
         $input = new Input('title', 'title', $entity->getTitle());
         $label = new Label('title', 'website:pageTitle');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, null, [], [Html5::ATTR_CLASS => FormGroup::CLASS_REQUIRED]);
 
         return $this;
     }

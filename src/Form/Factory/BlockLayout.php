@@ -66,7 +66,7 @@ class BlockLayout extends Base
         $input = new Input('name', 'name', $entity->getName());
         $label = new Label('name', 'website:blockLayoutName');
 
-        $this->form[] = new FormGroup($input, $label);
+        $this->form[] = new FormGroup($input, $label, null, [], [Html5::ATTR_CLASS => FormGroup::CLASS_REQUIRED]);
 
         return $this;
     }

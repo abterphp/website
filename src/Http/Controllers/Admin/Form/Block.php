@@ -104,5 +104,7 @@ class Block extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/layout-or-id.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/semi-auto.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/required.js');
+        $this->assetManager->addJs($footer, '/admin-assets/js/validation.js');
     }
 }
