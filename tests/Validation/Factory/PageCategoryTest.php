@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Validation\Factory;
 
 use AbterPhp\Admin\TestDouble\Validation\StubRulesFactory;
-use AbterPhp\Framework\Validation\Rules\Uuid;
-use Opulence\Validation\IValidator;
+use AbterPhp\Framework\Validation\Rules\Forbidden;
 use Opulence\Validation\Rules\Factories\RulesFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +22,10 @@ class PageCategoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->rulesFactoryMock = StubRulesFactory::createRulesFactory($this, ['uuid' => new Uuid()]);
+        $this->rulesFactoryMock = StubRulesFactory::createRulesFactory(
+            $this,
+            ['forbidden' => new Forbidden()]
+        );
 
         $this->sut = new PageCategory($this->rulesFactoryMock);
     }
@@ -34,26 +36,19 @@ class PageCategoryTest extends TestCase
     public function createValidatorProvider(): array
     {
         return [
-            'empty-data'                          => [
+            'empty-data'         => [
                 [],
                 false,
             ],
-            'valid-data'                          => [
-                [
-                    'id'   => '465c91df-9cc7-47e2-a2ef-8fe645753148',
-                    'name' => 'foo',
-                ],
-                true,
-            ],
-            'valid-data-missing-all-not-required' => [
+            'valid-data'         => [
                 [
                     'name' => 'foo',
                 ],
                 true,
             ],
-            'invalid-id-not-uuid'                 => [
+            'invalid-id-present' => [
                 [
-                    'id'   => '465c91df-9cc7-47e2-a2ef-8fe64575314',
+                    'id'   => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
                     'name' => 'foo',
                 ],
                 false,
@@ -70,8 +65,6 @@ class PageCategoryTest extends TestCase
     public function testCreateValidator(array $data, bool $expectedResult)
     {
         $validator = $this->sut->createValidator();
-
-        $this->assertInstanceOf(IValidator::class, $validator);
 
         $actualResult = $validator->isValid($data);
 

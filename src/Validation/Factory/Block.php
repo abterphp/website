@@ -18,7 +18,7 @@ class Block extends ValidatorFactory
 
         $validator
             ->field('id')
-            ->uuid();
+            ->forbidden();
 
         $validator
             ->field('identifier');
@@ -32,8 +32,9 @@ class Block extends ValidatorFactory
 
         $validator
             ->field('layout_id')
-            ->uuid()
-            ->atLeastOne('layout');
+//            ->validateEmpty()
+            ->exactlyOne('layout')
+            ->uuid();
 
         $validator
             ->field('layout');

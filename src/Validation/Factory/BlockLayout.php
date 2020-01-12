@@ -18,11 +18,10 @@ class BlockLayout extends ValidatorFactory
 
         $validator
             ->field('id')
-            ->uuid();
+            ->forbidden();
 
         $validator
-            ->field('identifier')
-            ->required();
+            ->field('identifier');
 
         $validator
             ->field('body');

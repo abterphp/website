@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Validation\Factory;
 
 use AbterPhp\Admin\TestDouble\Validation\StubRulesFactory;
-use AbterPhp\Framework\Validation\Rules\AtLeastOne;
+use AbterPhp\Framework\Validation\Rules\ExactlyOne;
+use AbterPhp\Framework\Validation\Rules\Forbidden;
 use AbterPhp\Framework\Validation\Rules\Uuid;
-use Opulence\Validation\IValidator;
 use Opulence\Validation\Rules\Factories\RulesFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -26,10 +26,7 @@ class BlockTest extends TestCase
 
         $this->rulesFactoryMock = StubRulesFactory::createRulesFactory(
             $this,
-            [
-                'uuid'       => new Uuid(),
-                'atLeastOne' => new AtLeastOne(),
-            ]
+            ['forbidden' => new Forbidden(), 'exactlyOne' => new ExactlyOne(), 'uuid' => new Uuid()]
         );
 
         $this->sut = new Block($this->rulesFactoryMock);
@@ -45,20 +42,18 @@ class BlockTest extends TestCase
                 [],
                 false,
             ],
-            'valid-data'                              => [
+            'valid-data-with-layout'                  => [
                 [
-                    'id'         => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'identifier' => 'foo',
                     'title'      => 'bar',
                     'body'       => 'baz',
                     'layout'     => 'quix',
-                    'layout_id'  => '2d60b546-ddbc-4fc4-be66-a2824e61334f',
+                    'layout_id'  => '',
                 ],
                 true,
             ],
             'valid-data-with-layout-id'               => [
                 [
-                    'id'         => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'identifier' => 'foo',
                     'title'      => 'bar',
                     'body'       => 'baz',
@@ -68,33 +63,37 @@ class BlockTest extends TestCase
             ],
             'valid-data-missing-all-not-required'     => [
                 [
-                    'id'     => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'title'  => 'bar',
                     'layout' => 'quix',
                 ],
                 true,
             ],
-            'invalid-id-not-uuid'                     => [
+            'invalid-id-present'                      => [
                 [
-                    'id'     => '465c91df-9cc7-47e2-a2ef-8fe64575314',
-                    'title'  => 'bar',
-                    'layout' => 'foo',
-                ],
-                false,
-            ],
-            'invalid-id-layout-and-layout-id-missing' => [
-                [
-                    'id'    => '465c91df-9cc7-47e2-a2ef-8fe64575314',
+                    'id'    => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
                     'title' => 'bar',
                 ],
                 false,
             ],
-            'invalid-id-layout-and-layout-id-empty'   => [
+//            'invalid-layout-and-layout-id-missing' => [
+//                [
+//                    'title' => 'bar',
+//                ],
+//                false,
+//            ],
+//            'invalid-layout-and-layout-id-empty'   => [
+//                [
+//                    'title'     => 'bar',
+//                    'layout'    => '',
+//                    'layout_id' => '',
+//                ],
+//                false,
+//            ],
+            'invalid-both-layout-and-layout-id-empty'   => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe64575314',
                     'title'     => 'bar',
-                    'layout'    => '',
-                    'layout_id' => '',
+                    'layout'    => 'baz',
+                    'layout_id' => '2d60b546-ddbc-4fc4-be66-a2824e61334f',
                 ],
                 false,
             ],
@@ -110,8 +109,6 @@ class BlockTest extends TestCase
     public function testCreateValidator(array $data, bool $expectedResult)
     {
         $validator = $this->sut->createValidator();
-
-        $this->assertInstanceOf(IValidator::class, $validator);
 
         $actualResult = $validator->isValid($data);
 

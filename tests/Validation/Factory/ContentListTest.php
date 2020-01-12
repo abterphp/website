@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Validation\Factory;
 
 use AbterPhp\Admin\TestDouble\Validation\StubRulesFactory;
-use AbterPhp\Framework\Validation\Rules\Uuid;
-use Opulence\Validation\IValidator;
+use AbterPhp\Framework\Validation\Rules\Forbidden;
 use Opulence\Validation\Rules\Factories\RulesFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -25,9 +24,7 @@ class ContentListTest extends TestCase
 
         $this->rulesFactoryMock = StubRulesFactory::createRulesFactory(
             $this,
-            [
-                'uuid' => new Uuid(),
-            ]
+            ['forbidden' => new Forbidden()]
         );
 
         $this->sut = new ContentList($this->rulesFactoryMock);
@@ -45,27 +42,26 @@ class ContentListTest extends TestCase
             ],
             'valid-data'                          => [
                 [
-                    'id'         => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'identifier' => 'foo',
                     'name'       => 'bar',
                     'classes'    => 'baz',
                     'protected'  => '1',
-                    'with_image' => '1',
                     'with_links' => '1',
+                    'with_image' => '1',
+                    'with_body'  => '1',
                     'with_html'  => '1',
                 ],
                 true,
             ],
             'valid-data-missing-all-not-required' => [
                 [
-                    'id'   => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'name' => 'bar',
                 ],
                 true,
             ],
-            'invalid-id-not-uuid'                 => [
+            'invalid-id-present'                 => [
                 [
-                    'id'   => '465c91df-9cc7-47e2-a2ef-8fe64575314',
+                    'id'   => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
                     'name' => 'bar',
                 ],
                 false,
@@ -82,8 +78,6 @@ class ContentListTest extends TestCase
     public function testCreateValidator(array $data, bool $expectedResult)
     {
         $validator = $this->sut->createValidator();
-
-        $this->assertInstanceOf(IValidator::class, $validator);
 
         $actualResult = $validator->isValid($data);
 

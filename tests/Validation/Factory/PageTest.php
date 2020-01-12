@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Validation\Factory;
 
 use AbterPhp\Admin\TestDouble\Validation\StubRulesFactory;
-use AbterPhp\Framework\Validation\Rules\AtLeastOne;
+use AbterPhp\Framework\Validation\Rules\ExactlyOne;
+use AbterPhp\Framework\Validation\Rules\Forbidden;
 use AbterPhp\Framework\Validation\Rules\Uuid;
-use Opulence\Validation\IValidator;
 use Opulence\Validation\Rules\Factories\RulesFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -27,8 +27,9 @@ class PageTest extends TestCase
         $this->rulesFactoryMock = StubRulesFactory::createRulesFactory(
             $this,
             [
+                'forbidden'  => new Forbidden(),
                 'uuid'       => new Uuid(),
-                'atLeastOne' => new AtLeastOne(),
+                'exactlyOne' => new ExactlyOne(),
             ]
         );
 
@@ -47,7 +48,6 @@ class PageTest extends TestCase
             ],
             'valid-data'                                      => [
                 [
-                    'id'          => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'identifier'  => 'foo',
                     'title'       => 'Foo',
                     'lead'        => 'bar',
@@ -55,7 +55,7 @@ class PageTest extends TestCase
                     'is_draft'    => '1',
                     'category_id' => '5c032f90-bf10-4a77-81aa-b0b1254a8f66',
                     'layout_id'   => 'ebc97435-7280-4a67-855c-5d1ef0a2fd40',
-                    'layout'      => 'qux',
+                    'layout'      => '',
                     'header'      => 'thud',
                     'footer'      => 'grunt',
                     'css_files'   => 'bletch',
@@ -77,23 +77,22 @@ class PageTest extends TestCase
                 ],
                 true,
             ],
-            'invalid-id-not-uuid'                             => [
+            'invalid-id-present'                              => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe64575314',
+                    'id'        => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
+                    'title'     => 'Foo',
                     'layout_id' => 'ebc97435-7280-4a67-855c-5d1ef0a2fd40',
                 ],
                 false,
             ],
             'invalid-category-id-not-uuid'                    => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'layout_id' => 'ebc97435-7280-4a67-855c-5d1ef0a2fd4',
                 ],
                 false,
             ],
             'invalid-is-draft-is-not-numeric'                 => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'is_draft'  => 'foo',
                     'layout_id' => 'ebc97435-7280-4a67-855c-5d1ef0a2fd40',
                 ],
@@ -101,7 +100,6 @@ class PageTest extends TestCase
             ],
             'invalid-layout-id-not-uuid'                      => [
                 [
-                    'id'          => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'category_id' => '5c032f90-bf10-4a77-81aa-b0b1254a8f6',
                     'layout_id'   => 'ebc97435-7280-4a67-855c-5d1ef0a2fd40',
                 ],
@@ -109,27 +107,23 @@ class PageTest extends TestCase
             ],
             'invalid-layout-and-layout-id-missing'            => [
                 [
-                    'id' => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                 ],
                 false,
             ],
             'invalid-layout-missing-and-layout-id-empty'      => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'layout_id' => '',
                 ],
                 false,
             ],
             'invalid-layout-empty-and-layout-id-missing'      => [
                 [
-                    'id'     => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'layout' => '',
                 ],
                 false,
             ],
             'invalid-layout-and-layout-id-empty'              => [
                 [
-                    'id'        => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'layout'    => '',
                     'layout_id' => '',
                 ],
@@ -147,8 +141,6 @@ class PageTest extends TestCase
     public function testCreateValidator(array $data, bool $expectedResult)
     {
         $validator = $this->sut->createValidator();
-
-        $this->assertInstanceOf(IValidator::class, $validator);
 
         $actualResult = $validator->isValid($data);
 

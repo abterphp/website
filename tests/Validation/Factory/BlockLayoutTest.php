@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Validation\Factory;
 
 use AbterPhp\Admin\TestDouble\Validation\StubRulesFactory;
-use AbterPhp\Framework\Validation\Rules\Uuid;
-use Opulence\Validation\IValidator;
+use AbterPhp\Framework\Validation\Rules\Forbidden;
 use Opulence\Validation\Rules\Factories\RulesFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +22,10 @@ class BlockLayoutTest extends TestCase
     {
         parent::setUp();
 
-        $this->rulesFactoryMock = StubRulesFactory::createRulesFactory($this, ['uuid' => new Uuid()]);
+        $this->rulesFactoryMock = StubRulesFactory::createRulesFactory(
+            $this,
+            ['forbidden' => new Forbidden()]
+        );
 
         $this->sut = new BlockLayout($this->rulesFactoryMock);
     }
@@ -36,25 +38,18 @@ class BlockLayoutTest extends TestCase
         return [
             'empty-data'                          => [
                 [],
-                false,
+                true,
             ],
             'valid-data'                          => [
                 [
-                    'id'         => '465c91df-9cc7-47e2-a2ef-8fe645753148',
                     'identifier' => 'foo',
                     'body'       => 'bar',
                 ],
                 true,
             ],
-            'valid-data-missing-all-not-required' => [
+            'invalid-id-present'                  => [
                 [
-                    'identifier' => 'foo',
-                ],
-                true,
-            ],
-            'invalid-id-not-uuid'                 => [
-                [
-                    'id'         => '465c91df-9cc7-47e2-a2ef-8fe64575314',
+                    'id'         => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
                     'identifier' => 'foo',
                 ],
                 false,
@@ -68,11 +63,9 @@ class BlockLayoutTest extends TestCase
      * @param array $data
      * @param bool  $expectedResult
      */
-    public function testCreateValidator(array $data, bool $expectedResult)
+    public function testCreateValidatorExisting(array $data, bool $expectedResult)
     {
         $validator = $this->sut->createValidator();
-
-        $this->assertInstanceOf(IValidator::class, $validator);
 
         $actualResult = $validator->isValid($data);
 

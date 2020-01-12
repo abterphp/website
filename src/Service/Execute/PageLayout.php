@@ -67,14 +67,14 @@ class PageLayout extends RepoServiceAbstract
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
-        
+
         $name = $postData['name'];
 
         $identifier = $postData['identifier'] ?? $entity->getIdentifier();
         $identifier = $identifier ?: $name;
         $identifier = $this->slugify->slugify($identifier);
 
-        $assets = $this->createAssets($postData);
+        $assets = $this->createAssets($postData, $identifier);
 
         $body = $postData['body'];
 
@@ -88,17 +88,17 @@ class PageLayout extends RepoServiceAbstract
     }
 
     /**
-     * @param array $postData
+     * @param array  $postData
+     * @param string $identifier
      *
      * @return Assets
      */
-    protected function createAssets(array $postData): Assets
+    protected function createAssets(array $postData, string $identifier): Assets
     {
-        $identifier = $postData['identifier'];
-        $header     = empty($postData['header']) ? '' : $postData['header'];
-        $footer     = empty($postData['footer']) ? '' : $postData['footer'];
-        $cssFiles   = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
-        $jsFiles    = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
+        $header   = empty($postData['header']) ? '' : $postData['header'];
+        $footer   = empty($postData['footer']) ? '' : $postData['footer'];
+        $cssFiles = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
+        $jsFiles  = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 
         return new Assets(
             $identifier,

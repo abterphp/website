@@ -18,7 +18,7 @@ class ContentList extends ValidatorFactory
 
         $validator
             ->field('id')
-            ->uuid();
+            ->forbidden();
 
         $validator
             ->field('identifier');
@@ -44,6 +44,12 @@ class ContentList extends ValidatorFactory
             ->field('with_links')
             ->min(1)
             ->max(1);
+
+        $validator
+            ->field('with_body')
+            ->min(1)
+            ->max(1);
+
 
         $validator
             ->field('with_html')
