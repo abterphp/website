@@ -84,7 +84,7 @@ class Page extends RepoServiceAbstract
 
         $category = null;
         if (!empty($postData['category_id'])) {
-            $category = new PageCategory((string)$postData['category_id'], '', '');
+            $category = new PageCategory($postData['category_id'], '', '');
         }
 
         $layoutId = $postData['layout_id'];
@@ -154,7 +154,6 @@ class Page extends RepoServiceAbstract
      */
     protected function getAssets(array $postData, string $identifier): Assets
     {
-        $identifier = $postData['identifier'];
         $header     = empty($postData['header']) ? '' : $postData['header'];
         $footer     = empty($postData['footer']) ? '' : $postData['footer'];
         $cssFiles   = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
