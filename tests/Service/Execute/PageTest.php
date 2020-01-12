@@ -74,6 +74,9 @@ class PageTest extends TestCase
         $postData   = [
             'title'       => $title,
             'identifier'  => $identifier,
+            'lead'        => '',
+            'body'        => '',
+            'layout_id'   => '',
             'layout'      => $layout,
             'category_id' => $categoryId,
         ];
@@ -103,6 +106,9 @@ class PageTest extends TestCase
         $postData   = [
             'title'      => $title,
             'identifier' => $identifier,
+            'lead'       => '',
+            'body'       => '',
+            'layout_id'  => '',
             'layout'     => $layout,
         ];
 

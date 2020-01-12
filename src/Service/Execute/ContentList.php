@@ -90,7 +90,8 @@ class ContentList extends RepoServiceAbstract
 
         $name = (string)$postData['name'];
 
-        $identifier = empty($postData['identifier']) ? $name : (string)$postData['identifier'];
+        $identifier = $postData['identifier'] ?? $entity->getIdentifier();
+        $identifier = $identifier ?: $name;
         $identifier = $this->slugify->slugify($identifier);
 
         $classes = $postData['classes'];

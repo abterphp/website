@@ -68,9 +68,10 @@ class PageCategory extends RepoServiceAbstract
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $name = (string)$postData['name'];
+        $name = $postData['name'];
 
-        $identifier = empty($postData['identifier']) ? $name : (string)$postData['identifier'];
+        $identifier = $postData['identifier'] ?? $entity->getIdentifier();
+        $identifier = $identifier ?: $name;
         $identifier = $this->slugify->slugify($identifier);
 
         $userGroups = [];

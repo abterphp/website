@@ -71,13 +71,14 @@ class Page extends RepoServiceAbstract
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $title = empty($postData['title']) ? '' : (string)$postData['title'];
+        $title = $postData['title'];
 
-        $identifier = empty($postData['identifier']) ? $title : (string)$postData['identifier'];
+        $identifier = $postData['identifier'] ?? $entity->getIdentifier();
+        $identifier = $identifier ?: $title;
         $identifier = $this->slugify->slugify($identifier);
 
-        $lead = empty($postData['lead']) ? '' : (string)$postData['lead'];
-        $body = empty($postData['body']) ? '' : (string)$postData['body'];
+        $lead = $postData['lead'];
+        $body = $postData['body'];
 
         $isDraft = !empty($postData['is_draft']);
 
@@ -86,8 +87,12 @@ class Page extends RepoServiceAbstract
             $category = new PageCategory((string)$postData['category_id'], '', '');
         }
 
-        $layoutId = empty($postData['layout_id']) ? null : (string)$postData['layout_id'];
-        $layout   = empty($postData['layout']) || $layoutId !== null ? '' : (string)$postData['layout'];
+        $layoutId = $postData['layout_id'];
+        $layout   = '';
+        if (empty($layoutId)) {
+            $layoutId = null;
+            $layout   = $postData['layout'] ?? '';
+        }
 
         $meta   = $this->getMeta($postData);
         $assets = $this->getAssets($postData);
@@ -116,14 +121,14 @@ class Page extends RepoServiceAbstract
      */
     protected function getMeta(array $postData): Meta
     {
-        $description   = empty($postData['description']) ? '' : $postData['description'];
-        $robots        = empty($postData['robots']) ? '' : $postData['robots'];
-        $author        = empty($postData['author']) ? '' : $postData['author'];
-        $copyright     = empty($postData['copyright']) ? '' : $postData['copyright'];
-        $keywords      = empty($postData['keywords']) ? '' : $postData['keywords'];
-        $ogTitle       = empty($postData['og-title']) ? '' : $postData['og-title'];
-        $ogImage       = empty($postData['og-image']) ? '' : $postData['og-image'];
-        $ogDescription = empty($postData['og-description']) ? '' : $postData['og-description'];
+        $description   = $postData['description'] ?? '';
+        $robots        = $postData['robots'] ?? '';
+        $author        = $postData['author'] ?? '';
+        $copyright     = $postData['copyright'] ?? '';
+        $keywords      = $postData['keywords'] ?? '';
+        $ogTitle       = $postData['og-title'] ?? '';
+        $ogImage       = $postData['og-image'] ?? '';
+        $ogDescription = $postData['og-description'] ?? '';
 
         $entity = new Meta(
             $description,

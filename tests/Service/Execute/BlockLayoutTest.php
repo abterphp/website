@@ -72,6 +72,7 @@ class BlockLayoutTest extends TestCase
         $postData   = [
             'name'       => $name,
             'identifier' => $identifier,
+            'body'       => '',
         ];
 
         $this->gridRepoMock->expects($this->once())->method('add');
@@ -98,6 +99,7 @@ class BlockLayoutTest extends TestCase
         $postData   = [
             'name'       => $name,
             'identifier' => $identifier,
+            'body'       => '',
         ];
 
         $this->gridRepoMock->expects($this->never())->method('add');

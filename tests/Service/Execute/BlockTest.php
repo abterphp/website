@@ -73,6 +73,8 @@ class BlockTest extends TestCase
         $postData   = [
             'title'      => $title,
             'identifier' => $identifier,
+            'body'       => '',
+            'layout_id'  => '',
             'layout'     => $layout,
         ];
 
@@ -101,6 +103,8 @@ class BlockTest extends TestCase
         $postData   = [
             'title'      => $title,
             'identifier' => $identifier,
+            'body'       => '',
+            'layout_id'  => '',
             'layout'     => $layout,
         ];
 

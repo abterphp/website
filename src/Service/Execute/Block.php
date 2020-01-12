@@ -66,14 +66,20 @@ class Block extends RepoServiceAbstract
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $body  = empty($postData['body']) ? '' : (string)$postData['body'];
-        $title = (string)$postData['title'];
+        $title = $postData['title'];
 
-        $identifier = empty($postData['identifier']) ? $title : (string)$postData['identifier'];
+        $identifier = $postData['identifier'] ?? $entity->getIdentifier();
+        $identifier = $identifier ?: $title;
         $identifier = $this->slugify->slugify($identifier);
 
-        $layoutId = empty($postData['layout_id']) ? null : (string)$postData['layout_id'];
-        $layout   = empty($postData['layout']) || $layoutId !== null ? '' : (string)$postData['layout'];
+        $body  = $postData['body'];
+
+        $layoutId = $postData['layout_id'];
+        $layout   = '';
+        if (empty($layoutId)) {
+            $layoutId = null;
+            $layout   = $postData['layout'] ?? '';
+        }
 
         $entity
             ->setIdentifier($identifier)
