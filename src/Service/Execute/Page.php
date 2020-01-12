@@ -95,7 +95,7 @@ class Page extends RepoServiceAbstract
         }
 
         $meta   = $this->getMeta($postData);
-        $assets = $this->getAssets($postData);
+        $assets = $this->getAssets($postData, $identifier);
 
         $entity
             ->setIdentifier($identifier)
@@ -147,11 +147,12 @@ class Page extends RepoServiceAbstract
     /**
      * @SuppressWarnings(PHPMD.NPathComplexity)
      *
-     * @param array $postData
+     * @param array  $postData
+     * @param string $identifier
      *
      * @return Assets
      */
-    protected function getAssets(array $postData): Assets
+    protected function getAssets(array $postData, string $identifier): Assets
     {
         $identifier = $postData['identifier'];
         $header     = empty($postData['header']) ? '' : $postData['header'];
