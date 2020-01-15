@@ -177,6 +177,7 @@ CREATE TABLE `page_layouts`
     `id`         char(36)     NOT NULL,
     `name`       varchar(160) NOT NULL,
     `identifier` varchar(160) NOT NULL,
+    `classes`    mediumtext   NOT NULL,
     `body`       mediumtext   NOT NULL,
     `header`     mediumtext   NOT NULL,
     `footer`     mediumtext   NOT NULL,
@@ -191,8 +192,8 @@ CREATE TABLE `page_layouts`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO `page_layouts` (`id`, `name`, `identifier`, `body`, `header`, `footer`, `css_files`, `js_files`)
-VALUES (UUID(), 'Empty', 'empty', '{{var/body}}', '', '', '', '');
+INSERT INTO `page_layouts` (`id`, `name`, `identifier`, `classes`, `body`, `header`, `footer`, `css_files`, `js_files`)
+VALUES (UUID(), 'Empty', 'empty', '{{var/body}}', '', '', '', '', '');
 
 --
 -- Table structure and data for table `pages`
@@ -202,6 +203,7 @@ CREATE TABLE `pages`
 (
     `id`                  char(36)            NOT NULL,
     `identifier`          varchar(160)        NOT NULL,
+    `classes`             mediumtext          NOT NULL,
     `title`               varchar(255)        NOT NULL,
     `meta_description`    mediumtext          NOT NULL,
     `meta_robots`         varchar(100)        NOT NULL,
@@ -234,10 +236,11 @@ CREATE TABLE `pages`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-INSERT INTO `pages` (id, identifier, title, meta_description, meta_robots, meta_author, meta_copyright, meta_keywords,
-                     meta_og_title, meta_og_image, meta_og_description, lead, body, category_id, layout_id, layout,
+INSERT INTO `pages` (id, identifier, classes, title, meta_description, meta_robots, meta_author, meta_copyright,
+                     meta_keywords,
+                     meta_og_title, meta_og_image, meta_og_description, `lead`, body, category_id, layout_id, layout,
                      header, footer, css_files, js_files, is_draft)
-VALUES (UUID(), 'index', 'New AbterCMS installation',
+VALUES (UUID(), 'index', '', 'New AbterCMS installation',
         'AbterCMS is a security first, simple and flexible open source content management system for both educational and commercial usecases.',
         '', '', '', 'cms, open source', '', '', '', '', 'Hello, World!', NULL, NULL,
         '<div class="container">{{var/body}}</div>', '', '', '', '', 0);
@@ -272,7 +275,8 @@ WHERE `user_groups`.`identifier` IN ('admin', 'content-editor', 'layout-editor')
 INSERT IGNORE INTO `user_groups_admin_resources` (`id`, `user_group_id`, `admin_resource_id`)
 SELECT UUID(), user_groups.id AS user_group_id, admin_resources.id AS admin_resource_id
 FROM user_groups
-         INNER JOIN admin_resources ON admin_resources.identifier IN ('block-layouts', 'page-layouts', 'pages', 'blocks', 'lists')
+         INNER JOIN admin_resources
+                    ON admin_resources.identifier IN ('block-layouts', 'page-layouts', 'pages', 'blocks', 'lists')
 WHERE user_groups.identifier = 'layout-editor';
 
 -- Provide access to relevant admin pages for content editors
