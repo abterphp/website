@@ -54,7 +54,6 @@ class PageLayout extends Base
             ->addDefaultElements()
             ->addName($entity)
             ->addIdentifier($entity)
-            ->addClasses($entity)
             ->addBody($entity)
             ->addAssets($entity)
             ->addDefaultButtons($showUrl);
@@ -97,22 +96,6 @@ class PageLayout extends Base
         );
         $label = new Label('identifier', 'website:pageLayoutIdentifier');
         $help  = new Help('website:pageLayoutIdentifierHelp');
-
-        $this->form[] = new FormGroup($input, $label, $help);
-
-        return $this;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addClasses(Entity $entity): PageLayout
-    {
-        $input = new Input('classes', 'classes', $entity->getClasses());
-        $label = new Label('classes', 'website:pageLayoutClasses');
-        $help  = new Help('website:pageLayoutClassesHelp');
 
         $this->form[] = new FormGroup($input, $label, $help);
 

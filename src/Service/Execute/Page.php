@@ -77,7 +77,7 @@ class Page extends RepoServiceAbstract
         $identifier = $identifier ?: $title;
         $identifier = $this->slugify->slugify($identifier);
 
-        $classes = $postData['classes'];
+        $classes = $postData['classes'] ?? '';
         $lead    = $postData['lead'];
         $body    = $postData['body'];
 
@@ -156,8 +156,8 @@ class Page extends RepoServiceAbstract
      */
     protected function getAssets(array $postData, string $identifier): Assets
     {
-        $header   = empty($postData['header']) ? '' : $postData['header'];
-        $footer   = empty($postData['footer']) ? '' : $postData['footer'];
+        $header   = $postData['header'] ?? '';
+        $footer   = $postData['footer'] ?? '';
         $cssFiles = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
         $jsFiles  = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 

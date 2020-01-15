@@ -68,7 +68,8 @@ class PageLayout extends RepoServiceAbstract
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
-        $name = $postData['name'];
+        $name    = $postData['name'];
+        $classes = $postData['classes'] ?? '';
 
         $identifier = $postData['identifier'] ?? $entity->getIdentifier();
         $identifier = $identifier ?: $name;
@@ -80,6 +81,7 @@ class PageLayout extends RepoServiceAbstract
 
         $entity
             ->setName($name)
+            ->setClasses($classes)
             ->setIdentifier($identifier)
             ->setBody($body)
             ->setAssets($assets);
@@ -95,8 +97,8 @@ class PageLayout extends RepoServiceAbstract
      */
     protected function createAssets(array $postData, string $identifier): Assets
     {
-        $header   = empty($postData['header']) ? '' : $postData['header'];
-        $footer   = empty($postData['footer']) ? '' : $postData['footer'];
+        $header   = $postData['header'] ?? '';
+        $footer   = $postData['footer'] ?? '';
         $cssFiles = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
         $jsFiles  = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 

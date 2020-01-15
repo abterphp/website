@@ -20,12 +20,27 @@ class Assets
     {
         $components = [];
 
+        $components[] = $this->addClasses($entity);
         $components[] = $this->addHeader($entity);
         $components[] = $this->addFooter($entity);
         $components[] = $this->addCssFiles($entity);
         $components[] = $this->addJsFiles($entity);
 
         return $components;
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return INode
+     */
+    protected function addClasses(Entity $entity): INode
+    {
+        $input = new Textarea('classes', 'classes', $entity->getClasses());
+        $label = new Label('classes', 'website:pageClasses');
+        $help  = new Help('website:pageClassesHelp');
+
+        return new FormGroup($input, $label, $help);
     }
 
     /**

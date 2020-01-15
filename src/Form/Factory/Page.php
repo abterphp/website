@@ -111,7 +111,6 @@ class Page extends Base
         $this->createForm($action, $method)
             ->addDefaultElements()
             ->addTitle($entity)
-            ->addClasses($entity)
             ->addIdentifier($entity)
             ->addDescription($entity)
             ->addMeta($entity)
@@ -142,22 +141,6 @@ class Page extends Base
         $label = new Label('title', 'website:pageTitle');
 
         $this->form[] = new FormGroup($input, $label, null, [], [Html5::ATTR_CLASS => FormGroup::CLASS_REQUIRED]);
-
-        return $this;
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addClasses(Entity $entity): Page
-    {
-        $input = new Input('classes', 'classes', $entity->getClasses());
-        $label = new Label('classes', 'website:pageClasses');
-        $help  = new Help('website:pageClassesHelp');
-
-        $this->form[] = new FormGroup($input, $label, $help);
 
         return $this;
     }
