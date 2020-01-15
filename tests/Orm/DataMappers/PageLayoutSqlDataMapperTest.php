@@ -28,19 +28,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $nextId     = 'c840500d-bd00-410a-912e-e923b8e965e3';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
 
-        $sql       = 'INSERT INTO page_layouts (id, name, identifier, body) VALUES (?, ?, ?, ?)'; // phpcs:ignore
+        $sql       = 'INSERT INTO page_layouts (id, name, identifier, classes, body) VALUES (?, ?, ?, ?, ?)'; // phpcs:ignore
         $values    = [
             [$nextId, \PDO::PARAM_STR],
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
+            [$classes, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
         ];
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new PageLayout($nextId, $name, $identifier, $body, null);
+        $entity = new PageLayout($nextId, $name, $identifier, $classes, $body, null);
 
         $this->sut->add($entity);
 
@@ -59,7 +61,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $statement = MockStatementFactory::createWriteStatement($this, $values);
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
-        $entity = new PageLayout($id, $name, $identifier, $body, null);
+        $entity = new PageLayout($id, $name, $identifier, '', $body, null);
 
         $this->sut->delete($entity);
     }
@@ -69,19 +71,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
                 'id'         => $id,
                 'name'       => $name,
                 'identifier' => $identifier,
+                'classes'    => $classes,
                 'body'       => $body,
                 'header'     => $header,
                 'footer'     => $footer,
@@ -102,19 +106,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
                 'id'         => $id,
                 'name'       => $name,
                 'identifier' => $identifier,
+                'classes'    => $classes,
                 'body'       => $body,
                 'header'     => $header,
                 'footer'     => $footer,
@@ -135,6 +141,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = 'df6b4637-634e-4544-a167-2bddf3eab498';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
@@ -144,13 +151,14 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['page_layouts.identifier ASC'];
         $conditions = ['page_layouts.identifier LIKE \'abc%\'', 'page_layouts.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
                 'id'         => $id,
                 'name'       => $name,
                 'identifier' => $identifier,
+                'classes'    => $classes,
                 'body'       => $body,
                 'header'     => $header,
                 'footer'     => $footer,
@@ -171,19 +179,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = 'fc2bdb23-bdd1-49aa-8613-b5e0ce76450d';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
         $values       = ['layout_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
                 'id'         => $id,
                 'name'       => $name,
                 'identifier' => $identifier,
+                'classes'    => $classes,
                 'body'       => $body,
                 'header'     => $header,
                 'footer'     => $footer,
@@ -204,19 +214,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = '4a7847c6-d202-4fc7-972b-bd4d634efda1';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
                 'id'         => $id,
                 'name'       => $name,
                 'identifier' => $identifier,
+                'classes'    => $classes,
                 'body'       => $body,
                 'header'     => $header,
                 'footer'     => $footer,
@@ -237,16 +249,18 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $id         = 'e62dd68b-c72c-464e-8e03-6ee86f26f592';
         $name       = 'Foo';
         $identifier = 'foo';
+        $classes    = 'tsa';
         $body       = 'bar';
         $header     = 'baz';
         $footer     = 'yak';
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
+        $sql       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, classes = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
         $values    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
+            [$classes, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
             [$header, \PDO::PARAM_STR],
             [$footer, \PDO::PARAM_STR],
@@ -258,7 +272,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
 
         $assets = new PageLayout\Assets($identifier, $header, $footer, (array)$cssFiles, (array)$jsFiles);
-        $entity = new PageLayout($id, $name, $identifier, $body, $assets);
+        $entity = new PageLayout($id, $name, $identifier, $classes, $body, $assets);
 
         $this->sut->update($entity);
     }

@@ -39,8 +39,8 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testGetAll()
     {
-        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
-        $entityStub1 = new Entity('foo1', 'Foo 1', 'foo-1', '', null);
+        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
+        $entityStub1 = new Entity('foo1', 'Foo 1', 'foo-1', '', '', null);
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -56,7 +56,7 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testGetByIdFromCache()
     {
-        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
+        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
 
         $entityRegistry = $this->createEntityRegistryStub($entityStub);
 
@@ -73,7 +73,7 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testGetByIdFromDataMapper()
     {
-        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
+        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
 
         $entityRegistry = $this->createEntityRegistryStub(null);
 
@@ -90,7 +90,7 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testAdd()
     {
-        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
+        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForInsertion')->with($entityStub);
 
@@ -99,7 +99,7 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testDelete()
     {
-        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
+        $entityStub = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForDeletion')->with($entityStub);
 
@@ -108,8 +108,8 @@ class PageLayoutRepoTest extends RepoTestCase
 
     public function testGetPage()
     {
-        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
-        $entityStub1 = new Entity('foo1', 'Foo 1', 'foo-1', '', null);
+        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
+        $entityStub1 = new Entity('foo1', 'Foo 1', 'foo-1', '', '', null);
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -127,7 +127,7 @@ class PageLayoutRepoTest extends RepoTestCase
     {
         $identifier = 'foo-0';
 
-        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', null);
+        $entityStub0 = new Entity('foo0', 'Foo 0', 'foo-0', '', '', null);
 
         $entityRegistry = $this->createEntityRegistryStub(null);
 

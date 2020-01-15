@@ -69,11 +69,13 @@ class PageTest extends TestCase
     {
         $title      = 'Bar';
         $identifier = 'bar';
+        $classes    = 'tsa';
         $layout     = 'baz';
         $categoryId = '7060fa74-f383-4e6f-99bd-ca40db021b1f';
         $postData   = [
             'title'       => $title,
             'identifier'  => $identifier,
+            'classes'     => $classes,
             'lead'        => '',
             'body'        => '',
             'layout_id'   => '',
@@ -102,10 +104,12 @@ class PageTest extends TestCase
 
         $title      = 'Bar';
         $identifier = 'bar';
+        $classes    = 'tsa';
         $layout     = 'baz';
         $postData   = [
             'title'      => $title,
             'identifier' => $identifier,
+            'classes'    => $classes,
             'lead'       => '',
             'body'       => '',
             'layout_id'  => '',

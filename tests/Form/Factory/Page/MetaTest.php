@@ -42,7 +42,7 @@ class MetaTest extends TestCase
             $ogImage,
             $ogDescription
         );
-        $entity = new Entity($id, $identifier, '', '', '', false, null, '', null, $meta);
+        $entity = new Entity($id, $identifier, '', '', '', '', false, null, '', null, $meta);
 
         $actualResult = $this->sut->create($entity);
 

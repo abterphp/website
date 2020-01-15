@@ -52,7 +52,7 @@ class PageLayout extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', new Assets('', '', '', [], []));
+        return new Entity($entityId, '', '', '', '', new Assets('', '', '', [], []));
     }
 
     /**

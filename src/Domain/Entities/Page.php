@@ -23,6 +23,9 @@ class Page implements IStringerEntity
     protected $title;
 
     /** @var string */
+    protected $classes;
+
+    /** @var string */
     protected $lead;
 
     /** @var string */
@@ -55,6 +58,7 @@ class Page implements IStringerEntity
      * @param string            $id
      * @param string            $identifier
      * @param string            $title
+     * @param string            $classes
      * @param string            $lead
      * @param string            $body
      * @param PageCategory|null $category
@@ -68,6 +72,7 @@ class Page implements IStringerEntity
         string $id,
         string $identifier,
         string $title,
+        string $classes,
         string $lead,
         string $body,
         bool $isDraft,
@@ -81,6 +86,7 @@ class Page implements IStringerEntity
         $this->id            = $id;
         $this->identifier    = $identifier;
         $this->title         = $title;
+        $this->classes       = $classes;
         $this->lead          = $lead;
         $this->body          = $body;
         $this->markedAsDraft = $isDraft;
@@ -151,6 +157,26 @@ class Page implements IStringerEntity
     /**
      * @return string
      */
+    public function getClasses(): string
+    {
+        return $this->classes;
+    }
+
+    /**
+     * @param string $classes
+     *
+     * @return $this
+     */
+    public function setClasses(string $classes): Page
+    {
+        $this->classes = $classes;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getLead(): string
     {
         return $this->lead;
@@ -158,6 +184,8 @@ class Page implements IStringerEntity
 
     /**
      * @param string $lead
+     *
+     * @return $this
      */
     public function setLead(string $lead): Page
     {
@@ -387,6 +415,7 @@ class Page implements IStringerEntity
             'id'         => $this->getId(),
             'identifier' => $this->getIdentifier(),
             'title'      => $this->getTitle(),
+            'classes'    => $this->getTitle(),
             'lead'       => $this->getLead(),
             'body'       => $this->getBody(),
             'is_draft'   => $this->isDraft(),

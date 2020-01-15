@@ -55,7 +55,7 @@ class PageCategoryTest extends TestCase
         $identifier = 'pc-1';
 
         $category = new PageCategoryEntity('', 'PC #1', $identifier);
-        $page     = new Page('', $identifier, '', '', '', false, $category);
+        $page     = new Page('', $identifier, '', '', '', '', false, $category);
 
         $this->pageRepoMock
             ->expects($this->any())
@@ -87,10 +87,10 @@ class PageCategoryTest extends TestCase
         $identifier1 = 'pc-2';
 
         $category0 = new PageCategoryEntity('', 'PC #0', $identifier0);
-        $page00    = new Page('', $identifier0, '', '', '', false, $category0);
-        $page01    = new Page('', $identifier0, '', '', '', false, $category0);
+        $page00    = new Page('', $identifier0, '', '', '', '', false, $category0);
+        $page01    = new Page('', $identifier0, '', '', '', '', false, $category0);
         $category1 = new PageCategoryEntity('', 'PC #1', $identifier1);
-        $page10    = new Page('', $identifier1, '', '', '', false, $category1);
+        $page10    = new Page('', $identifier1, '', '', '', '', false, $category1);
 
         $this->pageRepoMock
             ->expects($this->any())
@@ -129,7 +129,7 @@ class PageCategoryTest extends TestCase
         $identifier = 'pc-1';
 
         $category = new PageCategoryEntity('', 'PC #1', $identifier);
-        $page     = new Page('', $identifier, '', '', '', false, $category);
+        $page     = new Page('', $identifier, '', '', '', '', false, $category);
 
         $this->pageRepoMock
             ->expects($this->any())

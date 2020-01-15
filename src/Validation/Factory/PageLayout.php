@@ -24,6 +24,9 @@ class PageLayout extends ValidatorFactory
             ->field('identifier');
 
         $validator
+            ->field('classes');
+
+        $validator
             ->field('body');
 
         $validator

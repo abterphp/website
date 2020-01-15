@@ -222,6 +222,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
         $columnNamesToValues = [
             'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
             'title'       => [$entity->getTitle(), \PDO::PARAM_STR],
+            'classes'     => [$entity->getClasses(), \PDO::PARAM_STR],
             'lead'        => [$entity->getLead(), \PDO::PARAM_STR],
             'body'        => [$entity->getBody(), \PDO::PARAM_STR],
             'is_draft'    => [$entity->isDraft(), \PDO::PARAM_BOOL],
@@ -297,16 +298,18 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     {
         $meta     = $this->loadMeta($hash);
         $assets   = $this->loadAssets($hash);
-        $lead     = empty($hash['lead']) ? '' : $hash['lead'];
-        $body     = empty($hash['body']) ? '' : $hash['body'];
+        $lead     = $hash['lead'] ?? '';
+        $body     = $hash['body'] ?? '';
+        $classes  = $hash['classes'] ?? '';
         $category = $this->loadCategory($hash);
-        $layout   = empty($hash['layout']) ? '' : $hash['layout'];
-        $layoutId = empty($hash['layout_id']) ? null : $hash['layout_id'];
+        $layout   = $hash['layout'] ?? '';
+        $layoutId = $hash['layout_id'] ?? '';
 
         return new Entity(
             $hash['id'],
             $hash['identifier'],
             $hash['title'],
+            $classes,
             $lead,
             $body,
             (bool)$hash['is_draft'],
@@ -496,6 +499,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                'pages.classes',
                 'pages.lead',
                 'pages.body',
                 'pages.is_draft',
@@ -532,6 +536,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
+                "CONCAT(layouts.classes, ' ', pages.classes) AS classes",
                 'pages.lead',
                 'pages.body',
                 'pages.is_draft',

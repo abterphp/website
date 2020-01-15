@@ -53,7 +53,7 @@ class Page extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', '', false);
+        return new Entity($entityId, '', '', '', '', '', false);
     }
 
     /**
@@ -77,8 +77,9 @@ class Page extends RepoServiceAbstract
         $identifier = $identifier ?: $title;
         $identifier = $this->slugify->slugify($identifier);
 
-        $lead = $postData['lead'];
-        $body = $postData['body'];
+        $classes = $postData['classes'];
+        $lead    = $postData['lead'];
+        $body    = $postData['body'];
 
         $isDraft = !empty($postData['is_draft']);
 
@@ -100,6 +101,7 @@ class Page extends RepoServiceAbstract
         $entity
             ->setIdentifier($identifier)
             ->setTitle($title)
+            ->setClasses($classes)
             ->setLead($lead)
             ->setBody($body)
             ->setIsDraft($isDraft)
@@ -154,10 +156,10 @@ class Page extends RepoServiceAbstract
      */
     protected function getAssets(array $postData, string $identifier): Assets
     {
-        $header     = empty($postData['header']) ? '' : $postData['header'];
-        $footer     = empty($postData['footer']) ? '' : $postData['footer'];
-        $cssFiles   = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
-        $jsFiles    = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
+        $header   = empty($postData['header']) ? '' : $postData['header'];
+        $footer   = empty($postData['footer']) ? '' : $postData['footer'];
+        $cssFiles = empty($postData['css-files']) ? [] : explode('\r\n', $postData['css-files']);
+        $jsFiles  = empty($postData['js-files']) ? [] : explode('\r\n', $postData['js-files']);
 
         return new Assets(
             $identifier,

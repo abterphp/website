@@ -12,7 +12,6 @@ use Opulence\QueryBuilders\MySql\QueryBuilder;
 use Opulence\QueryBuilders\MySql\SelectQuery;
 
 /** @phan-file-suppress PhanTypeMismatchArgument */
-
 class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMapper
 {
     /**
@@ -159,6 +158,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
         $columnNamesToValues = [
             'name'       => [$entity->getName(), \PDO::PARAM_STR],
             'identifier' => [$entity->getIdentifier(), \PDO::PARAM_STR],
+            'classes'    => [$entity->getClasses(), \PDO::PARAM_STR],
             'body'       => [$entity->getBody(), \PDO::PARAM_STR],
         ];
 
@@ -208,6 +208,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
             $hash['id'],
             $hash['name'],
             $hash['identifier'],
+            $hash['classes'],
             $hash['body'],
             $assets
         );
@@ -240,6 +241,7 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
                 'page_layouts.id',
                 'page_layouts.name',
                 'page_layouts.identifier',
+                'page_layouts.classes',
                 'page_layouts.body',
                 'page_layouts.header',
                 'page_layouts.footer',

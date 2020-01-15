@@ -32,7 +32,7 @@ class DraftPageCheckerTest extends TestCase
 
     public function testHandleReturnsEarlyIfPageIsDraft()
     {
-        $page = new Page('', '', '', '', '', false);
+        $page = new Page('', '', '', '', '', '', false);
 
         $event = $this->createMock(PageViewed::class);
         $event->expects($this->once())->method('getPage')->willReturn($page);
@@ -43,7 +43,7 @@ class DraftPageCheckerTest extends TestCase
 
     public function testHandleSetsIsAllowedForNonDraftPagesByDefault()
     {
-        $page = new Page('', '', '', '', '', true);
+        $page = new Page('', '', '', '', '', '', true);
 
         $event = $this->createMock(PageViewed::class);
         $event->expects($this->any())->method('getPage')->willReturn($page);
@@ -56,7 +56,7 @@ class DraftPageCheckerTest extends TestCase
 
     public function testHandleSetsIsNotAllowedForNonDraftPagesIfNoAllowedUserGroupIsFound()
     {
-        $page          = new Page('', '', '', '', '', true);
+        $page          = new Page('', '', '', '', '', '', true);
         $ugIdentifiers = ['foo', 'bar'];
 
         $event = $this->createMock(PageViewed::class);
@@ -72,7 +72,7 @@ class DraftPageCheckerTest extends TestCase
 
     public function testHandleSetsIsAllowedForNonDraftPagesIfAllowedUserGroupIsFound()
     {
-        $page          = new Page('', '', '', '', '', true);
+        $page          = new Page('', '', '', '', '', '', true);
         $ugIdentifiers = ['foo', 'bar'];
 
         $event = $this->createMock(PageViewed::class);

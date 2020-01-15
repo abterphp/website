@@ -78,7 +78,7 @@ class Page extends FormAbstract
      */
     protected function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity((string)$entityId, '', '', '', '', false);
+        return new Entity((string)$entityId, '', '', '', '', '', false);
     }
 
     /**

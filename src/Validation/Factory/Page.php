@@ -24,6 +24,9 @@ class Page extends ValidatorFactory
             ->field('identifier');
 
         $validator
+            ->field('classes');
+
+        $validator
             ->field('title')
             ->required();
 

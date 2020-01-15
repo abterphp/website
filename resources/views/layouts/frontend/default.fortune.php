@@ -38,7 +38,7 @@
     <% endif %>
     {{! assetCss($page) !}}
 </head>
-<body>
+<body class="{{! $classes !}}">
     <% show("content") %>
 
     <!-- Optional JavaScript -->

@@ -107,6 +107,7 @@ class Index extends ControllerAbstract
         $this->view->setVar('siteTitle', $this->siteTitle);
         $this->view->setVar('pageUrl', $pageUrl);
         $this->view->setVar('homepageUrl', $homepageUrl);
+        $this->view->setVar('classes', $page->getClasses());
 
         $this->setMetaVars($page->getMeta());
         $this->setAssetsVars($page->getAssets());
@@ -198,35 +199,6 @@ class Index extends ControllerAbstract
         foreach ($assets->getCssFiles() as $cssFile) {
             $this->assetManager->addCss($key, $cssFile);
         }
-    }
-
-    /**
-     * @param string $route
-     *
-     * @return string
-     * @throws \Opulence\Routing\Urls\URLException
-     */
-    protected function getCanonicalUrl(string $route): string
-    {
-        $path = $this->urlGenerator->createFromName($route);
-
-        return $this->baseUrl . ltrim($path, '/');
-    }
-
-    /**
-     * @return string
-     */
-    protected function getBaseUrl(): string
-    {
-        if ($this->baseUrl === null) {
-            $this->baseUrl = sprintf(
-                '%s://%s/',
-                $this->request->getServer()->get('REQUEST_SCHEME'),
-                $this->request->getServer()->get('SERVER_NAME')
-            );
-        }
-
-        return $this->baseUrl;
     }
 
     /**

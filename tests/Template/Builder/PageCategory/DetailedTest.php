@@ -51,7 +51,7 @@ class DetailedTest extends TestCase
     {
         $this->expectException(\LogicException::class);
 
-        $page = new Page('', '', '', '', '', false, null);
+        $page = new Page('', '', '', '', '', '', false, null);
 
         $this->sut->build([$page]);
     }
@@ -63,7 +63,7 @@ class DetailedTest extends TestCase
         $pageTitle          = 'Bar';
 
         $category = new PageCategory('', '', $categoryIdentifier);
-        $page     = new Page('', $pageIdentifier, $pageTitle, '', '', false, $category);
+        $page     = new Page('', $pageIdentifier, $pageTitle, '', '', '', false, $category);
 
         $actualResult = $this->sut->build([$page]);
 
@@ -87,7 +87,7 @@ class DetailedTest extends TestCase
         $lead               = "foo\nbar\n";
 
         $category = new PageCategory('', '', $categoryIdentifier);
-        $page     = new Page('', $pageIdentifier, $pageTitle, $lead, '', false, $category);
+        $page     = new Page('', $pageIdentifier, $pageTitle, $lead, '', '', false, $category);
 
         $actualResult = $this->sut->build([$page]);
 

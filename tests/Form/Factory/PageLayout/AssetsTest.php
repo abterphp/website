@@ -31,7 +31,7 @@ class AssetsTest extends TestCase
         $body       = 'pior';
 
         $assets = new Entity\Assets($identifier, $header, $footer, $cssFiles, $jsFiles);
-        $entity = new Entity($id, $name, $identifier, $body, $assets);
+        $entity = new Entity($id, $name, $identifier, '', $body, $assets);
 
         $actualResult = $this->sut->create($entity);
 

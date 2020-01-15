@@ -35,7 +35,7 @@ class AssetsTest extends TestCase
         $jsFiles    = ['poic', 'yozz'];
 
         $assets = new Entity\Assets($identifier, $header, $footer, $cssFiles, $jsFiles, null);
-        $entity = new Entity($id, $identifier, '', '', '', false, null, '', null, null, $assets);
+        $entity = new Entity($id, $identifier, '', '', '', '', false, null, '', null, null, $assets);
 
         $actualResult = $this->sut->create($entity);
 

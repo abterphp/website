@@ -41,7 +41,7 @@ class SimpleTest extends TestCase
     {
         $this->expectException(\LogicException::class);
 
-        $page = new Page('', '', '', '', '', false, null);
+        $page = new Page('', '', '', '', '', '', false, null);
 
         $this->sut->build([$page]);
     }
@@ -53,7 +53,7 @@ class SimpleTest extends TestCase
         $pageTitle          = 'Bar';
 
         $category = new PageCategory('', '', $categoryIdentifier);
-        $page     = new Page('', $pageIdentifier, $pageTitle, '', '', false, $category);
+        $page     = new Page('', $pageIdentifier, $pageTitle, '', '', '', false, $category);
 
         $actualResult = $this->sut->build([$page]);
 

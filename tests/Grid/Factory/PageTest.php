@@ -64,7 +64,7 @@ class PageTest extends TestCase
 
     public function testGetCategoryNameIsEmptyStringIfNoCategoryIsSet()
     {
-        $entity = new Entity('', '', '', '', '', false);
+        $entity = new Entity('', '', '', '', '', '', false);
 
         $actualResult = $this->sut->getCategoryName($entity);
 
@@ -75,7 +75,7 @@ class PageTest extends TestCase
     {
         $categoryName = 'foo';
         $category     = new PageCategory('', $categoryName, '');
-        $entity       = new Entity('', '', '', '', '', false, $category);
+        $entity       = new Entity('', '', '', '', '', '', false, $category);
 
         $actualResult = $this->sut->getCategoryName($entity);
 
@@ -84,7 +84,7 @@ class PageTest extends TestCase
 
     public function testIsPublishedIfPageIsDraft()
     {
-        $entity = new Entity('', '', '', '', '', true);
+        $entity = new Entity('', '', '', '', '', '', true);
 
         $actualResult = $this->sut->isPublished($entity);
 
@@ -93,7 +93,7 @@ class PageTest extends TestCase
 
     public function testIsPublishedIfPageIsNotDraft()
     {
-        $entity = new Entity('', '', '', '', '', false);
+        $entity = new Entity('', '', '', '', '', '', false);
 
         $actualResult = $this->sut->isPublished($entity);
 

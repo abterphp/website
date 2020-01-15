@@ -65,7 +65,7 @@ class IndexTest extends TestCase
         $identifier           = 'foo';
         $userGroupIdentifiers = [];
 
-        $entity = new Page('', '', '', '', '', true, null, '', null);
+        $entity = new Page('', '', '', '', '', '', true, null, '', null);
 
         $this->pageRepoMock->expects($this->any())->method('getWithLayout')->willReturn($entity);
 
@@ -80,7 +80,7 @@ class IndexTest extends TestCase
         $userGroupIdentifiers = [];
         $renderedBody         = 'bar';
 
-        $entity = new Page('', '', '', '', '', false, null, '', null);
+        $entity = new Page('', '', '', '', '', '', false, null, '', null);
 
         $this->pageRepoMock->expects($this->any())->method('getWithLayout')->willReturn($entity);
 
