@@ -12,6 +12,7 @@ return [
     'contentListProtectedHelp'  => 'Tartalom-kezelők csak a lista elemek tartalmát módosíthatják',
     'contentLists'              => 'Listák',
     'contentListType'           => 'Lista típus',
+    'contentListTypeHollow'     => 'Üres',
     'contentListTypeIdLabel'    => 'Lista típus',
     'contentListTypeNeutral'    => 'Semleges (&lt;div&gt;)',
     'contentListTypeOrdered'    => 'Sorszámozott (&lt;ol&gt;)',

@@ -46,12 +46,12 @@ class Page extends ValidatorFactory
 
         $validator
             ->field('layout_id')
-//            ->validateEmpty()
-            ->exactlyOne('layout')
             ->uuid();
 
         $validator
-            ->field('layout');
+            ->field('layout')
+            ->validateEmpty()
+            ->exactlyOne('layout_id');
 
         $validator
             ->field('header');

@@ -95,7 +95,8 @@ CREATE TABLE `list_types`
 ) ENGINE = InnoDB;
 
 INSERT INTO `list_types` (`id`, `name`, `label`)
-VALUES ('ecf88c10-2872-4c68-9601-c88a106c49c7', 'ordered', 'website:contentListTypeOrdered'),
+VALUES ('0c9e1ec1-5503-4632-8fe1-4907a4df3dba', 'empty', 'website:contentListTypeEmpty'),
+       ('ecf88c10-2872-4c68-9601-c88a106c49c7', 'ordered', 'website:contentListTypeOrdered'),
        ('7c85d0e4-9998-4ed8-bbbd-1a9fc769d23c', 'unordered', 'website:contentListTypeUnordered'),
        ('9ba8d47c-ab75-4f73-af01-0a82d3372622', 'natural', 'website:contentListTypeNeutral'),
        ('e6069f1e-0500-4aac-a494-79a5f9df1270', 'section', 'website:contentListTypeSection');

@@ -12,6 +12,7 @@ return [
     'contentListProtectedHelp'  => 'Content editors are only allowed to change the content of the items',
     'contentLists'              => 'Lists',
     'contentListType'           => 'List type',
+    'contentListTypeHollow'     => 'Empty',
     'contentListTypeIdLabel'    => 'List type',
     'contentListTypeNeutral'    => 'Neutral (&lt;div&gt;)',
     'contentListTypeOrdered'    => 'Ordered (&lt;ol&gt;)',

@@ -7,6 +7,7 @@ namespace AbterPhp\Website\Bootstrappers\Template\Loader;
 use AbterPhp\Website\Databases\Queries\ContentListCache as Cache;
 use AbterPhp\Website\Orm\ContentListItemRepo as ItemRepo;
 use AbterPhp\Website\Orm\ContentListRepo as Repo;
+use AbterPhp\Website\Template\Builder\ContentList\Hollow as HollowBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Natural as NaturalBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Ordered as OrderedBuilder;
 use AbterPhp\Website\Template\Builder\ContentList\Section as SectionBuilder;
@@ -37,6 +38,9 @@ class ContentListBootstrapper extends Bootstrapper implements ILazyBootstrapper
         $itemRepo = $container->resolve(ItemRepo::class);
         $cache    = $container->resolve(Cache::class);
 
+        /** @var HollowBuilder $hollowBuilder */
+        $hollowBuilder = $container->resolve(HollowBuilder::class);
+
         /** @var NaturalBuilder $naturalBuilder */
         $naturalBuilder = $container->resolve(NaturalBuilder::class);
 
@@ -50,9 +54,11 @@ class ContentListBootstrapper extends Bootstrapper implements ILazyBootstrapper
         $unorderedBuilder = $container->resolve(UnorderedBuilder::class);
 
         $builders = [
+            $hollowBuilder->getIdentifier()    => $hollowBuilder,
             $naturalBuilder->getIdentifier()   => $naturalBuilder,
             $orderedBuilder->getIdentifier()   => $orderedBuilder,
             $sectionBuilder->getIdentifier()   => $sectionBuilder,
+            $unorderedBuilder->getIdentifier() => $unorderedBuilder,
             $unorderedBuilder->getIdentifier() => $unorderedBuilder,
         ];
 

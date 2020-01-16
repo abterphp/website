@@ -15,7 +15,7 @@ class Ordered implements IBuilder
 {
     use ItemTrait;
 
-    const IDENTIFIER = 'ordered-list';
+    const IDENTIFIER = 'ordered';
 
     /**
      * @return string
@@ -23,22 +23,6 @@ class Ordered implements IBuilder
     public function getIdentifier(): string
     {
         return static::IDENTIFIER;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getPartClassesByOrder(): array
-    {
-        return ['item-name', 'item-body', 'item-image'];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function wrapperTags(): array
-    {
-        return [Html5::TAG_SPAN, Html5::TAG_SPAN, Html5::TAG_SPAN];
     }
 
     /**

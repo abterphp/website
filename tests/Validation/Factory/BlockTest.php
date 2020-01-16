@@ -75,21 +75,21 @@ class BlockTest extends TestCase
                 ],
                 false,
             ],
-//            'invalid-layout-and-layout-id-missing' => [
-//                [
-//                    'title' => 'bar',
-//                ],
-//                false,
-//            ],
-//            'invalid-layout-and-layout-id-empty'   => [
-//                [
-//                    'title'     => 'bar',
-//                    'layout'    => '',
-//                    'layout_id' => '',
-//                ],
-//                false,
-//            ],
-            'invalid-both-layout-and-layout-id-empty'   => [
+            'invalid-layout-and-layout-id-missing'    => [
+                [
+                    'title' => 'bar',
+                ],
+                false,
+            ],
+            'invalid-layout-and-layout-id-empty'      => [
+                [
+                    'title'     => 'bar',
+                    'layout'    => '',
+                    'layout_id' => '',
+                ],
+                false,
+            ],
+            'invalid-both-layout-and-layout-id-empty' => [
                 [
                     'title'     => 'bar',
                     'layout'    => 'baz',

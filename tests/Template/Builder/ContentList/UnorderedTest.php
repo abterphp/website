@@ -25,31 +25,31 @@ class UnorderedTest extends ContentListTest
 
         // @codingStandardsIgnoreStart
         $withNothing = <<<EOD
-<ul id="$identifier" class="unordered-list $typeName"><li><span class="item-name">Foo $itemId0</span></li>
+<ul id="$identifier" class="unordered $typeName"><li><span class="item-name">Foo $itemId0</span></li>
 <li><span class="item-name">Foo $itemId1</span></li>
 </ul>
 EOD;
 
         $withLinks = <<<EOD
-<ul id="$identifier" class="unordered-list $typeName"><li><span class="item-name"><a href="/foo-$itemId0">Foo $itemId0</a></span></li>
+<ul id="$identifier" class="unordered $typeName"><li><span class="item-name"><a href="/foo-$itemId0">Foo $itemId0</a></span></li>
 <li><span class="item-name"><a href="/foo-$itemId1">Foo $itemId1</a></span></li>
 </ul>
 EOD;
 
         $withImage = <<<EOD
-<ul id="$identifier" class="unordered-list $typeName"><li><span class="item-name">Foo $itemId0</span><span class="item-image"><img src="/baz0-$itemId0" alt="/baz1-$itemId0"></span></li>
+<ul id="$identifier" class="unordered $typeName"><li><span class="item-name">Foo $itemId0</span><span class="item-image"><img src="/baz0-$itemId0" alt="/baz1-$itemId0"></span></li>
 <li><span class="item-name">Foo $itemId1</span><span class="item-image"><img src="/baz0-$itemId1" alt="/baz1-$itemId1"></span></li>
 </ul>
 EOD;
 
         $withBody = <<<EOD
-<ul id="$identifier" class="unordered-list $typeName"><li><span class="item-name">Foo ${itemId0}</span><span class="item-body">Bar ${itemId0}</span></li>
+<ul id="$identifier" class="unordered $typeName"><li><span class="item-name">Foo ${itemId0}</span><span class="item-body">Bar ${itemId0}</span></li>
 <li><span class="item-name">Foo ${itemId1}</span><span class="item-body">Bar ${itemId1}</span></li>
 </ul>
 EOD;
 
         $withAll = <<<EOD
-<ul id="$identifier" class="unordered-list $typeName"><li><span class="item-name"><a href="/foo-$itemId0">Foo $itemId0</a></span><span class="item-body"><a href="/bar-$itemId0">Bar $itemId0</a></span><span class="item-image"><a href="Baz $itemId0"><img src="/baz0-$itemId0" alt="/baz1-$itemId0"></a></span></li>
+<ul id="$identifier" class="unordered $typeName"><li><span class="item-name"><a href="/foo-$itemId0">Foo $itemId0</a></span><span class="item-body"><a href="/bar-$itemId0">Bar $itemId0</a></span><span class="item-image"><a href="Baz $itemId0"><img src="/baz0-$itemId0" alt="/baz1-$itemId0"></a></span></li>
 <li><span class="item-name"><a href="/foo-$itemId1">Foo $itemId1</a></span><span class="item-body"><a href="/bar-$itemId1">Bar $itemId1</a></span><span class="item-image"><a href="Baz $itemId1"><img src="/baz0-$itemId1" alt="/baz1-$itemId1"></a></span></li>
 </ul>
 EOD;

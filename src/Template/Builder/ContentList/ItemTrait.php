@@ -6,11 +6,15 @@ namespace AbterPhp\Website\Template\Builder\ContentList;
 
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Html\Helper\StringHelper;
+use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 
 trait ItemTrait
 {
+    /** @var bool */
+    protected $withName = true;
+
     /**
      * @return string
      */
@@ -19,12 +23,26 @@ trait ItemTrait
     /**
      * @return string[]
      */
-    abstract public function getPartClassesByOrder(): array;
+    public function getPartClassesByOrder(): array
+    {
+        return [
+            IBuilder::NAME  => 'item-name',
+            IBuilder::BODY  => 'item-body',
+            IBuilder::IMAGE => 'item-image',
+        ];
+    }
 
     /**
      * @return string[]
      */
-    abstract public function wrapperTags(): array;
+    public function wrapperTags(): array
+    {
+        return [
+            IBuilder::NAME  => Html5::TAG_SPAN,
+            IBuilder::BODY  => Html5::TAG_SPAN,
+            IBuilder::IMAGE => Html5::TAG_SPAN,
+        ];
+    }
 
     /**
      * @param Item   $item
@@ -36,26 +54,36 @@ trait ItemTrait
     {
         $name  = $item->getName();
         $body  = $item->getBody();
-        $image = StringHelper::createTag(
-            Html5::TAG_IMG,
-            [Html5::ATTR_SRC => $item->getImgSrc(), Html5::ATTR_ALT => $item->getImgAlt()]
-        );
+        $image = null;
+
+        if ($list->isWithImage()) {
+            $image = StringHelper::createTag(
+                Html5::TAG_IMG,
+                [Html5::ATTR_SRC => $item->getImgSrc(), Html5::ATTR_ALT => $item->getImgAlt()]
+            );
+        }
 
         if ($list->isWithLinks()) {
             $name  = StringHelper::wrapInTag($name, Html5::TAG_A, [Html5::ATTR_HREF => $item->getNameHref()]);
             $body  = StringHelper::wrapInTag($body, Html5::TAG_A, [Html5::ATTR_HREF => $item->getBodyHref()]);
-            $image  = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $item->getImgHref()]);
+            if ($image) {
+                $image = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $item->getImgHref()]);
+            }
+        }
+
+        if (!$this->withName) {
+            $name = null;
         }
 
         if (!$list->isWithBody()) {
             $body = null;
         }
 
-        if (!$list->isWithImage()) {
-            $image = null;
-        }
-
-        return [$name, $body, $image];
+        return [
+            IBuilder::NAME  => $name,
+            IBuilder::BODY  => $body,
+            IBuilder::IMAGE => $image,
+        ];
     }
 
     /**
@@ -68,12 +96,17 @@ trait ItemTrait
         $tags = $this->wrapperTags();
 
         $ordered = [];
-        foreach ($this->getPartClassesByOrder() as $i => $class) {
-            if (empty($parts[$i]) || empty($tags[$i])) {
+        foreach ($this->getPartClassesByOrder() as $partName => $class) {
+            if (empty($parts[$partName])) {
                 continue;
             }
 
-            $ordered[] = StringHelper::wrapInTag($parts[$i], $tags[$i], [Html5::ATTR_CLASS => $class]);
+            if (empty($tags[$partName])) {
+                $ordered[] = $parts[$partName];
+                continue;
+            }
+
+            $ordered[] = StringHelper::wrapInTag($parts[$partName], $tags[$partName], [Html5::ATTR_CLASS => $class]);
         }
 
         return implode('', $ordered);
@@ -93,9 +126,13 @@ trait ItemTrait
 
         $htmlParts = [];
         foreach ($list->getItems() as $item) {
-            $parts       = $this->buildParts($item, $list);
-            $joined      = $this->joinItem($parts);
-            $htmlParts[] = sprintf("<$tag>%s</$tag>\n", $joined);
+            $parts  = $this->buildParts($item, $list);
+            $joined = $this->joinItem($parts);
+            if ($tag) {
+                $htmlParts[] = sprintf("<$tag>%s</$tag>\n", $joined);
+            } else {
+                $htmlParts[] = sprintf("%s\n", $joined);
+            }
         }
 
         return implode('', $htmlParts);
