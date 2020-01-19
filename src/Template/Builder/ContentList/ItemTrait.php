@@ -7,7 +7,6 @@ namespace AbterPhp\Website\Template\Builder\ContentList;
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Html\Helper\StringHelper;
 use AbterPhp\Framework\Template\Data;
-use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
@@ -35,8 +34,8 @@ trait ItemTrait
         $options        = $this->getOptions($template);
 
         $content    = $this->getContent($list, $wrapperTags, $wrapperClasses, $options);
-        $tag        = $wrapperTags[IBuilder::LIST_TAG];
-        $classes    = $this->getListClasses($list->getClasses(), $wrapperClasses[IBuilder::LIST_CLASS]);
+        $tag        = $wrapperTags[IContentList::LIST_TAG];
+        $classes    = $this->getListClasses($list->getClasses(), $wrapperClasses[IContentList::LIST_CLASS]);
         $attributes = [Html5::ATTR_ID => $list->getIdentifier(), Html5::ATTR_CLASS => $classes];
 
         $html = StringHelper::wrapInTag($content, $tag, $attributes);
@@ -92,8 +91,8 @@ trait ItemTrait
             $parts   = $this->buildItemParts($item, $list, $tags, $classes, $options);
             $content = $this->joinItemParts($parts);
 
-            $tag   = $tags[IBuilder::ITEM_TAG];
-            $class = $classes[IBuilder::ITEM_CLASS];
+            $tag   = $tags[IContentList::ITEM_TAG];
+            $class = $classes[IContentList::ITEM_CLASS];
 
             $htmlParts[] = StringHelper::wrapInTag($content, $tag, [Html5::ATTR_CLASS => $class]);
         }
@@ -113,9 +112,9 @@ trait ItemTrait
     protected function buildItemParts(Item $item, Entity $list, array $tags, array $classes, array $options): array
     {
         return [
-            IBuilder::LABEL   => $this->buildLabel($item, $list, $tags, $classes, $options),
-            IBuilder::CONTENT => $this->buildContent($item, $list, $tags, $classes, $options),
-            IBuilder::IMAGE   => $this->buildImage($item, $list, $tags, $classes, $options),
+            IContentList::LABEL   => $this->buildLabel($item, $list, $tags, $classes, $options),
+            IContentList::CONTENT => $this->buildContent($item, $list, $tags, $classes, $options),
+            IContentList::IMAGE   => $this->buildImage($item, $list, $tags, $classes, $options),
         ];
     }
 
@@ -130,7 +129,7 @@ trait ItemTrait
      */
     protected function buildLabel(Item $item, Entity $list, array $tags, array $classes, array $options): string
     {
-        if (!$options[IBuilder::WITH_LABEL_OPTION]) {
+        if (!$options[IContentList::WITH_LABEL_OPTION]) {
             return '';
         }
 
@@ -145,8 +144,8 @@ trait ItemTrait
             $label = StringHelper::wrapInTag($label, Html5::TAG_A, [Html5::ATTR_HREF => $href]);
         }
 
-        $tag   = $tags[IBuilder::LABEL_TAG];
-        $class = $classes[IBuilder::LABEL_CLASS];
+        $tag   = $tags[IContentList::LABEL_TAG];
+        $class = $classes[IContentList::LABEL_CLASS];
         $label = StringHelper::wrapInTag($label, $tag, [Html5::ATTR_CLASS => $class]);
 
         return $label;
@@ -171,8 +170,8 @@ trait ItemTrait
             $content = StringHelper::wrapInTag($content, Html5::TAG_A, [Html5::ATTR_HREF => $item->getContentHref()]);
         }
 
-        $tag     = $tags[IBuilder::CONTENT_TAG];
-        $class   = $classes[IBuilder::CONTENT_CLASS];
+        $tag     = $tags[IContentList::CONTENT_TAG];
+        $class   = $classes[IContentList::CONTENT_CLASS];
         $content = StringHelper::wrapInTag($content, $tag, [Html5::ATTR_CLASS => $class]);
 
         return $content;
@@ -189,7 +188,7 @@ trait ItemTrait
      */
     protected function buildImage(Item $item, Entity $list, array $tags, array $classes, array $options): string
     {
-        if (!$options[IBuilder::WITH_IMAGE_OPTION] || !$list->isWithImages()) {
+        if (!$options[IContentList::WITH_IMAGES_OPTION] || !$list->isWithImages()) {
             return '';
         }
 
@@ -201,8 +200,8 @@ trait ItemTrait
             $image = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $href]);
         }
 
-        $tag   = $tags[IBuilder::IMAGE_TAG];
-        $class = $classes[IBuilder::IMAGE_CLASS];
+        $tag   = $tags[IContentList::IMAGE_TAG];
+        $class = $classes[IContentList::IMAGE_CLASS];
         $image = StringHelper::wrapInTag($image, $tag, [Html5::ATTR_CLASS => $class]);
 
         return $image;

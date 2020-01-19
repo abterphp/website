@@ -3,7 +3,6 @@
 namespace AbterPhp\Website\Template\Builder\ContentList;
 
 use AbterPhp\Framework\Constant\Html5;
-use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\ParsedTemplate;
 
 class DefinitionListTest extends ContentListTest
@@ -162,18 +161,18 @@ EOD;
             ->setWithImages($withImages);
 
         $attributes     = [
-            IBuilder::WITH_LABEL_OPTION => '1',
-            IBuilder::WITH_IMAGE_OPTION => '1',
-            IBuilder::LIST_TAG          => Html5::TAG_DIV,
-            IBuilder::LIST_CLASS        => 'd',
-            IBuilder::ITEM_TAG          => Html5::TAG_UL,
-            IBuilder::ITEM_CLASS        => 'it',
-            IBuilder::LABEL_TAG         => Html5::TAG_LI,
-            IBuilder::LABEL_CLASS       => 'l',
-            IBuilder::CONTENT_TAG       => Html5::TAG_LI,
-            IBuilder::CONTENT_CLASS     => 'c',
-            IBuilder::IMAGE_TAG         => Html5::TAG_LI,
-            IBuilder::IMAGE_CLASS       => 'im',
+            IContentList::WITH_LABEL_OPTION  => '1',
+            IContentList::WITH_IMAGES_OPTION => '1',
+            IContentList::LIST_TAG           => Html5::TAG_DIV,
+            IContentList::LIST_CLASS         => 'd',
+            IContentList::ITEM_TAG           => Html5::TAG_UL,
+            IContentList::ITEM_CLASS         => 'it',
+            IContentList::LABEL_TAG          => Html5::TAG_LI,
+            IContentList::LABEL_CLASS        => 'l',
+            IContentList::CONTENT_TAG        => Html5::TAG_LI,
+            IContentList::CONTENT_CLASS      => 'c',
+            IContentList::IMAGE_TAG          => Html5::TAG_LI,
+            IContentList::IMAGE_CLASS        => 'im',
         ];
         $parsedTemplate = new ParsedTemplate('', '', $attributes);
 

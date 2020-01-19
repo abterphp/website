@@ -79,7 +79,7 @@ class ContentListTest extends TestCase
                     'with_links',
                     'with_label_links',
                     'with_html',
-                    'with_image',
+                    'with_images',
                     'with_classes',
                 ],
                 [],
@@ -96,7 +96,7 @@ class ContentListTest extends TestCase
                     'with_links',
                     'with_label_links',
                     'with_html',
-                    'with_image',
+                    'with_images',
                     'with_classes',
                 ],
                 [],
@@ -155,7 +155,7 @@ class ContentListTest extends TestCase
             'with_links',
             'with_label_links',
             'with_html',
-            'with_image',
+            'with_images',
             'with_classes',
         ];
 
@@ -172,7 +172,7 @@ class ContentListTest extends TestCase
                 true,
                 [],
                 ['POST', 'CSRF'],
-                ['identifier', 'classes', 'with_links', 'with_label_links', 'with_html', 'with_image', 'with_classes'],
+                ['identifier', 'classes', 'with_links', 'with_label_links', 'with_html', 'with_images', 'with_classes'],
             ],
             'admin protected' => [
                 true,

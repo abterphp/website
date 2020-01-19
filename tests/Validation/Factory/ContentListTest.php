@@ -42,14 +42,15 @@ class ContentListTest extends TestCase
             ],
             'valid-data'                          => [
                 [
-                    'identifier' => 'foo',
-                    'name'       => 'bar',
-                    'classes'    => 'baz',
-                    'protected'  => '1',
-                    'with_links' => '1',
-                    'with_image' => '1',
-                    'with_body'  => '1',
-                    'with_html'  => '1',
+                    'identifier'       => 'foo',
+                    'name'             => 'bar',
+                    'classes'          => 'baz',
+                    'protected'        => '1',
+                    'with_links'       => '1',
+                    'with_label_links' => '1',
+                    'with_html'        => '1',
+                    'with_images'      => '1',
+                    'with_classes'     => '1',
                 ],
                 true,
             ],
@@ -59,7 +60,7 @@ class ContentListTest extends TestCase
                 ],
                 true,
             ],
-            'invalid-id-present'                 => [
+            'invalid-id-present'                  => [
                 [
                     'id'   => 'baf16ace-8fae-48a8-bbad-a610d7960e31',
                     'name' => 'bar',

@@ -36,23 +36,27 @@ class ContentList extends ValidatorFactory
             ->max(1);
 
         $validator
-            ->field('with_image')
-            ->min(1)
-            ->max(1);
-
-        $validator
             ->field('with_links')
             ->min(1)
             ->max(1);
 
         $validator
-            ->field('with_body')
+            ->field('with_html')
             ->min(1)
             ->max(1);
 
+        $validator
+            ->field('with_label_links')
+            ->min(1)
+            ->max(1);
 
         $validator
-            ->field('with_html')
+            ->field('with_images')
+            ->min(1)
+            ->max(1);
+
+        $validator
+            ->field('with_classes')
             ->min(1)
             ->max(1);
 

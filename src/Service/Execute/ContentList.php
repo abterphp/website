@@ -96,8 +96,8 @@ class ContentList extends RepoServiceAbstract
         $protected      = !empty($postData['protected']);
         $withLinks      = !empty($postData['with_links']);
         $withLabelLinks = !empty($postData['with_label_links']);
-        $withImages     = !empty($postData['with_images']);
         $withHtml       = !empty($postData['with_html']);
+        $withImages     = !empty($postData['with_images']);
         $withClasses    = !empty($postData['with_classes']);
 
         $items = $this->createItems($postData, $entity->getId());

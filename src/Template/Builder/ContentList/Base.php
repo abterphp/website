@@ -5,11 +5,25 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Template\Builder\ContentList;
 
 use AbterPhp\Framework\Constant\Html5;
-use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\ParsedTemplate;
 
 class Base
 {
+    const LIST_TAG    = 'list-tag';
+    const ITEM_TAG    = 'item-tag';
+    const LABEL_TAG   = 'label-tag';
+    const CONTENT_TAG = 'content-tag';
+    const IMAGE_TAG   = 'image-tag';
+
+    const LIST_CLASS    = 'list-class';
+    const ITEM_CLASS    = 'item-class';
+    const LABEL_CLASS   = 'label-class';
+    const CONTENT_CLASS = 'content-class';
+    const IMAGE_CLASS   = 'image-class';
+
+    const WITH_LABEL_OPTION  = 'with-label';
+    const WITH_IMAGES_OPTION = 'with-images';
+
     protected $defaultListTag    = Html5::TAG_UL;
     protected $defaultItemTag    = Html5::TAG_LI;
     protected $defaultLabelTag   = '';
@@ -34,26 +48,26 @@ class Base
     {
         if (!$template) {
             return [
-                IBuilder::LIST_TAG    => $this->defaultListTag,
-                IBuilder::ITEM_TAG    => $this->defaultItemTag,
-                IBuilder::LABEL_TAG   => $this->defaultLabelTag,
-                IBuilder::CONTENT_TAG => $this->defaultContentTag,
-                IBuilder::IMAGE_TAG   => $this->defaultImageTag,
+                IContentList::LIST_TAG    => $this->defaultListTag,
+                IContentList::ITEM_TAG    => $this->defaultItemTag,
+                IContentList::LABEL_TAG   => $this->defaultLabelTag,
+                IContentList::CONTENT_TAG => $this->defaultContentTag,
+                IContentList::IMAGE_TAG   => $this->defaultImageTag,
             ];
         }
 
-        $listTag    = $template->getAttribute(IBuilder::LIST_TAG, $this->defaultListTag);
-        $itemTag    = $template->getAttribute(IBuilder::ITEM_TAG, $this->defaultItemTag);
-        $labelTag   = $template->getAttribute(IBuilder::LABEL_TAG, $this->defaultLabelTag);
-        $contentTag = $template->getAttribute(IBuilder::CONTENT_TAG, $this->defaultContentTag);
-        $imageTag   = $template->getAttribute(IBuilder::IMAGE_TAG, $this->defaultImageTag);
+        $listTag    = $template->getAttribute(IContentList::LIST_TAG, $this->defaultListTag);
+        $itemTag    = $template->getAttribute(IContentList::ITEM_TAG, $this->defaultItemTag);
+        $labelTag   = $template->getAttribute(IContentList::LABEL_TAG, $this->defaultLabelTag);
+        $contentTag = $template->getAttribute(IContentList::CONTENT_TAG, $this->defaultContentTag);
+        $imageTag   = $template->getAttribute(IContentList::IMAGE_TAG, $this->defaultImageTag);
 
         return [
-            IBuilder::LIST_TAG    => $listTag,
-            IBuilder::ITEM_TAG    => $itemTag,
-            IBuilder::LABEL_TAG   => $labelTag,
-            IBuilder::CONTENT_TAG => $contentTag,
-            IBuilder::IMAGE_TAG   => $imageTag,
+            IContentList::LIST_TAG    => $listTag,
+            IContentList::ITEM_TAG    => $itemTag,
+            IContentList::LABEL_TAG   => $labelTag,
+            IContentList::CONTENT_TAG => $contentTag,
+            IContentList::IMAGE_TAG   => $imageTag,
         ];
     }
 
@@ -66,49 +80,49 @@ class Base
     {
         if (!$template) {
             return [
-                IBuilder::LIST_CLASS    => $this->defaultListClass,
-                IBuilder::ITEM_CLASS    => $this->defaultItemClass,
-                IBuilder::LABEL_CLASS   => $this->defaultLabelClass,
-                IBuilder::CONTENT_CLASS => $this->defaultContentClass,
-                IBuilder::IMAGE_CLASS   => $this->defaultImageClass,
+                IContentList::LIST_CLASS    => $this->defaultListClass,
+                IContentList::ITEM_CLASS    => $this->defaultItemClass,
+                IContentList::LABEL_CLASS   => $this->defaultLabelClass,
+                IContentList::CONTENT_CLASS => $this->defaultContentClass,
+                IContentList::IMAGE_CLASS   => $this->defaultImageClass,
             ];
         }
 
-        $listClass    = $template->getAttribute(IBuilder::LIST_CLASS, $this->defaultListClass);
-        $itemClass    = $template->getAttribute(IBuilder::ITEM_CLASS, $this->defaultItemClass);
-        $labelClass   = $template->getAttribute(IBuilder::LABEL_CLASS, $this->defaultLabelClass);
-        $contentClass = $template->getAttribute(IBuilder::CONTENT_CLASS, $this->defaultContentClass);
-        $imageClass   = $template->getAttribute(IBuilder::IMAGE_CLASS, $this->defaultImageClass);
+        $listClass    = $template->getAttribute(IContentList::LIST_CLASS, $this->defaultListClass);
+        $itemClass    = $template->getAttribute(IContentList::ITEM_CLASS, $this->defaultItemClass);
+        $labelClass   = $template->getAttribute(IContentList::LABEL_CLASS, $this->defaultLabelClass);
+        $contentClass = $template->getAttribute(IContentList::CONTENT_CLASS, $this->defaultContentClass);
+        $imageClass   = $template->getAttribute(IContentList::IMAGE_CLASS, $this->defaultImageClass);
 
         return [
-            IBuilder::LIST_CLASS    => $listClass,
-            IBuilder::ITEM_CLASS    => $itemClass,
-            IBuilder::LABEL_CLASS   => $labelClass,
-            IBuilder::CONTENT_CLASS => $contentClass,
-            IBuilder::IMAGE_CLASS   => $imageClass,
+            IContentList::LIST_CLASS    => $listClass,
+            IContentList::ITEM_CLASS    => $itemClass,
+            IContentList::LABEL_CLASS   => $labelClass,
+            IContentList::CONTENT_CLASS => $contentClass,
+            IContentList::IMAGE_CLASS   => $imageClass,
         ];
     }
 
     /**
      * @param ParsedTemplate|null $template
      *
-     * @return array<string,string>
+     * @return array
      */
     protected function getOptions(?ParsedTemplate $template = null): array
     {
         if (!$template) {
             return [
-                IBuilder::WITH_LABEL_OPTION => (bool)$this->defaultWithLabel,
-                IBuilder::WITH_IMAGE_OPTION => (bool)$this->defaultWithImage,
+                IContentList::WITH_LABEL_OPTION  => (bool)$this->defaultWithLabel,
+                IContentList::WITH_IMAGES_OPTION => (bool)$this->defaultWithImage,
             ];
         }
 
-        $listClass = $template->getAttribute(IBuilder::WITH_LABEL_OPTION, $this->defaultWithLabel);
-        $itemClass = $template->getAttribute(IBuilder::WITH_IMAGE_OPTION, $this->defaultWithImage);
+        $listClass = $template->getAttribute(IContentList::WITH_LABEL_OPTION, $this->defaultWithLabel);
+        $itemClass = $template->getAttribute(IContentList::WITH_IMAGES_OPTION, $this->defaultWithImage);
 
         return [
-            IBuilder::WITH_LABEL_OPTION => (bool)$listClass,
-            IBuilder::WITH_IMAGE_OPTION => (bool)$itemClass,
+            IContentList::WITH_LABEL_OPTION  => (bool)$listClass,
+            IContentList::WITH_IMAGES_OPTION => (bool)$itemClass,
         ];
     }
 }
