@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/admin.git",
-                "reference": "5948f56d6e5ad43e649146471973aafb4ebb4f4e"
+                "reference": "e56b5f6bba3f53c5e6e3f642dbfae644f04c7d16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/admin/zipball/5948f56d6e5ad43e649146471973aafb4ebb4f4e",
-                "reference": "5948f56d6e5ad43e649146471973aafb4ebb4f4e",
+                "url": "https://api.github.com/repos/abterphp/admin/zipball/e56b5f6bba3f53c5e6e3f642dbfae644f04c7d16",
+                "reference": "e56b5f6bba3f53c5e6e3f642dbfae644f04c7d16",
                 "shasum": ""
             },
             "require": {
@@ -33,7 +33,7 @@
             "suggest": {
                 "ext-redis": "Allows better caching"
             },
-            "type": "project",
+            "type": "library",
             "autoload": {
                 "psr-4": {
                     "AbterPhp\\Admin\\": [
@@ -54,7 +54,7 @@
                 }
             ],
             "description": "Admin module for AbterPHP",
-            "time": "2020-01-19T07:39:13+00:00"
+            "time": "2020-01-19T10:50:30+00:00"
         },
         {
             "name": "abterphp/framework",
@@ -62,12 +62,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/framework.git",
-                "reference": "df4541c2e7ebc1a6a8e3ccffafe065c9498e967c"
+                "reference": "e5a92b5a149be987990edd90f07865679eb0ef4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/framework/zipball/df4541c2e7ebc1a6a8e3ccffafe065c9498e967c",
-                "reference": "df4541c2e7ebc1a6a8e3ccffafe065c9498e967c",
+                "url": "https://api.github.com/repos/abterphp/framework/zipball/e5a92b5a149be987990edd90f07865679eb0ef4d",
+                "reference": "e5a92b5a149be987990edd90f07865679eb0ef4d",
                 "shasum": ""
             },
             "require": {
@@ -103,7 +103,7 @@
             "suggest": {
                 "ext-redis": "Allows better caching"
             },
-            "type": "project",
+            "type": "library",
             "autoload": {
                 "psr-4": {
                     "AbterPhp\\Framework\\": [
@@ -124,7 +124,7 @@
                 }
             ],
             "description": "Foundations for AbterPHP",
-            "time": "2020-01-19T07:32:09+00:00"
+            "time": "2020-01-19T22:06:10+00:00"
         },
         {
             "name": "bjeavons/zxcvbn-php",
