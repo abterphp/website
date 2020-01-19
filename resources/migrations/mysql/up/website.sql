@@ -78,48 +78,24 @@ CREATE TABLE `blocks`
   DEFAULT CHARSET = utf8;
 
 --
--- Table structure and data for table `list_types`
---
-
-CREATE TABLE `list_types`
-(
-    `id`         char(36)     NOT NULL,
-    `name`       varchar(160) NOT NULL,
-    `label`      varchar(255) NOT NULL,
-    `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at` timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `deleted_at` datetime              DEFAULT NULL,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `list_types_name_uindex` (`name`),
-    KEY `list_types_deleted_at_index` (`deleted_at`)
-) ENGINE = InnoDB;
-
-INSERT INTO `list_types` (`id`, `name`, `label`)
-VALUES ('0c9e1ec1-5503-4632-8fe1-4907a4df3dba', 'empty', 'website:contentListTypeEmpty'),
-       ('ecf88c10-2872-4c68-9601-c88a106c49c7', 'ordered', 'website:contentListTypeOrdered'),
-       ('7c85d0e4-9998-4ed8-bbbd-1a9fc769d23c', 'unordered', 'website:contentListTypeUnordered'),
-       ('9ba8d47c-ab75-4f73-af01-0a82d3372622', 'natural', 'website:contentListTypeNeutral'),
-       ('e6069f1e-0500-4aac-a494-79a5f9df1270', 'section', 'website:contentListTypeSection');
-
---
 -- Table structure and data for table `lists`
 --
 
 CREATE TABLE `lists`
 (
-    `id`         char(36)     NOT NULL,
-    `type_id`    char(36)     NOT NULL,
-    `name`       varchar(160) NOT NULL,
-    `identifier` varchar(160) NOT NULL,
-    `classes`    varchar(255) NOT NULL,
-    `protected`  bool         NOT NULL,
-    `with_links` bool         NOT NULL,
-    `with_image` bool         NOT NULL,
-    `with_body`  bool         NOT NULL,
-    `with_html`  bool         NOT NULL,
-    `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
-    `updated_at` timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `deleted_at` datetime              DEFAULT NULL,
+    `id`               char(36)     NOT NULL,
+    `name`             varchar(160) NOT NULL,
+    `identifier`       varchar(160) NOT NULL,
+    `classes`          varchar(255) NOT NULL,
+    `protected`        bool         NOT NULL,
+    `with_links`       bool         NOT NULL,
+    `with_label_links` bool         NOT NULL,
+    `with_html`        bool         NOT NULL,
+    `with_image`       bool         NOT NULL,
+    `with_classes`     bool         NOT NULL,
+    `created_at`       timestamp    NOT NULL DEFAULT current_timestamp(),
+    `updated_at`       timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    `deleted_at`       datetime              DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `lists_identifier_uindex` (`identifier`),
     KEY `lists_deleted_at_index` (`deleted_at`)
@@ -134,13 +110,14 @@ CREATE TABLE `list_items`
 (
     `id`         char(36)     NOT NULL,
     `list_id`    char(36)     NULL,
-    `name`       varchar(160) NOT NULL,
-    `name_href`  mediumtext,
-    `body`       mediumtext   NOT NULL,
-    `body_href`  mediumtext,
+    `label`      varchar(160) NOT NULL,
+    `label_href` mediumtext,
+    `content`       mediumtext   NOT NULL,
+    `content_href`  mediumtext,
     `img_src`    mediumtext,
     `img_href`   mediumtext,
     `img_alt`    mediumtext,
+    `classes`    varchar(255),
     `created_at` timestamp    NOT NULL DEFAULT current_timestamp(),
     `updated_at` timestamp    NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `deleted_at` datetime              DEFAULT NULL,

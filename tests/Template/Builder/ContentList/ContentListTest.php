@@ -4,23 +4,19 @@ namespace AbterPhp\Website\Template\Builder\ContentList;
 
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
-use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use PHPUnit\Framework\TestCase;
 
 abstract class ContentListTest extends TestCase
 {
     /**
-     * @param string $typeName
      * @param string $identifier
      * @param string ...$itemIds
      *
      * @return Entity
      */
-    protected function createEntity(string $typeName, string $identifier, string ...$itemIds): Entity
+    protected function createEntity(string $identifier, string ...$itemIds): Entity
     {
-
-        $type   = new Type("type-$identifier", $typeName, '');
-        $entity = new Entity("list-$identifier", '', $identifier, '', false, false, false, false, false, $type);
+        $entity = new Entity("list-$identifier", '', $identifier, '', false, false, false, false, false, false);
         $items  = [];
         foreach ($itemIds as $itemId) {
             $entity->addItem($this->createItem("item-$itemId", $itemId));
@@ -37,14 +33,15 @@ abstract class ContentListTest extends TestCase
      */
     protected function createItem(string $id, string $postfix): Item
     {
-        $name     = "Foo $postfix";
-        $nameHref = "/foo-$postfix";
-        $body     = "Bar $postfix";
-        $bodyHref = "/bar-$postfix";
-        $imgSrc   = "/baz0-$postfix";
-        $imgHref  = "/baz1-$postfix";
-        $imgAlt   = "Baz $postfix";
+        $label       = "Foo $postfix";
+        $labelHref   = "/foo-$postfix";
+        $content     = "Bar $postfix";
+        $contentHref = "/bar-$postfix";
+        $imgSrc      = "/baz-$postfix.png";
+        $imgAlt      = "Baz $postfix";
+        $imgHref     = "/baz-$postfix";
+        $classes     = "$postfix";
 
-        return new Item($id, $id, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        return new Item($id, $id, $label, $labelHref, $content, $contentHref, $imgSrc, $imgAlt, $imgHref, $classes);
     }
 }

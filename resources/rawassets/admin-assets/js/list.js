@@ -4,14 +4,7 @@ $(document).ready(function () {
         addBtn = $('#add-item-container > button'),
         count = 0,
         isDeletedInputs = $('.item_is_deleted'),
-        withBodyInput = $('#with_body'),
-        withHtmlInput = $('#with_html'),
-        withHtmlContainer = $('#withHtml-container').toggle(withBodyInput.is(':checked'));
-
-    withBodyInput.click(function () {
-        withHtmlContainer.toggle($(this).is(':checked'));
-        withHtmlInput.prop('checked', false);
-    });
+        withHtmlInput = $('#with_html');
 
     if (itemTemplate.length == 0) {
         return;

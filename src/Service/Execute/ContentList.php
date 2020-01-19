@@ -10,7 +10,6 @@ use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
-use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use AbterPhp\Website\Orm\ContentListRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\ContentList as ValidatorFactory;
 use Casbin\Enforcer;
@@ -68,7 +67,7 @@ class ContentList extends RepoServiceAbstract
      */
     public function createEntity(string $entityId): IStringerEntity
     {
-        return new Entity($entityId, '', '', '', false, false, false, false, false);
+        return new Entity($entityId, '', '', '', false, false, false, false, false, false);
     }
 
     /**
@@ -86,8 +85,6 @@ class ContentList extends RepoServiceAbstract
 
         $postData = $this->protectPostData($entity, $postData);
 
-        $type = new Type((string)$postData['type_id'], '', '');
-
         $name = (string)$postData['name'];
 
         $identifier = $postData['identifier'] ?? $entity->getIdentifier();
@@ -96,24 +93,25 @@ class ContentList extends RepoServiceAbstract
 
         $classes = $postData['classes'];
 
-        $protected = !empty($postData['protected']);
-        $withLinks = !empty($postData['with_links']);
-        $withImage = !empty($postData['with_image']);
-        $withBody  = !empty($postData['with_body']);
-        $withHtml  = !empty($postData['with_html']);
+        $protected      = !empty($postData['protected']);
+        $withLinks      = !empty($postData['with_links']);
+        $withLabelLinks = !empty($postData['with_label_links']);
+        $withImages     = !empty($postData['with_images']);
+        $withHtml       = !empty($postData['with_html']);
+        $withClasses    = !empty($postData['with_classes']);
 
         $items = $this->createItems($postData, $entity->getId());
 
         $entity
-            ->setType($type)
             ->setIdentifier($identifier)
             ->setClasses($classes)
             ->setName($name)
             ->setProtected($protected)
-            ->setWithImage($withImage)
             ->setWithLinks($withLinks)
-            ->setWithBody($withBody)
+            ->setWithLabelLinks($withLabelLinks)
             ->setWithHtml($withHtml)
+            ->setWithImages($withImages)
+            ->setWithClasses($withClasses)
             ->setItems($items);
 
         return $entity;
@@ -143,13 +141,13 @@ class ContentList extends RepoServiceAbstract
             return $postData;
         }
 
-        $postData['type_id']    = $entity->getType()->getId();
-        $postData['identifier'] = $entity->getIdentifier();
-        $postData['protected']  = $entity->isProtected();
-        $postData['with_image'] = $entity->isWithImage();
-        $postData['with_links'] = $entity->isWithLinks();
-        $postData['with_body']  = $entity->isWithBody();
-        $postData['with_html']  = $entity->isWithHtml();
+        $postData['identifier']       = $entity->getIdentifier();
+        $postData['protected']        = $entity->isProtected();
+        $postData['with_links']       = $entity->isWithLinks();
+        $postData['with_label_links'] = $entity->isWithLabelLinks();
+        $postData['with_html']        = $entity->isWithHtml();
+        $postData['with_images']      = $entity->isWithImages();
+        $postData['with_classes']     = $entity->isWithClasses();
 
         return $postData;
     }
@@ -195,26 +193,28 @@ class ContentList extends RepoServiceAbstract
      */
     protected function createItem(array $itemData, string $listId): Item
     {
-        $itemId   = $itemData['id'] ?? '';
-        $name     = $itemData['name'] ?? '';
-        $nameHref = $itemData['name_href'] ?? '';
-        $body     = $itemData['body'] ?? '';
-        $bodyHref = $itemData['body_href'] ?? '';
-        $imgSrc   = $itemData['img_src'] ?? '';
-        $imgAlt   = $itemData['img_alt'] ?? '';
-        $imgHref  = $itemData['img_href'] ?? '';
-        $deleted  = !empty($itemData['is_deleted']);
+        $itemId      = $itemData['id'] ?? '';
+        $label       = $itemData['label'] ?? '';
+        $labelHref   = $itemData['label_href'] ?? '';
+        $content     = $itemData['content'] ?? '';
+        $contentHref = $itemData['content_href'] ?? '';
+        $imgSrc      = $itemData['img_src'] ?? '';
+        $imgAlt      = $itemData['img_alt'] ?? '';
+        $imgHref     = $itemData['img_href'] ?? '';
+        $classes     = $itemData['classes'] ?? '';
+        $deleted     = !empty($itemData['is_deleted']);
 
         return new Item(
             $itemId,
             $listId,
-            $name,
-            $nameHref,
-            $body,
-            $bodyHref,
+            $label,
+            $labelHref,
+            $content,
+            $contentHref,
             $imgSrc,
             $imgAlt,
             $imgHref,
+            $classes,
             $deleted
         );
     }

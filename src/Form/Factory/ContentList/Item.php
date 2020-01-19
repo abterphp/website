@@ -27,15 +27,24 @@ class Item
     protected $hiddenAttribs = [Html5::ATTR_TYPE => Input::TYPE_HIDDEN];
 
     /**
+     * @
      * @param Entity|null $entity
      * @param bool        $withLinks
-     * @param bool        $withImage
+     * @param bool        $withLabelLinks
      * @param bool        $withHtml
+     * @param bool        $withImages
+     * @param bool        $withClasses
      *
      * @return INode[]
      */
-    public function create(?Entity $entity, bool $withLinks, bool $withImage, bool $withBody, bool $withHtml): array
-    {
+    public function create(
+        ?Entity $entity,
+        bool $withLinks,
+        bool $withLabelLinks,
+        bool $withHtml,
+        bool $withImages,
+        bool $withClasses
+    ): array {
         $this->id = $entity ? "existing{$this->count}" : 'new';
 
         $components = [];
@@ -44,23 +53,28 @@ class Item
             $components[] = $this->addId($entity);
         }
 
-        $components[] = $this->addName($entity);
+        $components[] = $this->addLabel($entity);
+        if ($withLinks && $withLabelLinks) {
+            $components[] = $this->addLabelHref($entity);
+        }
+
+        $components[] = $this->addContent($entity, $withHtml);
         if ($withLinks) {
-            $components[] = $this->addNameHref($entity);
+            $components[] = $this->addContentHref($entity);
         }
-        if ($withBody) {
-            $components[] = $this->addBody($entity, $withHtml);
-            if ($withLinks) {
-                $components[] = $this->addBodyHref($entity);
-            }
-        }
-        if ($withImage) {
+
+        if ($withImages) {
             $components[] = $this->addImgSrc($entity);
             $components[] = $this->addImgAlt($entity);
             if ($withLinks) {
                 $components[] = $this->addImgHref($entity);
             }
         }
+
+        if ($withClasses) {
+            $components[] = $this->addClasses($entity);
+        }
+
         $components[] = $this->addIsDeleted();
 
         $this->count++;
@@ -83,13 +97,13 @@ class Item
      *
      * @return INode
      */
-    protected function addName(?Entity $entity): INode
+    protected function addLabel(?Entity $entity): INode
     {
-        $name = $entity ? $entity->getName() : '';
+        $label = $entity ? $entity->getLabel() : '';
 
-        $input = new Input("item_name_{$this->id}", "{$this->id}[name]", $name);
-        $label = new Label("item_name_{$this->id}", 'website:contentListItemName');
-        $help  = new Help('website:contentListItemNameHelp');
+        $input = new Input("item_label_{$this->id}", "{$this->id}[label]", $label);
+        $label = new Label("item_label_{$this->id}", 'website:contentListItemLabel');
+        $help  = new Help('website:contentListItemLabelHelp');
 
         return new FormGroup($input, $label, $help);
     }
@@ -99,13 +113,13 @@ class Item
      *
      * @return INode
      */
-    protected function addNameHref(?Entity $entity): INode
+    protected function addLabelHref(?Entity $entity): INode
     {
-        $nameHref = $entity ? $entity->getNameHref() : '';
+        $labelHref = $entity ? $entity->getLabelHref() : '';
 
-        $input = new Input("item_name_href_{$this->id}", "{$this->id}[name_href]", $nameHref);
-        $label = new Label("item_name_href_{$this->id}", 'website:contentListItemNameHref');
-        $help  = new Help('website:contentListItemNameHrefHelp');
+        $input = new Input("item_label_href_{$this->id}", "{$this->id}[label_href]", $labelHref);
+        $label = new Label("item_label_href_{$this->id}", 'website:contentListItemLabelHref');
+        $help  = new Help('website:contentListItemLabelHrefHelp');
 
         return new FormGroup($input, $label, $help);
     }
@@ -116,17 +130,17 @@ class Item
      *
      * @return INode
      */
-    protected function addBody(?Entity $entity, bool $withHtml): INode
+    protected function addContent(?Entity $entity, bool $withHtml): INode
     {
-        $body    = $entity ? $entity->getBody() : '';
-        $attribs = [];
+        $content = $entity ? $entity->getContent() : '';
+        $attribs = [Html5::ATTR_ROWS => '7'];
         if ($withHtml) {
             $attribs = [Html5::ATTR_CLASS => 'wysiwyg', Html5::ATTR_ROWS => '15'];
         }
 
-        $input = new Textarea("item_body_{$this->id}", "{$this->id}[body]", $body, [], $attribs);
-        $label = new Label("item_body_{$this->id}", 'website:contentListItemBody');
-        $help  = new Help('website:contentListItemBodyHelp');
+        $input = new Textarea("item_content_{$this->id}", "{$this->id}[content]", $content, [], $attribs);
+        $label = new Label("item_content_{$this->id}", 'website:contentListItemContent');
+        $help  = new Help('website:contentListItemContentHelp');
 
         return new FormGroup($input, $label, $help);
     }
@@ -136,13 +150,13 @@ class Item
      *
      * @return INode
      */
-    protected function addBodyHref(?Entity $entity): INode
+    protected function addContentHref(?Entity $entity): INode
     {
-        $bodyHref = $entity ? $entity->getBodyHref() : '';
+        $contentHref = $entity ? $entity->getContentHref() : '';
 
-        $input = new Input("item_body_href_{$this->id}", "{$this->id}[body_href]", $bodyHref);
-        $label = new Label("item_body_href_{$this->id}", 'website:contentListItemBodyHref');
-        $help  = new Help('website:contentListItemBodyHrefHelp');
+        $input = new Input("item_content_href_{$this->id}", "{$this->id}[content_href]", $contentHref);
+        $label = new Label("item_content_href_{$this->id}", 'website:contentListItemContentHref');
+        $help  = new Help('website:contentListItemContentHrefHelp');
 
         return new FormGroup($input, $label, $help);
     }
@@ -191,6 +205,22 @@ class Item
         $input = new Input("item_img_href_{$this->id}", "{$this->id}[img_href]", $imgHref);
         $label = new Label("item_img_href_{$this->id}", 'website:contentListItemImgHref');
         $help  = new Help('website:contentListItemImgHrefHelp');
+
+        return new FormGroup($input, $label, $help);
+    }
+
+    /**
+     * @param Entity|null $entity
+     *
+     * @return INode
+     */
+    protected function addClasses(?Entity $entity): INode
+    {
+        $classes = $entity ? $entity->getClasses() : '';
+
+        $input = new Input("item_classes_{$this->id}", "{$this->id}[classes]", $classes);
+        $label = new Label("item_classes_{$this->id}", 'website:contentListItemClasses');
+        $help  = new Help('website:contentListItemClassesHelp');
 
         return new FormGroup($input, $label, $help);
     }

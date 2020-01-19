@@ -79,24 +79,26 @@ class ContentListTest extends TestCase
 
     public function testCreate()
     {
-        $typeId     = '51a510aa-4946-4dc1-bcfa-ea180ed14bb3';
-        $name       = 'Bar';
-        $identifier = 'bar';
-        $classes    = 'baz0 baz1';
-        $protected  = '1';
-        $withImage  = '1';
-        $withLinks  = '1';
-        $withHtml   = '1';
+        $name           = 'Bar';
+        $identifier     = 'bar';
+        $classes        = 'baz0 baz1';
+        $protected      = '1';
+        $withLinks      = '1';
+        $withLabelLinks = '1';
+        $withHtml       = '1';
+        $withImages     = '1';
+        $withClasses    = '1';
 
         $postData = [
-            'type_id'    => $typeId,
-            'name'       => $name,
-            'identifier' => $identifier,
-            'classes'    => $classes,
-            'protected'  => $protected,
-            'with_image' => $withImage,
-            'with_links' => $withLinks,
-            'with_html'  => $withHtml,
+            'name'             => $name,
+            'identifier'       => $identifier,
+            'classes'          => $classes,
+            'protected'        => $protected,
+            'with_links'       => $withLinks,
+            'with_label_links' => $withLabelLinks,
+            'with_html'        => $withHtml,
+            'with_images'      => $withImages,
+            'with_classes'     => $withClasses,
         ];
 
         $this->gridRepoMock->expects($this->once())->method('add');
@@ -114,25 +116,27 @@ class ContentListTest extends TestCase
 
     public function testUpdate()
     {
-        $id         = '5c003d37-c59e-43eb-a471-e7b3c031fbeb';
-        $typeId     = '51a510aa-4946-4dc1-bcfa-ea180ed14bb3';
-        $name       = 'Bar';
-        $identifier = 'bar';
-        $classes    = 'baz0 baz1';
-        $protected  = '1';
-        $withImage  = '1';
-        $withLinks  = '1';
-        $withHtml   = '1';
+        $id             = '5c003d37-c59e-43eb-a471-e7b3c031fbeb';
+        $name           = 'Bar';
+        $identifier     = 'bar';
+        $classes        = 'baz0 baz1';
+        $protected      = '1';
+        $withLinks      = '1';
+        $withLabelLinks = '1';
+        $withHtml       = '1';
+        $withImages     = '1';
+        $withClasses    = '1';
 
         $postData = [
-            'type_id'    => $typeId,
-            'name'       => $name,
-            'identifier' => $identifier,
-            'classes'    => $classes,
-            'protected'  => $protected,
-            'with_image' => $withImage,
-            'with_links' => $withLinks,
-            'with_html'  => $withHtml,
+            'name'             => $name,
+            'identifier'       => $identifier,
+            'classes'          => $classes,
+            'protected'        => $protected,
+            'with_links'       => $withLinks,
+            'with_label_links' => $withLabelLinks,
+            'with_html'        => $withHtml,
+            'with_images'      => $withImages,
+            'with_classes'     => $withClasses,
         ];
 
         $entity = $this->sut->createEntity($id);

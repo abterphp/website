@@ -89,6 +89,9 @@ class PageCategorySqlDataMapper extends SqlDataMapper implements IPageCategoryDa
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('pc.name ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }

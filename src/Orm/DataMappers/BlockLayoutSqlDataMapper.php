@@ -79,6 +79,9 @@ class BlockLayoutSqlDataMapper extends SqlDataMapper implements IBlockLayoutData
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('name ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }

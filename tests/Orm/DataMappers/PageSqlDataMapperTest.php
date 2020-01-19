@@ -221,7 +221,7 @@ class PageSqlDataMapperTest extends DataMapperTestCase
         $categoryId = '6c79a886-9c74-441b-b205-dc1d274e7e55';
         $layoutId   = '0ec12802-0eb4-4a90-b0ba-454d4d42a367';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pages.id, pages.identifier, pages.title, pages.is_draft, categories.name AS category_name, pages.layout_id, IF(layouts.name <> \'\', layouts.name, pages.layout) AS layout FROM pages LEFT JOIN page_categories AS categories ON categories.id = pages.category_id LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id WHERE (pages.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pages.id, pages.identifier, pages.title, pages.is_draft, categories.name AS category_name, pages.layout_id, IF(layouts.name <> \'\', layouts.name, pages.layout) AS layout FROM pages LEFT JOIN page_categories AS categories ON categories.id = pages.category_id LEFT JOIN page_layouts AS layouts ON layouts.id = pages.layout_id WHERE (pages.deleted_at IS NULL) ORDER BY pages.title ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [

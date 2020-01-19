@@ -107,7 +107,7 @@ class Index extends ControllerAbstract
         $this->view->setVar('siteTitle', $this->siteTitle);
         $this->view->setVar('pageUrl', $pageUrl);
         $this->view->setVar('homepageUrl', $homepageUrl);
-        $this->view->setVar('classes', $page->getClasses());
+        $this->view->setVar('classes', trim($page->getClasses()));
 
         $this->setMetaVars($page->getMeta());
         $this->setAssetsVars($page->getAssets());
@@ -171,6 +171,9 @@ class Index extends ControllerAbstract
             $this->assetManager->addCss($key, $cssFile);
         }
 
+        $this->view->setVar('pageJs', count($assets->getJsFiles()));
+        $this->view->setVar('pageCss', count($assets->getCssFiles()));
+
         $this->setLayoutAssetsVars($assets->getLayoutAssets());
     }
 
@@ -199,6 +202,9 @@ class Index extends ControllerAbstract
         foreach ($assets->getCssFiles() as $cssFile) {
             $this->assetManager->addCss($key, $cssFile);
         }
+
+        $this->view->setVar('layoutJs', count($assets->getJsFiles()));
+        $this->view->setVar('layoutCss', count($assets->getCssFiles()));
     }
 
     /**

@@ -8,7 +8,6 @@ use AbterPhp\Admin\Orm\DataMappers\IdGeneratorUserTrait;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
-use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use Opulence\Orm\DataMappers\SqlDataMapper;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\Expression;
@@ -35,16 +34,16 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
             ->insert(
                 'lists',
                 [
-                    'id'         => [$entity->getId(), PDO::PARAM_STR],
-                    'type_id'    => [$entity->getType()->getId(), PDO::PARAM_STR],
-                    'name'       => [$entity->getName(), PDO::PARAM_STR],
-                    'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
-                    'classes'    => [$entity->getClasses(), PDO::PARAM_STR],
-                    'protected'  => [$entity->isProtected(), PDO::PARAM_BOOL],
-                    'with_links' => [$entity->isWithLinks(), PDO::PARAM_BOOL],
-                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
-                    'with_body'  => [$entity->isWithBody(), PDO::PARAM_BOOL],
-                    'with_html'  => [$entity->isWithHtml(), PDO::PARAM_BOOL],
+                    'id'               => [$entity->getId(), PDO::PARAM_STR],
+                    'name'             => [$entity->getName(), PDO::PARAM_STR],
+                    'identifier'       => [$entity->getIdentifier(), PDO::PARAM_STR],
+                    'classes'          => [$entity->getClasses(), PDO::PARAM_STR],
+                    'protected'        => [$entity->isProtected(), PDO::PARAM_BOOL],
+                    'with_links'       => [$entity->isWithLinks(), PDO::PARAM_BOOL],
+                    'with_label_links' => [$entity->isWithLabelLinks(), PDO::PARAM_BOOL],
+                    'with_html'        => [$entity->isWithHtml(), PDO::PARAM_BOOL],
+                    'with_images'      => [$entity->isWithImages(), PDO::PARAM_BOOL],
+                    'with_classes'     => [$entity->isWithClasses(), PDO::PARAM_BOOL],
                 ]
             );
 
@@ -103,6 +102,9 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('name ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }
@@ -187,15 +189,15 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
                 'lists',
                 'lists',
                 [
-                    'type_id'    => [$entity->getType()->getId(), PDO::PARAM_STR],
-                    'name'       => [$entity->getName(), PDO::PARAM_STR],
-                    'identifier' => [$entity->getIdentifier(), PDO::PARAM_STR],
-                    'classes'    => [$entity->getClasses(), PDO::PARAM_STR],
-                    'protected'  => [$entity->isProtected(), PDO::PARAM_BOOL],
-                    'with_links' => [$entity->isWithLinks(), PDO::PARAM_BOOL],
-                    'with_image' => [$entity->isWithImage(), PDO::PARAM_BOOL],
-                    'with_body'  => [$entity->isWithBody(), PDO::PARAM_BOOL],
-                    'with_html'  => [$entity->isWithHtml(), PDO::PARAM_BOOL],
+                    'name'             => [$entity->getName(), PDO::PARAM_STR],
+                    'identifier'       => [$entity->getIdentifier(), PDO::PARAM_STR],
+                    'classes'          => [$entity->getClasses(), PDO::PARAM_STR],
+                    'protected'        => [$entity->isProtected(), PDO::PARAM_BOOL],
+                    'with_links'       => [$entity->isWithLinks(), PDO::PARAM_BOOL],
+                    'with_label_links' => [$entity->isWithLabelLinks(), PDO::PARAM_BOOL],
+                    'with_html'        => [$entity->isWithHtml(), PDO::PARAM_BOOL],
+                    'with_images'      => [$entity->isWithImages(), PDO::PARAM_BOOL],
+                    'with_classes'     => [$entity->isWithClasses(), PDO::PARAM_BOOL],
                 ]
             )
             ->where('id = ?')
@@ -216,8 +218,6 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
      */
     protected function loadEntity(array $hash)
     {
-        $type = $this->loadType($hash);
-
         return new Entity(
             $hash['id'],
             $hash['name'],
@@ -225,21 +225,11 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
             $hash['classes'],
             (bool)$hash['protected'],
             (bool)$hash['with_links'],
-            (bool)$hash['with_image'],
-            (bool)$hash['with_body'],
+            (bool)$hash['with_label_links'],
             (bool)$hash['with_html'],
-            $type
+            (bool)$hash['with_images'],
+            (bool)$hash['with_classes']
         );
-    }
-
-    /**
-     * @param string[] $hash
-     *
-     * @return Type
-     */
-    protected function loadType(array $hash): Type
-    {
-        return new Type($hash['type_id'], $hash['type_name'], $hash['type_label']);
     }
 
     /**
@@ -251,20 +241,17 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
         $query = (new QueryBuilder())
             ->select(
                 'lists.id',
-                'lists.type_id',
                 'lists.name',
                 'lists.identifier',
                 'lists.classes',
                 'lists.protected',
                 'lists.with_links',
-                'lists.with_image',
-                'lists.with_body',
+                'lists.with_label_links',
                 'lists.with_html',
-                'list_types.name AS type_name',
-                'list_types.label AS type_label'
+                'lists.with_images',
+                'lists.with_classes'
             )
             ->from('lists')
-            ->innerJoin('list_types', 'list_types', 'list_types.id = lists.type_id AND list_types.deleted_at IS NULL')
             ->where('lists.deleted_at IS NULL');
 
         return $query;
@@ -310,15 +297,16 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
                 'list_items',
                 'list_items',
                 [
-                    'list_id'    => [$item->getListId(), \PDO::PARAM_STR],
-                    'name'       => [$item->getName(), \PDO::PARAM_STR],
-                    'name_href'  => [$item->getNameHref(), \PDO::PARAM_STR],
-                    'body'       => [$item->getBody(), \PDO::PARAM_STR],
-                    'body_href'  => [$item->getBodyHref(), \PDO::PARAM_STR],
-                    'img_src'    => [$item->getImgSrc(), \PDO::PARAM_STR],
-                    'img_alt'    => [$item->getImgAlt(), \PDO::PARAM_STR],
-                    'img_href'   => [$item->getImgHref(), \PDO::PARAM_STR],
-                    'deleted_at' => $deletedAt,
+                    'list_id'      => [$item->getListId(), \PDO::PARAM_STR],
+                    'label'        => [$item->getLabel(), \PDO::PARAM_STR],
+                    'label_href'   => [$item->getLabelHref(), \PDO::PARAM_STR],
+                    'content'      => [$item->getContent(), \PDO::PARAM_STR],
+                    'content_href' => [$item->getContentHref(), \PDO::PARAM_STR],
+                    'img_src'      => [$item->getImgSrc(), \PDO::PARAM_STR],
+                    'img_alt'      => [$item->getImgAlt(), \PDO::PARAM_STR],
+                    'img_href'     => [$item->getImgHref(), \PDO::PARAM_STR],
+                    'classes'      => [$item->getClasses(), \PDO::PARAM_STR],
+                    'deleted_at'   => $deletedAt,
                 ]
             )
             ->where('id = ?')
@@ -336,15 +324,16 @@ class ContentListSqlDataMapper extends SqlDataMapper implements IContentListData
             ->insert(
                 'list_items',
                 [
-                    'id'        => [$this->getIdGenerator()->generate($item), \PDO::PARAM_STR],
-                    'list_id'   => [$item->getListId(), \PDO::PARAM_STR],
-                    'name'      => [$item->getName(), \PDO::PARAM_STR],
-                    'name_href' => [$item->getNameHref(), \PDO::PARAM_STR],
-                    'body'      => [$item->getBody(), \PDO::PARAM_STR],
-                    'body_href' => [$item->getBodyHref(), \PDO::PARAM_STR],
-                    'img_src'   => [$item->getImgSrc(), \PDO::PARAM_STR],
-                    'img_alt'   => [$item->getImgAlt(), \PDO::PARAM_STR],
-                    'img_href'  => [$item->getImgHref(), \PDO::PARAM_STR],
+                    'id'           => [$this->getIdGenerator()->generate($item), \PDO::PARAM_STR],
+                    'list_id'      => [$item->getListId(), \PDO::PARAM_STR],
+                    'label'        => [$item->getLabel(), \PDO::PARAM_STR],
+                    'label_href'   => [$item->getLabelHref(), \PDO::PARAM_STR],
+                    'content'      => [$item->getContent(), \PDO::PARAM_STR],
+                    'content_href' => [$item->getContentHref(), \PDO::PARAM_STR],
+                    'img_src'      => [$item->getImgSrc(), \PDO::PARAM_STR],
+                    'img_alt'      => [$item->getImgAlt(), \PDO::PARAM_STR],
+                    'img_href'     => [$item->getImgHref(), \PDO::PARAM_STR],
+                    'classes'      => [$item->getClasses(), \PDO::PARAM_STR],
                 ]
             );
     }

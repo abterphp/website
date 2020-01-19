@@ -18,16 +18,16 @@ class ContentListItem implements IStringerEntity
     protected $listId;
 
     /** @var string */
-    protected $name;
+    protected $label;
 
     /** @var string */
-    protected $nameHref;
+    protected $labelHref;
 
     /** @var string */
-    protected $body;
+    protected $content;
 
     /** @var string */
-    protected $bodyHref;
+    protected $contentHref;
 
     /** @var string */
     protected $imgSrc;
@@ -38,6 +38,9 @@ class ContentListItem implements IStringerEntity
     /** @var string */
     protected $imgHref;
 
+    /** @var string */
+    protected $classes;
+
     /** @var bool */
     protected $deleted;
 
@@ -46,37 +49,40 @@ class ContentListItem implements IStringerEntity
      *
      * @param string $id
      * @param string $listId
-     * @param string $name
-     * @param string $nameHref
-     * @param string $body
-     * @param string $bodyHref
+     * @param string $label
+     * @param string $labelHref
+     * @param string $content
+     * @param string $contentHref
      * @param string $imgSrc
      * @param string $imgAlt
      * @param string $imgHref
+     * @param string $classes
      * @param bool   $isDeleted
      */
     public function __construct(
         string $id,
         string $listId,
-        string $name,
-        string $nameHref,
-        string $body,
-        string $bodyHref,
+        string $label,
+        string $labelHref,
+        string $content,
+        string $contentHref,
         string $imgSrc,
         string $imgAlt,
         string $imgHref,
+        string $classes,
         bool $isDeleted = false
     ) {
-        $this->id       = $id;
-        $this->listId   = $listId;
-        $this->name     = $name;
-        $this->nameHref = $nameHref;
-        $this->body     = $body;
-        $this->bodyHref = $bodyHref;
-        $this->imgSrc   = $imgSrc;
-        $this->imgAlt   = $imgAlt;
-        $this->imgHref  = $imgHref;
-        $this->deleted  = $isDeleted;
+        $this->id          = $id;
+        $this->listId      = $listId;
+        $this->label       = $label;
+        $this->labelHref   = $labelHref;
+        $this->content     = $content;
+        $this->contentHref = $contentHref;
+        $this->imgSrc      = $imgSrc;
+        $this->imgAlt      = $imgAlt;
+        $this->imgHref     = $imgHref;
+        $this->classes     = $classes;
+        $this->deleted     = $isDeleted;
     }
 
     /**
@@ -108,7 +114,7 @@ class ContentListItem implements IStringerEntity
      *
      * @return $this
      */
-    public function setListId(string $listId): ContentListItem
+    public function setListId(string $listId): self
     {
         $this->listId = $listId;
 
@@ -118,19 +124,19 @@ class ContentListItem implements IStringerEntity
     /**
      * @return string
      */
-    public function getName(): string
+    public function getLabel(): string
     {
-        return $this->name;
+        return $this->label;
     }
 
     /**
-     * @param string $name
+     * @param string $label
      *
      * @return $this
      */
-    public function setName(string $name): ContentListItem
+    public function setLabel(string $label): self
     {
-        $this->name = $name;
+        $this->label = $label;
 
         return $this;
     }
@@ -138,19 +144,19 @@ class ContentListItem implements IStringerEntity
     /**
      * @return string
      */
-    public function getNameHref(): string
+    public function getLabelHref(): string
     {
-        return $this->nameHref;
+        return $this->labelHref;
     }
 
     /**
-     * @param string $nameHref
+     * @param string $labelHref
      *
      * @return $this
      */
-    public function setNameHref(string $nameHref): ContentListItem
+    public function setLabelHref(string $labelHref): self
     {
-        $this->nameHref = $nameHref;
+        $this->labelHref = $labelHref;
 
         return $this;
     }
@@ -158,19 +164,19 @@ class ContentListItem implements IStringerEntity
     /**
      * @return string
      */
-    public function getBody(): string
+    public function getContent(): string
     {
-        return $this->body;
+        return $this->content;
     }
 
     /**
-     * @param string $body
+     * @param string $content
      *
      * @return $this
      */
-    public function setBody(string $body): ContentListItem
+    public function setContent(string $content): self
     {
-        $this->body = $body;
+        $this->content = $content;
 
         return $this;
     }
@@ -178,19 +184,19 @@ class ContentListItem implements IStringerEntity
     /**
      * @return string
      */
-    public function getBodyHref(): string
+    public function getContentHref(): string
     {
-        return $this->bodyHref;
+        return $this->contentHref;
     }
 
     /**
-     * @param string $bodyHref
+     * @param string $contentHref
      *
      * @return $this
      */
-    public function setBodyHref(string $bodyHref): ContentListItem
+    public function setContentHref(string $contentHref): self
     {
-        $this->bodyHref = $bodyHref;
+        $this->contentHref = $contentHref;
 
         return $this;
     }
@@ -208,7 +214,7 @@ class ContentListItem implements IStringerEntity
      *
      * @return $this
      */
-    public function setImgSrc(string $imgSrc): ContentListItem
+    public function setImgSrc(string $imgSrc): self
     {
         $this->imgSrc = $imgSrc;
 
@@ -228,7 +234,7 @@ class ContentListItem implements IStringerEntity
      *
      * @return $this
      */
-    public function setImgAlt(string $imgAlt): ContentListItem
+    public function setImgAlt(string $imgAlt): self
     {
         $this->imgAlt = $imgAlt;
 
@@ -248,9 +254,29 @@ class ContentListItem implements IStringerEntity
      *
      * @return $this
      */
-    public function setImgHref(string $imgHref): ContentListItem
+    public function setImgHref(string $imgHref): self
     {
         $this->imgHref = $imgHref;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClasses(): string
+    {
+        return $this->classes;
+    }
+
+    /**
+     * @param string $classes
+     *
+     * @return $this
+     */
+    public function setClasses(string $classes): self
+    {
+        $this->classes = $classes;
 
         return $this;
     }
@@ -266,7 +292,7 @@ class ContentListItem implements IStringerEntity
     /**
      * @param bool $deleted
      */
-    public function setDeleted(bool $deleted): ContentListItem
+    public function setDeleted(bool $deleted): self
     {
         $this->deleted = $deleted;
 
@@ -278,7 +304,7 @@ class ContentListItem implements IStringerEntity
      */
     public function __toString(): string
     {
-        return $this->getName();
+        return $this->getLabel();
     }
 
     /**
@@ -291,15 +317,16 @@ class ContentListItem implements IStringerEntity
         }
 
         $data = [
-            'id'        => $this->getId(),
-            'list_id'   => $this->getListId(),
-            'name'      => $this->getName(),
-            'name_href' => $this->getNameHref(),
-            'body'      => $this->getBody(),
-            'body_href' => $this->getBodyHref(),
-            'img_src'   => $this->getImgSrc(),
-            'img_href'  => $this->getImgHref(),
-            'img_alt'   => $this->getImgAlt(),
+            'id'           => $this->getId(),
+            'list_id'      => $this->getListId(),
+            'label'        => $this->getLabel(),
+            'label_href'   => $this->getLabelHref(),
+            'content'      => $this->getContent(),
+            'content_href' => $this->getContentHref(),
+            'img_src'      => $this->getImgSrc(),
+            'img_href'     => $this->getImgHref(),
+            'img_alt'      => $this->getImgAlt(),
+            'classes'      => $this->getClasses(),
         ];
 
         return $data;

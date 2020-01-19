@@ -92,6 +92,9 @@ class BlockSqlDataMapper extends SqlDataMapper implements IBlockDataMapper
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('title ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }

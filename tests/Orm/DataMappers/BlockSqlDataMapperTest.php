@@ -136,7 +136,7 @@ class BlockSqlDataMapperTest extends DataMapperTestCase
         $layout     = 'qux';
         $layoutId   = null;
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS blocks.id, blocks.identifier, blocks.title, blocks.body, blocks.layout_id, blocks.layout FROM blocks WHERE (blocks.deleted_at IS NULL) ORDER BY title ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [

@@ -72,7 +72,7 @@ class Index
 
         $page      = $pageEvent->getPage();
         $leadLines = StringHelper::wrapByLines($page->getLead(), Html5::TAG_P);
-        $lead      = StringHelper::wrapInTag($leadLines, Html5::TAG_DIV, [Html5::ATTR_CLASS => 'strong']);
+        $lead      = StringHelper::wrapInTag($leadLines, Html5::TAG_DIV, [Html5::ATTR_CLASS => 'lead']);
 
         $vars      = [
             'title' => $page->getTitle(),

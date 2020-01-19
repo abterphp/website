@@ -6,7 +6,6 @@ namespace AbterPhp\Website\Domain\Entities;
 
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
-use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 
 /**
  * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -29,19 +28,19 @@ class ContentList implements IStringerEntity
     protected $protected;
 
     /** @var bool */
-    protected $withImage;
-
-    /** @var bool */
     protected $withLinks;
 
     /** @var bool */
-    protected $withBody;
+    protected $withLabelLinks;
 
     /** @var bool */
     protected $withHtml;
 
-    /** @var Type */
-    protected $type;
+    /** @var bool */
+    protected $withImages;
+
+    /** @var bool */
+    protected $withClasses;
 
     /** @var Item[]|null */
     protected $items;
@@ -55,10 +54,10 @@ class ContentList implements IStringerEntity
      * @param string      $classes
      * @param bool        $protected
      * @param bool        $withLinks
-     * @param bool        $withImage
-     * @param bool        $withBody
+     * @param bool        $withLabelLinks
      * @param bool        $withHtml
-     * @param Type|null   $type
+     * @param bool        $withImages
+     * @param bool        $withClasses
      * @param Item[]|null $items
      */
     public function __construct(
@@ -68,23 +67,23 @@ class ContentList implements IStringerEntity
         string $classes,
         bool $protected,
         bool $withLinks,
-        bool $withImage,
-        bool $withBody,
+        bool $withLabelLinks,
         bool $withHtml,
-        ?Type $type = null,
+        bool $withImages,
+        bool $withClasses,
         array $items = null
     ) {
-        $this->id         = $id;
-        $this->name       = $name;
-        $this->identifier = $identifier;
-        $this->classes    = $classes;
-        $this->protected  = $protected;
-        $this->withLinks  = $withLinks;
-        $this->withImage  = $withImage;
-        $this->withBody   = $withBody;
-        $this->withHtml   = $withHtml;
-        $this->type       = $type ?: new Type('', '', '');
-        $this->items      = $items;
+        $this->id             = $id;
+        $this->name           = $name;
+        $this->identifier     = $identifier;
+        $this->classes        = $classes;
+        $this->protected      = $protected;
+        $this->withLinks      = $withLinks;
+        $this->withLabelLinks = $withLabelLinks;
+        $this->withHtml       = $withHtml;
+        $this->withImages     = $withImages;
+        $this->withClasses    = $withClasses;
+        $this->items          = $items;
     }
 
     /**
@@ -116,7 +115,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setIdentifier(string $identifier): ContentList
+    public function setIdentifier(string $identifier): self
     {
         $this->identifier = $identifier;
 
@@ -136,7 +135,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setClasses(string $classes): ContentList
+    public function setClasses(string $classes): self
     {
         $this->classes = $classes;
 
@@ -156,7 +155,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setName(string $name): ContentList
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -176,29 +175,9 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setProtected(bool $protected): ContentList
+    public function setProtected(bool $protected): self
     {
         $this->protected = $protected;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isWithImage(): bool
-    {
-        return $this->withImage;
-    }
-
-    /**
-     * @param bool $withImage
-     *
-     * @return $this
-     */
-    public function setWithImage(bool $withImage): ContentList
-    {
-        $this->withImage = $withImage;
 
         return $this;
     }
@@ -216,7 +195,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setWithLinks(bool $withLinks): ContentList
+    public function setWithLinks(bool $withLinks): self
     {
         $this->withLinks = $withLinks;
 
@@ -226,19 +205,19 @@ class ContentList implements IStringerEntity
     /**
      * @return bool
      */
-    public function isWithBody(): bool
+    public function isWithLabelLinks(): bool
     {
-        return $this->withBody;
+        return $this->withLabelLinks;
     }
 
     /**
-     * @param bool $withBody
+     * @param bool $withLabelLinks
      *
      * @return $this
      */
-    public function setWithBody(bool $withBody): ContentList
+    public function setWithLabelLinks(bool $withLabelLinks): self
     {
-        $this->withBody = $withBody;
+        $this->withLabelLinks = $withLabelLinks;
 
         return $this;
     }
@@ -256,7 +235,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setWithHtml(bool $withHtml): ContentList
+    public function setWithHtml(bool $withHtml): self
     {
         $this->withHtml = $withHtml;
 
@@ -264,21 +243,41 @@ class ContentList implements IStringerEntity
     }
 
     /**
-     * @return Type
+     * @return bool
      */
-    public function getType(): Type
+    public function isWithImages(): bool
     {
-        return $this->type;
+        return $this->withImages;
     }
 
     /**
-     * @param Type $type
+     * @param bool $withImages
      *
      * @return $this
      */
-    public function setType(Type $type): ContentList
+    public function setWithImages(bool $withImages): self
     {
-        $this->type = $type;
+        $this->withImages = $withImages;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWithClasses(): bool
+    {
+        return $this->withClasses;
+    }
+
+    /**
+     * @param bool $withClasses
+     *
+     * @return $this
+     */
+    public function setWithClasses(bool $withClasses): self
+    {
+        $this->withClasses = $withClasses;
 
         return $this;
     }
@@ -296,7 +295,7 @@ class ContentList implements IStringerEntity
      *
      * @return $this
      */
-    public function setItems(?array $items = null): ContentList
+    public function setItems(?array $items = null): self
     {
         $this->items = $items;
 
@@ -308,7 +307,7 @@ class ContentList implements IStringerEntity
      *
      * @return ContentList
      */
-    public function addItem(Item $item): ContentList
+    public function addItem(Item $item): self
     {
         $this->items[] = $item;
 
@@ -329,15 +328,16 @@ class ContentList implements IStringerEntity
     public function toData(): ?array
     {
         $data = [
-            'id'         => $this->getId(),
-            'name'       => $this->getName(),
-            'identifier' => $this->getIdentifier(),
-            'classes'    => $this->getClasses(),
-            'protected'  => $this->isProtected(),
-            'with_links' => $this->isWithLinks(),
-            'with_image' => $this->isWithImage(),
-            'with_body'  => $this->isWithBody(),
-            'with_html'  => $this->isWithHtml(),
+            'id'               => $this->getId(),
+            'name'             => $this->getName(),
+            'identifier'       => $this->getIdentifier(),
+            'classes'          => $this->getClasses(),
+            'protected'        => $this->isProtected(),
+            'with_links'       => $this->isWithLinks(),
+            'with_label_links' => $this->isWithLabelLinks(),
+            'with_html'        => $this->isWithHtml(),
+            'with_images'      => $this->isWithImages(),
+            'with_classes'     => $this->isWithClasses(),
         ];
 
         if ($this->items !== null) {

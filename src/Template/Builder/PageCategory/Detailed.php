@@ -59,10 +59,10 @@ class Detailed implements IBuilder
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @param Entity[]            $pages
+     * @param mixed               $pages
      * @param ParsedTemplate|null $template
      *
-     * @return Data
+     * @return IData
      */
     public function build($pages, ?ParsedTemplate $template = null): IData
     {

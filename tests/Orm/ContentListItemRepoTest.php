@@ -42,8 +42,8 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '');
-        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '');
+        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
+        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '', '');
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -61,7 +61,7 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '');
+        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
 
         $entityRegistry = $this->createEntityRegistryStub($entityStub);
 
@@ -80,7 +80,7 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '');
+        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
 
         $entityRegistry = $this->createEntityRegistryStub(null);
 
@@ -99,7 +99,7 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '');
+        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForInsertion')->with($entityStub);
 
@@ -110,7 +110,7 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '');
+        $entityStub = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForDeletion')->with($entityStub);
 
@@ -121,8 +121,8 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '');
-        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '');
+        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
+        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '', '');
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -140,8 +140,8 @@ class ContentListItemRepoTest extends RepoTestCase
     {
         $listId = 'bar0';
 
-        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '');
-        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '');
+        $entityStub0 = new Entity('foo0', $listId, '', '', '', '', '', '', '', '');
+        $entityStub1 = new Entity('foo1', $listId, '', '', '', '', '', '', '', '');
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -160,8 +160,8 @@ class ContentListItemRepoTest extends RepoTestCase
         $listId0 = 'bar0';
         $listId1 = 'bar1';
 
-        $entityStub0 = new Entity('foo0', $listId0, '', '', '', '', '', '', '');
-        $entityStub1 = new Entity('foo1', $listId1, '', '', '', '', '', '', '');
+        $entityStub0 = new Entity('foo0', $listId0, '', '', '', '', '', '', '', '');
+        $entityStub1 = new Entity('foo1', $listId1, '', '', '', '', '', '', '', '');
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);

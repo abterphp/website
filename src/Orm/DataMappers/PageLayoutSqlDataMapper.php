@@ -75,6 +75,9 @@ class PageLayoutSqlDataMapper extends SqlDataMapper implements IPageLayoutDataMa
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('page_layouts.name ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }

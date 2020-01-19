@@ -33,12 +33,14 @@
     {{! $header !}}
     {{! $postHeader !}}
 
-    <% if ($layout) %>
+    <% if ($layoutCss) %>
     {{! assetCss($layout) !}}
     <% endif %>
+    <% if ($pageCss) %>
     {{! assetCss($page) !}}
+    <% endif %>
 </head>
-<body class="{{! $classes !}}">
+<body<% if ($classes) %> class="{{! $classes !}}"<% endif %>>
     <% show("content") %>
 
     <!-- Optional JavaScript -->
@@ -47,10 +49,12 @@
     {{! $postFooter !}}
 
     <!-- Scripts Starts -->
-    <% if ($layout) %>
+    <% if ($layoutJs) %>
     {{! assetJs($layout) !}}
     <% endif %>
+    <% if ($pageJs) %>
     {{! assetJs($page) !}}
+    <% endif %>
     <!-- Scripts Ends -->
 </body>
 </html>

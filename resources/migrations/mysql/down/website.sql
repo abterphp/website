@@ -4,6 +4,8 @@ DELETE FROM `casbin_rule` WHERE `v1` = 'blocks' AND `v2` = 'advanced-write';
 DELETE FROM `casbin_rule` WHERE `v1` = 'pages' AND `v2` = 'advanced-write';
 DROP TABLE IF EXISTS `blocks`;
 DROP TABLE IF EXISTS `block_layouts`;
+DROP TABLE IF EXISTS `lists`;
+DROP TABLE IF EXISTS `list_items`;
 DROP TABLE IF EXISTS `pages`;
 DROP TABLE IF EXISTS `page_layouts`;
 DROP TABLE IF EXISTS `page_categories`;

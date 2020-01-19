@@ -40,8 +40,8 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testGetAll()
     {
-        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
-        $entityStub1 = new Entity('foo1', 'foo-1', '', '', false, false, false, false, false);
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
+        $entityStub1 = new Entity('foo1', 'foo-1', '', '', false, false, false, false, false, false);
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -57,7 +57,7 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testGetByIdFromCache()
     {
-        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
+        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
 
         $entityRegistry = $this->createEntityRegistryStub($entityStub);
 
@@ -74,7 +74,7 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testGetByIdFromDataMapper()
     {
-        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
+        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
 
         $entityRegistry = $this->createEntityRegistryStub(null);
 
@@ -91,7 +91,7 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testAdd()
     {
-        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
+        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForInsertion')->with($entityStub);
 
@@ -100,7 +100,7 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testDelete()
     {
-        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
+        $entityStub = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
 
         $this->unitOfWorkMock->expects($this->once())->method('scheduleForDeletion')->with($entityStub);
 
@@ -109,8 +109,8 @@ class ContentListRepoTest extends RepoTestCase
 
     public function testGetPage()
     {
-        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
-        $entityStub1 = new Entity('foo1', 'foo-1', '', '', false, false, false, false, false);
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
+        $entityStub1 = new Entity('foo1', 'foo-1', '', '', false, false, false, false, false, false);
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);
@@ -128,7 +128,7 @@ class ContentListRepoTest extends RepoTestCase
     {
         $identifier = 'foo-0';
 
-        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false);
+        $entityStub0 = new Entity('foo0', 'foo-0', '', '', false, false, false, false, false, false);
 
         $entityRegistry = $this->createEntityRegistryStub(null);
 
@@ -146,8 +146,8 @@ class ContentListRepoTest extends RepoTestCase
         $identifier0 = 'foo-0';
         $identifier1 = 'foo-1';
 
-        $entityStub0 = new Entity('foo0', $identifier0, '', '', false, false, false, false, false);
-        $entityStub1 = new Entity('foo1', $identifier1, '', '', false, false, false, false, false);
+        $entityStub0 = new Entity('foo0', $identifier0, '', '', false, false, false, false, false, false);
+        $entityStub1 = new Entity('foo1', $identifier1, '', '', false, false, false, false, false, false);
         $entities    = [$entityStub0, $entityStub1];
 
         $entityRegistry = $this->createEntityRegistryStub(null);

@@ -89,7 +89,7 @@ class BlockLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS block_layouts.id, block_layouts.name, block_layouts.identifier, block_layouts.body FROM block_layouts WHERE (block_layouts.deleted_at IS NULL) ORDER BY name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [['id' => $id, 'name' => $name, 'identifier' => $identifier, 'body' => $body]];
         $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);

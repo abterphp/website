@@ -11,7 +11,6 @@ use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Databases\Queries\ContentListCache as Cache;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
-use AbterPhp\Website\Domain\Entities\ContentListType as Type;
 use AbterPhp\Website\Orm\ContentListItemRepo as ItemRepo;
 use AbterPhp\Website\Orm\ContentListRepo as Repo;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -44,10 +43,10 @@ class ContentListTest extends TestCase
 
     public function testLoadOne()
     {
-        $typeName   = 'siakwl';
+        $typeName   = 'simple';
         $identifier = 'isdfk';
 
-        $entity = $this->createEntity($typeName, $identifier, 'veowq', 'zzoel');
+        $entity = $this->createEntity($identifier, 'veowq', 'zzoel');
 
         $this->repoMock->expects($this->any())->method('getByIdentifiers')->willReturn([$entity]);
         $this->itemRepoMock->expects($this->any())->method('getByListIds')->willReturn($entity->getItems());
@@ -68,10 +67,10 @@ class ContentListTest extends TestCase
     {
         $this->expectException(Config::class);
 
-        $typeName   = 'siakwl';
+        $typeName   = 'simple';
         $identifier = 'isdfk';
 
-        $entity = $this->createEntity($typeName, $identifier, 'veowq', 'zzoel');
+        $entity = $this->createEntity($identifier, 'veowq', 'zzoel');
 
         $this->repoMock->expects($this->any())->method('getByIdentifiers')->willReturn([$entity]);
         $this->itemRepoMock->expects($this->any())->method('getByListIds')->willReturn($entity->getItems());
@@ -81,35 +80,31 @@ class ContentListTest extends TestCase
         ];
 
         $actualResult = $this->sut->load($parsedTemplates);
-
-        $this->assertSame([$dataStub], $actualResult);
     }
 
     /**
-     * @param string $typeName
+     * @param string $builderName
      * @param IData  $data
      */
-    protected function addBuilder(string $typeName, IData $data)
+    protected function addBuilder(string $builderName, IData $data)
     {
         $builderMock = $this->createMock(IBuilder::class);
         $builderMock->expects($this->atLeastOnce())->method('build')->willReturn($data);
 
-        $this->sut->addBuilder($typeName, $builderMock);
+        $this->sut->addBuilder($builderName, $builderMock);
     }
 
     /**
-     * @param string $typeName
      * @param string $identifier
      * @param string ...$itemPostixes
      *
      * @return Entity
      */
-    protected function createEntity(string $typeName, string $identifier, string ...$itemPostixes): Entity
+    protected function createEntity(string $identifier, string ...$itemPostixes): Entity
     {
         $entityId = "list-$identifier";
 
-        $type   = new Type("type-$identifier", $typeName, '');
-        $entity = new Entity($entityId, '', $identifier, '', false, false, false, false, false, $type);
+        $entity = new Entity($entityId, '', $identifier, '', false, false, false, false, false, false);
         $items  = [];
         foreach ($itemPostixes as $postfix) {
             $entity->addItem($this->createItem($postfix, $entityId));
@@ -126,16 +121,17 @@ class ContentListTest extends TestCase
      */
     protected function createItem(string $postfix, string $listId): Item
     {
-        $id       = "item-$postfix";
-        $name     = "Foo $postfix";
-        $nameHref = "/foo-$postfix";
-        $body     = "Bar $postfix";
-        $bodyHref = "/bar-$postfix";
-        $imgSrc   = "/baz0-$postfix";
-        $imgHref  = "/baz1-$postfix";
-        $imgAlt   = "Baz $postfix";
+        $id          = "item-$postfix";
+        $label       = "Foo $postfix";
+        $labelHref   = "/foo-$postfix";
+        $content     = "Bar $postfix";
+        $contentHref = "/bar-$postfix";
+        $imgSrc      = "/baz0-$postfix";
+        $imgHref     = "/baz1-$postfix";
+        $imgAlt      = "Baz $postfix";
+        $classes     = "$postfix";
 
-        return new Item($id, $listId, $name, $nameHref, $body, $bodyHref, $imgSrc, $imgHref, $imgAlt);
+        return new Item($id, $listId, $label, $labelHref, $content, $contentHref, $imgSrc, $imgHref, $imgAlt, $classes);
     }
 
     public function testHasAnyChangedSinceCallsBlockCache()

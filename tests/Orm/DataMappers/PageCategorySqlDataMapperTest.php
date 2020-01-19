@@ -92,7 +92,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id ORDER BY pc.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [

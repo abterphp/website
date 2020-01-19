@@ -113,7 +113,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) ORDER BY page_layouts.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [

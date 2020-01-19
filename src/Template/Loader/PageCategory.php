@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Template\Loader;
 
-use AbterPhp\Framework\Exception\Config;
 use AbterPhp\Framework\Template\IBuilder;
 use AbterPhp\Framework\Template\IData;
 use AbterPhp\Framework\Template\ILoader;
@@ -17,6 +16,8 @@ use Opulence\QueryBuilders\InvalidQueryException;
 
 class PageCategory implements ILoader
 {
+    use WithBuildersTrait;
+
     /**
      * @var PageRepo
      */
@@ -26,11 +27,6 @@ class PageCategory implements ILoader
      * @var PageCategoryCache
      */
     protected $cache;
-
-    /**
-     * @var IBuilder[]
-     */
-    protected $builders;
 
     /**
      * PageCategory constructor.
@@ -44,19 +40,6 @@ class PageCategory implements ILoader
         $this->pageRepo = $pageRepo;
         $this->cache    = $pageCategoryCache;
         $this->builders = $builders;
-    }
-
-    /**
-     * @param string   $name
-     * @param IBuilder $builder
-     *
-     * @return $this
-     */
-    public function addBuilder(string $name, IBuilder $builder): self
-    {
-        $this->builders[$name] = $builder;
-
-        return $this;
     }
 
     /**
@@ -111,14 +94,7 @@ class PageCategory implements ILoader
 
                 $pages = $groupedPages[$identifier];
 
-                $builderName = $parsedTemplate->getAttribute('builder');
-                if ($builderName && array_key_exists($builderName, $this->builders)) {
-                    $templateData[] = $this->builders[$builderName]->build($pages, $parsedTemplate);
-
-                    continue;
-                }
-
-                throw new Config(__CLASS__);
+                $templateData[] = $this->buildTemplateData($parsedTemplate, $pages, 'simple');
             }
         }
 

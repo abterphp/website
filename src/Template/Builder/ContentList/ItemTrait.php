@@ -6,119 +6,82 @@ namespace AbterPhp\Website\Template\Builder\ContentList;
 
 use AbterPhp\Framework\Constant\Html5;
 use AbterPhp\Framework\Html\Helper\StringHelper;
+use AbterPhp\Framework\Template\Data;
 use AbterPhp\Framework\Template\IBuilder;
+use AbterPhp\Framework\Template\IData;
+use AbterPhp\Framework\Template\ParsedTemplate;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
 use AbterPhp\Website\Domain\Entities\ContentListItem as Item;
 
 trait ItemTrait
 {
-    /** @var bool */
-    protected $withName = true;
-
     /**
      * @return string
      */
     abstract public function getIdentifier(): string;
 
     /**
-     * @return string[]
-     */
-    public function getPartClassesByOrder(): array
-    {
-        return [
-            IBuilder::NAME  => 'item-name',
-            IBuilder::BODY  => 'item-body',
-            IBuilder::IMAGE => 'item-image',
-        ];
-    }
-
-    /**
-     * @return string[]
-     */
-    public function wrapperTags(): array
-    {
-        return [
-            IBuilder::NAME  => Html5::TAG_SPAN,
-            IBuilder::BODY  => Html5::TAG_SPAN,
-            IBuilder::IMAGE => Html5::TAG_SPAN,
-        ];
-    }
-
-    /**
-     * @param Item   $item
-     * @param Entity $list
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
-     * @return array
+     * @param Entity              $list
+     * @param ParsedTemplate|null $template
+     *
+     * @return IData
      */
-    protected function buildParts(Item $item, Entity $list): array
+    public function build($list, ?ParsedTemplate $template = null): IData
     {
-        $name  = $item->getName();
-        $body  = $item->getBody();
-        $image = null;
+        $wrapperTags    = $this->getWrapperTags($template);
+        $wrapperClasses = $this->getWrapperClasses($template);
+        $options        = $this->getOptions($template);
 
-        if ($list->isWithImage()) {
-            $image = StringHelper::createTag(
-                Html5::TAG_IMG,
-                [Html5::ATTR_SRC => $item->getImgSrc(), Html5::ATTR_ALT => $item->getImgAlt()]
-            );
-        }
+        $content    = $this->getContent($list, $wrapperTags, $wrapperClasses, $options);
+        $tag        = $wrapperTags[IBuilder::LIST_TAG];
+        $classes    = $this->getListClasses($list->getClasses(), $wrapperClasses[IBuilder::LIST_CLASS]);
+        $attributes = [Html5::ATTR_ID => $list->getIdentifier(), Html5::ATTR_CLASS => $classes];
 
-        if ($list->isWithLinks()) {
-            $name  = StringHelper::wrapInTag($name, Html5::TAG_A, [Html5::ATTR_HREF => $item->getNameHref()]);
-            $body  = StringHelper::wrapInTag($body, Html5::TAG_A, [Html5::ATTR_HREF => $item->getBodyHref()]);
-            if ($image) {
-                $image = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $item->getImgHref()]);
-            }
-        }
+        $html = StringHelper::wrapInTag($content, $tag, $attributes);
 
-        if (!$this->withName) {
-            $name = null;
-        }
-
-        if (!$list->isWithBody()) {
-            $body = null;
-        }
-
-        return [
-            IBuilder::NAME  => $name,
-            IBuilder::BODY  => $body,
-            IBuilder::IMAGE => $image,
-        ];
+        return new Data(
+            $list->getIdentifier(),
+            [],
+            ['body' => $html]
+        );
     }
 
     /**
-     * @param string[] $parts
+     * @param ParsedTemplate|null $template
+     *
+     * @return array<string,string>
+     */
+    abstract protected function getWrapperTags(?ParsedTemplate $template = null): array;
+
+
+    /**
+     * @param ParsedTemplate|null $template
+     *
+     * @return array<string,string>
+     */
+    abstract protected function getWrapperClasses(?ParsedTemplate $template = null): array;
+
+
+    /**
+     * @param ParsedTemplate|null $template
+     *
+     * @return array<string,string>
+     */
+    abstract protected function getOptions(?ParsedTemplate $template = null): array;
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Entity          $list
+     * @param  array<string,string> $tags
+     * @param  array<string,string> $classes
+     * @param  array<string,string> $options
      *
      * @return string
      */
-    protected function joinItem(array $parts): string
-    {
-        $tags = $this->wrapperTags();
-
-        $ordered = [];
-        foreach ($this->getPartClassesByOrder() as $partName => $class) {
-            if (empty($parts[$partName])) {
-                continue;
-            }
-
-            if (empty($tags[$partName])) {
-                $ordered[] = $parts[$partName];
-                continue;
-            }
-
-            $ordered[] = StringHelper::wrapInTag($parts[$partName], $tags[$partName], [Html5::ATTR_CLASS => $class]);
-        }
-
-        return implode('', $ordered);
-    }
-
-    /**
-     * @param Entity $list
-     * @param string $tag
-     *
-     * @return string
-     */
-    protected function joinItems(Entity $list, string $tag): string
+    protected function getContent(Entity $list, array $tags, array $classes, array $options): string
     {
         if ($list->getItems() === null) {
             return '';
@@ -126,40 +89,167 @@ trait ItemTrait
 
         $htmlParts = [];
         foreach ($list->getItems() as $item) {
-            $parts  = $this->buildParts($item, $list);
-            $joined = $this->joinItem($parts);
-            if ($tag) {
-                $htmlParts[] = sprintf("<$tag>%s</$tag>\n", $joined);
-            } else {
-                $htmlParts[] = sprintf("%s\n", $joined);
-            }
+            $parts   = $this->buildItemParts($item, $list, $tags, $classes, $options);
+            $content = $this->joinItemParts($parts);
+
+            $tag   = $tags[IBuilder::ITEM_TAG];
+            $class = $classes[IBuilder::ITEM_CLASS];
+
+            $htmlParts[] = StringHelper::wrapInTag($content, $tag, [Html5::ATTR_CLASS => $class]);
         }
 
-        return implode('', $htmlParts);
+        return implode(PHP_EOL, $htmlParts);
     }
 
     /**
-     * @param Entity $list
-     * @param string $listTag
-     * @param string $itemTag
+     * @param Item            $item
+     * @param Entity          $list
+     * @param  array<string,string> $tags
+     * @param  array<string,string> $classes
+     * @param  array<string,string> $options
+     *
+     * @return array
+     */
+    protected function buildItemParts(Item $item, Entity $list, array $tags, array $classes, array $options): array
+    {
+        return [
+            IBuilder::LABEL   => $this->buildLabel($item, $list, $tags, $classes, $options),
+            IBuilder::CONTENT => $this->buildContent($item, $list, $tags, $classes, $options),
+            IBuilder::IMAGE   => $this->buildImage($item, $list, $tags, $classes, $options),
+        ];
+    }
+
+    /**
+     * @param Item            $item
+     * @param Entity          $list
+     * @param  array<string,string> $tags
+     * @param  array<string,string> $classes
+     * @param  array<string,string> $options
      *
      * @return string
      */
-    protected function buildItems(Entity $list, string $listTag, string $itemTag): string
+    protected function buildLabel(Item $item, Entity $list, array $tags, array $classes, array $options): string
     {
-        $content = $this->joinItems($list, $itemTag);
-
-        $classes = [$this->getIdentifier(), $list->getType()->getName()];
-        if ($list->getClasses()) {
-            $classes = array_merge($classes, explode(' ', $list->getClasses()));
+        if (!$options[IBuilder::WITH_LABEL_OPTION]) {
+            return '';
         }
 
-        $html = StringHelper::wrapInTag(
-            $content,
-            $listTag,
-            [Html5::ATTR_ID => $list->getIdentifier(), Html5::ATTR_CLASS => implode(' ', $classes)]
-        );
+        $label = $item->getLabel();
 
-        return $html;
+        if ($list->isWithLinks()) {
+            $href = $item->getContentHref();
+            if ($list->isWithLabelLinks()) {
+                $href = $item->getLabelHref() ?: $item->getContentHref();
+            }
+
+            $label = StringHelper::wrapInTag($label, Html5::TAG_A, [Html5::ATTR_HREF => $href]);
+        }
+
+        $tag   = $tags[IBuilder::LABEL_TAG];
+        $class = $classes[IBuilder::LABEL_CLASS];
+        $label = StringHelper::wrapInTag($label, $tag, [Html5::ATTR_CLASS => $class]);
+
+        return $label;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param Item            $item
+     * @param Entity          $list
+     * @param  array<string,string> $tags
+     * @param  array<string,string> $classes
+     * @param  array<string,string> $options
+     *
+     * @return string
+     */
+    protected function buildContent(Item $item, Entity $list, array $tags, array $classes, array $options): string
+    {
+        $content = $item->getContent();
+
+        if ($list->isWithLinks()) {
+            $content = StringHelper::wrapInTag($content, Html5::TAG_A, [Html5::ATTR_HREF => $item->getContentHref()]);
+        }
+
+        $tag     = $tags[IBuilder::CONTENT_TAG];
+        $class   = $classes[IBuilder::CONTENT_CLASS];
+        $content = StringHelper::wrapInTag($content, $tag, [Html5::ATTR_CLASS => $class]);
+
+        return $content;
+    }
+
+    /**
+     * @param Item            $item
+     * @param Entity          $list
+     * @param  array<string,string> $tags
+     * @param  array<string,string> $classes
+     * @param  array<string,string> $options
+     *
+     * @return string
+     */
+    protected function buildImage(Item $item, Entity $list, array $tags, array $classes, array $options): string
+    {
+        if (!$options[IBuilder::WITH_IMAGE_OPTION] || !$list->isWithImages()) {
+            return '';
+        }
+
+        $attr  = [Html5::ATTR_SRC => $item->getImgSrc(), Html5::ATTR_ALT => $item->getImgAlt()];
+        $image = StringHelper::createTag(Html5::TAG_IMG, $attr);
+
+        if ($list->isWithLinks()) {
+            $href  = $item->getImgHref() ?: $item->getContentHref();
+            $image = StringHelper::wrapInTag($image, Html5::TAG_A, [Html5::ATTR_HREF => $href]);
+        }
+
+        $tag   = $tags[IBuilder::IMAGE_TAG];
+        $class = $classes[IBuilder::IMAGE_CLASS];
+        $image = StringHelper::wrapInTag($image, $tag, [Html5::ATTR_CLASS => $class]);
+
+        return $image;
+    }
+
+    /**
+     * @param array<string,string> $parts
+     *
+     * @return string
+     */
+    protected function joinItemParts(array $parts): string
+    {
+        $content = '';
+        foreach ($parts as $part) {
+            if (!$part) {
+                continue;
+            }
+
+            $content .= $part;
+        }
+
+        return $content;
+    }
+
+    /**
+     * @param string $classes
+     * @param string $attributeClasses
+     *
+     * @return string
+     */
+    protected function getListClasses(string $classes, string $attributeClasses): string
+    {
+        $trimmedClasses = [$this->getIdentifier() => $this->getIdentifier()];
+
+        foreach (explode(' ', $classes) as $class) {
+            $trimmedClass = trim($class);
+            if ($trimmedClass) {
+                $trimmedClasses[$trimmedClass] = $trimmedClass;
+            }
+        }
+        foreach (explode(' ', $attributeClasses) as $class) {
+            $trimmedClass = trim($class);
+            if ($trimmedClass) {
+                $trimmedClasses[$trimmedClass] = $trimmedClass;
+            }
+        }
+
+        return implode(' ', $trimmedClasses);
     }
 }

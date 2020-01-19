@@ -29,15 +29,16 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
             ->insert(
                 'list_items',
                 [
-                    'id'        => [$entity->getId(), PDO::PARAM_STR],
-                    'list_id'   => [$entity->getListId(), PDO::PARAM_STR],
-                    'name'      => [$entity->getName(), PDO::PARAM_STR],
-                    'name_href' => [$entity->getNameHref(), PDO::PARAM_STR],
-                    'body'      => [$entity->getBody(), PDO::PARAM_STR],
-                    'body_href' => [$entity->getBodyHref(), PDO::PARAM_STR],
-                    'img_src'   => [$entity->getImgSrc(), PDO::PARAM_STR],
-                    'img_alt'   => [$entity->getImgAlt(), PDO::PARAM_STR],
-                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
+                    'id'           => [$entity->getId(), PDO::PARAM_STR],
+                    'list_id'      => [$entity->getListId(), PDO::PARAM_STR],
+                    'label'        => [$entity->getLabel(), PDO::PARAM_STR],
+                    'label_href'   => [$entity->getLabelHref(), PDO::PARAM_STR],
+                    'content'      => [$entity->getContent(), PDO::PARAM_STR],
+                    'content_href' => [$entity->getContentHref(), PDO::PARAM_STR],
+                    'img_src'      => [$entity->getImgSrc(), PDO::PARAM_STR],
+                    'img_alt'      => [$entity->getImgAlt(), PDO::PARAM_STR],
+                    'img_href'     => [$entity->getImgHref(), PDO::PARAM_STR],
+                    'classes'      => [$entity->getClasses(), PDO::PARAM_STR],
                 ]
             );
 
@@ -92,6 +93,9 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('label ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }
@@ -157,7 +161,7 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
         }
 
         $conditions = new ConditionFactory();
-        $query = $this->getBaseQuery()->andWhere($conditions->in('list_items.list_id', $listIds));
+        $query      = $this->getBaseQuery()->andWhere($conditions->in('list_items.list_id', $listIds));
 
         return $this->read($query->getSql(), $query->getParameters(), self::VALUE_TYPE_ARRAY);
     }
@@ -176,14 +180,15 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
                 'list_items',
                 'list_items',
                 [
-                    'list_id'   => [$entity->getListId(), PDO::PARAM_STR],
-                    'name'      => [$entity->getName(), PDO::PARAM_STR],
-                    'name_href' => [$entity->getNameHref(), PDO::PARAM_STR],
-                    'body'      => [$entity->getBody(), PDO::PARAM_STR],
-                    'body_href' => [$entity->getBodyHref(), PDO::PARAM_STR],
-                    'img_src'   => [$entity->getImgSrc(), PDO::PARAM_STR],
-                    'img_alt'   => [$entity->getImgAlt(), PDO::PARAM_STR],
-                    'img_href'  => [$entity->getImgHref(), PDO::PARAM_STR],
+                    'list_id'      => [$entity->getListId(), PDO::PARAM_STR],
+                    'label'        => [$entity->getLabel(), PDO::PARAM_STR],
+                    'label_href'   => [$entity->getLabelHref(), PDO::PARAM_STR],
+                    'content'      => [$entity->getContent(), PDO::PARAM_STR],
+                    'content_href' => [$entity->getContentHref(), PDO::PARAM_STR],
+                    'img_src'      => [$entity->getImgSrc(), PDO::PARAM_STR],
+                    'img_alt'      => [$entity->getImgAlt(), PDO::PARAM_STR],
+                    'img_href'     => [$entity->getImgHref(), PDO::PARAM_STR],
+                    'classes'      => [$entity->getClasses(), PDO::PARAM_STR],
                 ]
             )
             ->where('id = ?')
@@ -205,13 +210,14 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
         return new Entity(
             $hash['id'],
             $hash['list_id'],
-            $hash['name'],
-            $hash['name_href'],
-            $hash['body'],
-            $hash['body_href'],
+            $hash['label'],
+            $hash['label_href'],
+            $hash['content'],
+            $hash['content_href'],
             $hash['img_src'],
             $hash['img_alt'],
-            $hash['img_href']
+            $hash['img_href'],
+            $hash['classes']
         );
     }
 
@@ -225,13 +231,14 @@ class ContentListItemSqlDataMapper extends SqlDataMapper implements IContentList
             ->select(
                 'list_items.id',
                 'list_items.list_id',
-                'list_items.name',
-                'list_items.name_href',
-                'list_items.body',
-                'list_items.body_href',
+                'list_items.label',
+                'list_items.label_href',
+                'list_items.content',
+                'list_items.content_href',
                 'list_items.img_src',
                 'list_items.img_alt',
-                'list_items.img_href'
+                'list_items.img_href',
+                'list_items.classes'
             )
             ->from('list_items')
             ->where('list_items.deleted_at IS NULL');

@@ -9,7 +9,6 @@ use AbterPhp\Website\Domain\Entities\Block;
 use AbterPhp\Website\Domain\Entities\BlockLayout;
 use AbterPhp\Website\Domain\Entities\ContentList;
 use AbterPhp\Website\Domain\Entities\ContentListItem;
-use AbterPhp\Website\Domain\Entities\ContentListType;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout;
@@ -17,12 +16,10 @@ use AbterPhp\Website\Orm\BlockLayoutRepo;
 use AbterPhp\Website\Orm\BlockRepo;
 use AbterPhp\Website\Orm\ContentListItemRepo;
 use AbterPhp\Website\Orm\ContentListRepo;
-use AbterPhp\Website\Orm\ContentListTypeRepo;
 use AbterPhp\Website\Orm\DataMappers\BlockLayoutSqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\BlockSqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\ContentListItemSqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\ContentListSqlDataMapper;
-use AbterPhp\Website\Orm\DataMappers\ContentListTypeSqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\PageCategorySqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
 use AbterPhp\Website\Orm\DataMappers\PageSqlDataMapper;
@@ -40,7 +37,6 @@ class OrmBootstrapper extends AbterAdminOrmBootstrapper
     protected $repoMappers = [
         BlockLayoutRepo::class     => [BlockLayoutSqlDataMapper::class, BlockLayout::class],
         BlockRepo::class           => [BlockSqlDataMapper::class, Block::class],
-        ContentListTypeRepo::class => [ContentListTypeSqlDataMapper::class, ContentListType::class],
         ContentListRepo::class     => [ContentListSqlDataMapper::class, ContentList::class],
         ContentListItemRepo::class => [ContentListItemSqlDataMapper::class, ContentListItem::class],
         PageLayoutRepo::class      => [PageLayoutSqlDataMapper::class, PageLayout::class],

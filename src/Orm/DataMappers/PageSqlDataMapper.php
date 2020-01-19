@@ -87,6 +87,9 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             ->limit($pageSize)
             ->offset($limitFrom);
 
+        if (!$orders) {
+            $query->orderBy('pages.title ASC');
+        }
         foreach ($orders as $order) {
             $query->addOrderBy($order);
         }
