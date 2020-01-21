@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
+use AbterPhp\Admin\Config\Routes;
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
+use AbterPhp\Framework\Config\EnvReader;
+use AbterPhp\Framework\Constant\Env;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
@@ -17,6 +20,9 @@ use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
 class ContentList extends FormAbstract
 {
     const ENTITY_SINGULAR = 'contentList';
@@ -29,6 +35,9 @@ class ContentList extends FormAbstract
 
     /** @var AssetManager */
     protected $assetManager;
+
+    /** @var EnvReader */
+    protected $envReader;
 
     /** @var string */
     protected $resource = 'lists';
@@ -45,6 +54,7 @@ class ContentList extends FormAbstract
      * @param IEventDispatcher $eventDispatcher
      * @param FormFactory      $formFactory
      * @param AssetManager     $assetManager
+     * @param EnvReader        $envReader
      */
     public function __construct(
         FlashService $flashService,
@@ -55,7 +65,8 @@ class ContentList extends FormAbstract
         ISession $session,
         IEventDispatcher $eventDispatcher,
         FormFactory $formFactory,
-        AssetManager $assetManager
+        AssetManager $assetManager,
+        EnvReader $envReader
     ) {
         parent::__construct(
             $flashService,
@@ -70,6 +81,7 @@ class ContentList extends FormAbstract
 
         $this->formFactory  = $formFactory;
         $this->assetManager = $assetManager;
+        $this->envReader    = $envReader;
     }
 
     /**
@@ -95,18 +107,29 @@ class ContentList extends FormAbstract
             return;
         }
 
+        $jsContent = sprintf(
+            "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";",
+            $this->envReader->get(Env::CRYPTO_CLIENT_ID),
+            Routes::getApiBasePath(),
+            '/editor-file-upload'
+        );
+
         $styles = $this->getResourceName(static::RESOURCE_DEFAULT);
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
+        $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/table/ui/trumbowyg.table.css');
         $this->assetManager->addCss($styles, '/admin-assets/css/list.css');
 
         $footer = $this->getResourceName(static::RESOURCE_FOOTER);
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/table/trumbowyg.table.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/upload/trumbowyg.upload.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/list.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/semi-auto.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/required.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/validation.js');
+        $this->assetManager->addJsContent($footer, $jsContent);
     }
 }

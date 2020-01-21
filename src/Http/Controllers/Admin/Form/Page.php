@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
+use AbterPhp\Admin\Config\Routes;
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
+use AbterPhp\Framework\Config\EnvReader;
+use AbterPhp\Framework\Constant\Env;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
@@ -17,6 +20,9 @@ use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+ */
 class Page extends FormAbstract
 {
     const ENTITY_PLURAL   = 'pages';
@@ -29,6 +35,9 @@ class Page extends FormAbstract
 
     /** @var AssetManager */
     protected $assetManager;
+
+    /** @var EnvReader */
+    protected $envReader;
 
     /** @var string */
     protected $resource = 'pages';
@@ -45,6 +54,7 @@ class Page extends FormAbstract
      * @param FormFactory      $formFactory
      * @param IEventDispatcher $eventDispatcher
      * @param AssetManager     $assetManager
+     * @param EnvReader        $envReader
      */
     public function __construct(
         FlashService $flashService,
@@ -55,7 +65,8 @@ class Page extends FormAbstract
         ISession $session,
         FormFactory $formFactory,
         IEventDispatcher $eventDispatcher,
-        AssetManager $assetManager
+        AssetManager $assetManager,
+        EnvReader $envReader
     ) {
         parent::__construct(
             $flashService,
@@ -69,6 +80,7 @@ class Page extends FormAbstract
         );
 
         $this->assetManager = $assetManager;
+        $this->envReader    = $envReader;
     }
 
     /**
@@ -94,12 +106,22 @@ class Page extends FormAbstract
             return;
         }
 
+        $jsContent = sprintf(
+            "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";",
+            $this->envReader->get(Env::CRYPTO_CLIENT_ID),
+            Routes::getApiBasePath(),
+            '/editor-file-upload'
+        );
+
         $styles = $this->getResourceName(static::RESOURCE_DEFAULT);
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
+        $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/table/ui/trumbowyg.table.css');
 
         $footer = $this->getResourceName(static::RESOURCE_FOOTER);
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/table/trumbowyg.table.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/upload/trumbowyg.upload.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/countable-textarea.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
@@ -109,5 +131,6 @@ class Page extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/js/required.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/validation.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/page.js');
+        $this->assetManager->addJsContent($footer, $jsContent);
     }
 }
