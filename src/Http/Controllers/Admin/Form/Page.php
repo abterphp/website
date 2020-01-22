@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
 use AbterPhp\Admin\Config\Routes;
+use AbterPhp\Admin\Constant\Env as AdminEnv;
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Config\EnvReader;
-use AbterPhp\Framework\Constant\Env;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
@@ -108,7 +108,7 @@ class Page extends FormAbstract
 
         $jsContent = sprintf(
             "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";",
-            $this->envReader->get(Env::CRYPTO_CLIENT_ID),
+            $this->envReader->get(AdminEnv::UPLOAD_CLIENT_ID),
             Routes::getApiBasePath(),
             '/editor-file-upload'
         );
