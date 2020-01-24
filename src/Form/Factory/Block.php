@@ -78,7 +78,7 @@ class Block extends Base
             ->addTitle($entity)
             ->addIdentifier($entity)
             ->addBody($entity)
-            ->addLayoutId($entity)
+            ->addLayoutId($entity, $advancedAllowed)
             ->addLayout($entity, $advancedAllowed)
             ->addDefaultButtons($showUrl);
 
@@ -144,15 +144,20 @@ class Block extends Base
 
     /**
      * @param Entity $entity
+     * @param bool   $advancedAllowed
      *
      * @return $this
      */
-    protected function addLayoutId(Entity $entity): Block
+    protected function addLayoutId(Entity $entity, bool $advancedAllowed): Block
     {
+        if ($advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
+            return $this;
+        }
+
         $allLayouts = $this->getAllLayouts();
         $layoutId   = $entity->getLayoutId();
 
-        $options = $this->createLayoutIdOptions($allLayouts, $layoutId);
+        $options = $this->createLayoutIdOptions($allLayouts, $layoutId, $advancedAllowed);
 
         $this->form[] = new FormGroup(
             $this->createLayoutIdSelect($options),
@@ -173,13 +178,16 @@ class Block extends Base
     /**
      * @param BlockLayout[] $allLayouts
      * @param string|null   $layoutId
+     * @param bool          $advancedAllowed
      *
      * @return Option[]
      */
-    protected function createLayoutIdOptions(array $allLayouts, ?string $layoutId): array
+    protected function createLayoutIdOptions(array $allLayouts, ?string $layoutId, bool $advancedAllowed): array
     {
-        $options   = [];
-        $options[] = new Option('', 'framework:none', false);
+        $options = [];
+        if ($advancedAllowed) {
+            $options[] = new Option('', 'framework:none', false);
+        }
         foreach ($allLayouts as $layout) {
             $isSelected = $layout->getId() === $layoutId;
             $options[]  = new Option($layout->getId(), $layout->getName(), $isSelected);

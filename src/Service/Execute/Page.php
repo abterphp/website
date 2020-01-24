@@ -5,17 +5,21 @@ declare(strict_types=1);
 namespace AbterPhp\Website\Service\Execute;
 
 use AbterPhp\Admin\Service\Execute\RepoServiceAbstract;
+use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
+use AbterPhp\Website\Constant\Authorization;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Orm\PageRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Page as ValidatorFactory;
+use Casbin\Enforcer;
 use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
+use Opulence\Sessions\ISession;
 
 class Page extends RepoServiceAbstract
 {
@@ -25,6 +29,12 @@ class Page extends RepoServiceAbstract
     /** @var GridRepo */
     protected $repo;
 
+    /** @var ISession */
+    protected $session;
+
+    /** @var Enforcer */
+    protected $enforcer;
+
     /**
      * Page constructor.
      *
@@ -33,17 +43,23 @@ class Page extends RepoServiceAbstract
      * @param IUnitOfWork      $unitOfWork
      * @param IEventDispatcher $eventDispatcher
      * @param Slugify          $slugify
+     * @param ISession         $session
+     * @param Enforcer         $enforcer
      */
     public function __construct(
         GridRepo $repo,
         ValidatorFactory $validatorFactory,
         IUnitOfWork $unitOfWork,
         IEventDispatcher $eventDispatcher,
-        Slugify $slugify
+        Slugify $slugify,
+        ISession $session,
+        Enforcer $enforcer
     ) {
         parent::__construct($repo, $validatorFactory, $unitOfWork, $eventDispatcher);
 
-        $this->slugify = $slugify;
+        $this->slugify  = $slugify;
+        $this->session  = $session;
+        $this->enforcer = $enforcer;
     }
 
     /**
@@ -70,6 +86,8 @@ class Page extends RepoServiceAbstract
     protected function fillEntity(IStringerEntity $entity, array $postData, array $fileData): IStringerEntity
     {
         assert($entity instanceof Entity, new \InvalidArgumentException());
+
+        $postData = $this->protectPostData($entity, $postData);
 
         $title = $postData['title'];
 
@@ -112,6 +130,32 @@ class Page extends RepoServiceAbstract
             ->setAssets($assets);
 
         return $entity;
+    }
+
+    /**
+     * @param Entity $entity
+     * @param array  $postData
+     *
+     * @return array
+     * @throws \Casbin\Exceptions\CasbinException
+     */
+    protected function protectPostData(Entity $entity, array $postData): array
+    {
+        $username        = $this->session->get(Session::USERNAME);
+        $advancedAllowed = $this->enforcer->enforce(
+            $username,
+            Authorization::RESOURCE_PAGES,
+            Authorization::ROLE_ADVANCED_WRITE
+        );
+
+        if ($advancedAllowed) {
+            return $postData;
+        }
+
+        $postData['layout_id'] = $postData['layout_id'] ?? $entity->getLayoutId();
+        $postData['layout_id'] = $entity->getLayoutId();
+
+        return $postData;
     }
 
     /**

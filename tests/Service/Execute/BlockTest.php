@@ -8,9 +8,11 @@ use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use AbterPhp\Website\Orm\BlockRepo as GridRepo;
 use AbterPhp\Website\Validation\Factory\Block as ValidatorFactory;
+use Casbin\Enforcer;
 use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Orm\IUnitOfWork;
+use Opulence\Sessions\ISession;
 use Opulence\Validation\IValidator;
 use Opulence\Validation\Rules\Errors\ErrorCollection;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -36,6 +38,12 @@ class BlockTest extends TestCase
     /** @var Slugify|MockObject */
     protected $slugifyMock;
 
+    /** @var ISession|MockObject */
+    protected $sessionMock;
+
+    /** @var Enforcer|MockObject */
+    protected $enforcerMock;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -45,13 +53,17 @@ class BlockTest extends TestCase
         $this->unitOfWorkMock       = $this->createMock(IUnitOfWork::class);
         $this->eventDispatcherMock  = $this->createMock(IEventDispatcher::class);
         $this->slugifyMock          = $this->createMock(Slugify::class);
+        $this->sessionMock          = $this->createMock(ISession::class);
+        $this->enforcerMock         = $this->createMock(Enforcer::class);
 
         $this->sut = new Block(
             $this->gridRepoMock,
             $this->validatorFactoryMock,
             $this->unitOfWorkMock,
             $this->eventDispatcherMock,
-            $this->slugifyMock
+            $this->slugifyMock,
+            $this->sessionMock,
+            $this->enforcerMock
         );
     }
 

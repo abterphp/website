@@ -117,7 +117,7 @@ class Page extends Base
             ->addLead($entity)
             ->addBody($entity)
             ->addCategoryId($entity)
-            ->addLayoutId($entity)
+            ->addLayoutId($entity, $advancedAllowed)
             ->addLayout($entity, $advancedAllowed)
             ->addAssets($entity, $advancedAllowed)
             ->addIsDraft($entity)
@@ -311,15 +311,20 @@ class Page extends Base
 
     /**
      * @param Entity $entity
+     * @param bool   $advancedAllowed
      *
      * @return $this
      */
-    protected function addLayoutId(Entity $entity): Page
+    protected function addLayoutId(Entity $entity, bool $advancedAllowed): Page
     {
+        if ($advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
+            return $this;
+        }
+
         $allLayouts = $this->getAllLayouts();
         $layoutId   = $entity->getLayoutId();
 
-        $options = $this->createLayoutIdOptions($allLayouts, $layoutId);
+        $options = $this->createLayoutIdOptions($allLayouts, $layoutId, $advancedAllowed);
 
         $this->form[] = new FormGroup(
             $this->createLayoutIdSelect($options),
@@ -340,13 +345,16 @@ class Page extends Base
     /**
      * @param PageLayout[] $allLayouts
      * @param string|null  $layoutId
+     * @param bool         $advancedAllowed
      *
      * @return Option[]
      */
-    protected function createLayoutIdOptions(array $allLayouts, ?string $layoutId): array
+    protected function createLayoutIdOptions(array $allLayouts, ?string $layoutId, bool $advancedAllowed): array
     {
-        $options   = [];
-        $options[] = new Option('', 'framework:none', false);
+        $options = [];
+        if ($advancedAllowed) {
+            $options[] = new Option('', 'framework:none', false);
+        }
         foreach ($allLayouts as $layout) {
             $isSelected = $layout->getId() === $layoutId;
             $options[]  = new Option($layout->getId(), $layout->getName(), $isSelected);
@@ -388,23 +396,10 @@ class Page extends Base
     protected function addLayout(Entity $entity, bool $advancedAllowed): Page
     {
         if (!$advancedAllowed) {
-            return $this->addLayoutHidden($entity);
+            return $this;
         }
 
         return $this->addLayoutTextarea($entity);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addLayoutHidden(Entity $entity): Page
-    {
-        $attribs      = [Html5::ATTR_TYPE => Input::TYPE_HIDDEN];
-        $this->form[] = new Input('layout', 'layout', $entity->getLayout(), [], $attribs);
-
-        return $this;
     }
 
     /**
