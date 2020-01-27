@@ -108,7 +108,7 @@ class Page extends FormAbstract
 
         $jsContent = sprintf(
             "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";",
-            $this->envReader->get(AdminEnv::UPLOAD_CLIENT_ID),
+            $this->envReader->get(AdminEnv::EDITOR_CLIENT_ID),
             Routes::getApiBasePath(),
             '/editor-file-upload'
         );
