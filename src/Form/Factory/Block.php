@@ -229,7 +229,7 @@ class Block extends Base
     protected function addLayout(Entity $entity, bool $advancedAllowed): Block
     {
         if (!$advancedAllowed) {
-            return $this;
+            return $this->addLayoutHidden($entity);
         }
 
         return $this->addLayoutTextarea($entity);

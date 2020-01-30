@@ -396,10 +396,24 @@ class Page extends Base
     protected function addLayout(Entity $entity, bool $advancedAllowed): Page
     {
         if (!$advancedAllowed) {
-            return $this;
+            return $this->addLayoutHidden($entity);
         }
 
         return $this->addLayoutTextarea($entity);
+    }
+
+    /**
+     * @param Entity $entity
+     *
+     * @return $this
+     */
+    protected function addLayoutHidden(Entity $entity): Page
+    {
+        $attribs = [Html5::ATTR_TYPE => Input::TYPE_HIDDEN];
+
+        $this->form[] = new Input('layout', 'layout', $entity->getLayout(), [], $attribs);
+
+        return $this;
     }
 
     /**
