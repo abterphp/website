@@ -150,7 +150,7 @@ class Block extends Base
      */
     protected function addLayoutId(Entity $entity, bool $advancedAllowed): Block
     {
-        if ($advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
+        if (!$advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
             return $this;
         }
 

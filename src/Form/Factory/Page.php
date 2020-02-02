@@ -317,7 +317,7 @@ class Page extends Base
      */
     protected function addLayoutId(Entity $entity, bool $advancedAllowed): Page
     {
-        if ($advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
+        if (!$advancedAllowed && $entity->getId() && !$entity->getLayoutId()) {
             return $this;
         }
 
