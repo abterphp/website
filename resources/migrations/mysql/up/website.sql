@@ -77,6 +77,10 @@ CREATE TABLE `blocks`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
+INSERT INTO `blocks` (`id`, `title`, `identifier`, `body`, `layout_id`, `layout`)
+VALUES (UUID(), 'Safe Mail', 'safe-mail', '', NULL,
+        '<a href="#" class="safe-mail" data-domain="{{ attr/domain }}" data-user="{{ attr/user }}" data-f="{{ attr/f }}"><i class="{{ attr/icon-class }}"></i> <span></span></a>');
+
 --
 -- Table structure and data for table `lists`
 --
@@ -221,7 +225,7 @@ INSERT INTO `pages` (id, identifier, classes, title, meta_description, meta_robo
 VALUES (UUID(), 'index', '', 'New AbterCMS installation',
         'AbterCMS is a security first, simple and flexible open source content management system for both educational and commercial usecases.',
         '', '', '', 'cms, open source', '', '', '', '', 'Hello, World!', NULL, NULL,
-        '<div class="container">{{var/body}}</div>', '', '', '', '', 0);
+        '<div class="container">{{var/body}}</div>', '', '', '', '/assets/js/safe-mail.js', 0);
 
 --
 -- Table structure and data for table `user_groups_page_categories`
