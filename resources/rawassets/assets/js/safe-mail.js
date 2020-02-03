@@ -7,9 +7,9 @@ $(document).ready(function () {
         addr = '';
 
     if (f && window[f]) {
-        addr = window[f](domain) + '@' + window[f](user);
+        addr = window[f](user) + '@' + window[f](domain);
     } else {
-        addr = domain.replace(/\,/g, '') + '@' + user.replace(/\,/g, '');
+        addr = user.replace(/\,/g, '') + '@' + domain.replace(/\,/g, '');
     }
 
     s = s.length > 0 ? s : a;
