@@ -9,6 +9,7 @@ use AbterPhp\Admin\Constant\Env as AdminEnv;
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Config\EnvReader;
+use AbterPhp\Framework\Constant\Session;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Framework\Session\FlashService;
@@ -106,20 +107,32 @@ class Page extends FormAbstract
             return;
         }
 
+        $editorLang = $this->session->get(Session::LANGUAGE_IDENTIFIER);
+
         $jsContent = sprintf(
-            "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";",
+            "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";var editorLang=\"%s\"",
             $this->envReader->get(AdminEnv::EDITOR_CLIENT_ID),
             Routes::getApiBasePath(),
-            '/editor-file-upload'
+            '/editor-file-upload',
+            $editorLang
         );
 
         $styles = $this->getResourceName(static::RESOURCE_DEFAULT);
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/table/ui/trumbowyg.table.css');
+        $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/specialchars/ui/trumbowyg.specialchars.css');
+        $this->assetManager->addCss($styles, '/admin-assets/css/trumbowyg.css');
 
         $footer = $this->getResourceName(static::RESOURCE_FOOTER);
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/jquery/jquery-resizable.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
-        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/langs/hu.js');
+        $this->assetManager->addJs($footer, "/admin-assets/vendor/trumbowyg/langs/${editorLang}.js");
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/base64/trumbowyg.base64.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/cleanpaste/trumbowyg.cleanpaste.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/history/trumbowyg.history.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/preformatted/trumbowyg.preformatted.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/resizimg/trumbowyg.resizimg.js');
+        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/specialchars/trumbowyg.specialchars.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/table/trumbowyg.table.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/upload/trumbowyg.upload.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
