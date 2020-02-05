@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace AbterPhp\Website\Http\Controllers\Admin\Form;
 
-use AbterPhp\Admin\Config\Routes;
-use AbterPhp\Admin\Constant\Env as AdminEnv;
 use AbterPhp\Admin\Http\Controllers\Admin\FormAbstract;
 use AbterPhp\Framework\Assets\AssetManager;
 use AbterPhp\Framework\Config\EnvReader;
@@ -107,23 +105,22 @@ class Page extends FormAbstract
             return;
         }
 
-        $editorLang = $this->session->get(Session::LANGUAGE_IDENTIFIER);
-
-        $jsContent = sprintf(
-            "var clientId=\"%s\";\nvar editorFileUploadPath=\"%s%s\";var editorLang=\"%s\"",
-            $this->envReader->get(AdminEnv::EDITOR_CLIENT_ID),
-            Routes::getApiBasePath(),
-            '/editor-file-upload',
-            $editorLang
-        );
-
         $styles = $this->getResourceName(static::RESOURCE_DEFAULT);
+        $footer = $this->getResourceName(static::RESOURCE_FOOTER);
+
+        // Feature is disabled in favor of the base64 plugin
+        //$editorFileUploadPath = Routes::getApiBasePath() . '/editor-file-upload';
+        //$this->assetManager->addJsVar('clientId', $this->envReader->get(AdminEnv::EDITOR_CLIENT_ID));
+        //$this->assetManager->addJsVar('editorFileUploadPath', $this->envReader->get(AdminEnv::EDITOR_CLIENT_ID));
+
+        $editorLang = $this->session->get(Session::LANGUAGE_IDENTIFIER);
+        $this->assetManager->addJsVar($footer, 'editorLang', $editorLang);
+
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/ui/trumbowyg.css');
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/table/ui/trumbowyg.table.css');
         $this->assetManager->addCss($styles, '/admin-assets/vendor/trumbowyg/plugins/specialchars/ui/trumbowyg.specialchars.css');
         $this->assetManager->addCss($styles, '/admin-assets/css/trumbowyg.css');
 
-        $footer = $this->getResourceName(static::RESOURCE_FOOTER);
         $this->assetManager->addJs($footer, '/admin-assets/vendor/jquery/jquery-resizable.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/trumbowyg.js');
         $this->assetManager->addJs($footer, "/admin-assets/vendor/trumbowyg/langs/${editorLang}.js");
@@ -134,7 +131,8 @@ class Page extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/resizimg/trumbowyg.resizimg.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/specialchars/trumbowyg.specialchars.js');
         $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/table/trumbowyg.table.js');
-        $this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/upload/trumbowyg.upload.js');
+        // Feature is disabled in favor of the base64 plugin
+        //$this->assetManager->addJs($footer, '/admin-assets/vendor/trumbowyg/plugins/upload/trumbowyg.upload.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/editor.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/countable-textarea.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/hideable-container.js');
@@ -144,6 +142,5 @@ class Page extends FormAbstract
         $this->assetManager->addJs($footer, '/admin-assets/js/required.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/validation.js');
         $this->assetManager->addJs($footer, '/admin-assets/js/page.js');
-        $this->assetManager->addJsContent($footer, $jsContent);
     }
 }
