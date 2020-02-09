@@ -152,8 +152,8 @@ class Page extends RepoServiceAbstract
             return $postData;
         }
 
-        $postData['layout_id'] = $postData['layout_id'] ?? $entity->getLayoutId();
-        $postData['layout_id'] = $entity->getLayoutId();
+        $postData['layout_id'] = empty($postData['layout_id']) ? $entity->getLayoutId() : $postData['layout_id'];
+        $postData['layout']    = $entity->getLayout();
 
         return $postData;
     }

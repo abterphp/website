@@ -229,24 +229,10 @@ class Block extends Base
     protected function addLayout(Entity $entity, bool $advancedAllowed): Block
     {
         if (!$advancedAllowed) {
-            return $this->addLayoutHidden($entity);
+            return $this;
         }
 
         return $this->addLayoutTextarea($entity);
-    }
-
-    /**
-     * @param Entity $entity
-     *
-     * @return $this
-     */
-    protected function addLayoutHidden(Entity $entity): Block
-    {
-        $attribs = [Html5::ATTR_TYPE => Input::TYPE_HIDDEN];
-
-        $this->form[] = new Input('layout', 'layout', $entity->getLayout(), [], $attribs);
-
-        return $this;
     }
 
     /**

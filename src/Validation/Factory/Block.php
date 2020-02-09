@@ -35,9 +35,7 @@ class Block extends ValidatorFactory
             ->uuid();
 
         $validator
-            ->field('layout')
-            ->validateEmpty()
-            ->exactlyOne('layout_id');
+            ->field('layout');
 
         return $validator;
     }

@@ -105,30 +105,6 @@ class PageTest extends TestCase
                 ],
                 false,
             ],
-            'invalid-layout-and-layout-id-missing'            => [
-                [
-                ],
-                false,
-            ],
-            'invalid-layout-missing-and-layout-id-empty'      => [
-                [
-                    'layout_id' => '',
-                ],
-                false,
-            ],
-            'invalid-layout-empty-and-layout-id-missing'      => [
-                [
-                    'layout' => '',
-                ],
-                false,
-            ],
-            'invalid-layout-and-layout-id-empty'              => [
-                [
-                    'layout'    => '',
-                    'layout_id' => '',
-                ],
-                false,
-            ],
         ];
     }
 
