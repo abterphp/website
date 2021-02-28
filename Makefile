@@ -13,7 +13,7 @@ build:
 	XDEBUG_MODE=off ./vendor/bin/phpcs -p --colors --cache src
 	XDEBUG_MODE=off ./vendor/bin/phpcs -p --colors --cache --standard=PSR12 tests
 	XDEBUG_MODE=off ./vendor/bin/phpmd src text .phpmd.xml
-	XDEBUG_MODE=off PHAN_DISABLE_XDEBUG_WARN=1 ./vendor/bin/phan --color
+	XDEBUG_MODE=off ./vendor/bin/phan --color
 
 precommit:
 	git diff --cached --name-only --diff-filter=ACM | grep \\.php | xargs -n 1 php -l
@@ -27,4 +27,8 @@ unit:
 coverage:
 	XDEBUG_MODE=coverage ./vendor/bin/phpunit -c phpunit-cov.xml
 
-.PHONY: install update build precommit unit integration coverage
+pull:
+	git pull
+	git submodule update --recursive --remote
+
+.PHONY: install update build precommit unit integration coverage pull
