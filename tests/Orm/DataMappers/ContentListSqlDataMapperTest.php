@@ -2,25 +2,24 @@
 
 declare(strict_types=1);
 
-namespace AbterPhp\Website\Orm\DataMapper;
+namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\ContentList as Entity;
-use AbterPhp\Website\Orm\DataMappers\ContentListSqlDataMapper as DataMapper;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ContentListSqlDataMapperTest extends DataMapperTestCase
 {
-    /** @var DataMapper - System Under Test */
+    /** @var ContentListSqlDataMapper - System Under Test */
     protected $sut;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->sut = new DataMapper($this->readConnectionMock, $this->writeConnectionMock);
+        $this->sut = new ContentListSqlDataMapper($this->readConnectionMock, $this->writeConnectionMock);
     }
 
     public function testAdd()

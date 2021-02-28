@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/abterphp/admin.git",
-                "reference": "3d65e13335b7447a196d1bfa07fe85944e3b33c4"
+                "reference": "7ada397848d1dd3db9fcf9657ec68a23513a4b7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/abterphp/admin/zipball/3d65e13335b7447a196d1bfa07fe85944e3b33c4",
-                "reference": "3d65e13335b7447a196d1bfa07fe85944e3b33c4",
+                "url": "https://api.github.com/repos/abterphp/admin/zipball/7ada397848d1dd3db9fcf9657ec68a23513a4b7e",
+                "reference": "7ada397848d1dd3db9fcf9657ec68a23513a4b7e",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
                 "issues": "https://github.com/abterphp/admin/issues",
                 "source": "https://github.com/abterphp/admin/tree/master"
             },
-            "time": "2021-02-28T12:15:45+00:00"
+            "time": "2021-02-28T12:32:37+00:00"
         },
         {
             "name": "abterphp/framework",

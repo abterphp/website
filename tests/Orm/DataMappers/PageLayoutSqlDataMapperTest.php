@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace AbterPhp\Website\Orm\DataMapper;
+namespace AbterPhp\Website\Orm\DataMappers;
 
 use AbterPhp\Admin\TestCase\Orm\DataMapperTestCase;
 use AbterPhp\Framework\Domain\Entities\IStringerEntity;
 use AbterPhp\Framework\TestDouble\Database\MockStatementFactory;
 use AbterPhp\Website\Domain\Entities\PageLayout;
-use AbterPhp\Website\Orm\DataMappers\PageLayoutSqlDataMapper;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class PageLayoutSqlDataMapperTest extends DataMapperTestCase
