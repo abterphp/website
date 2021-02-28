@@ -22,15 +22,20 @@ class PageCategoryAuthLoaderTest extends QueryTestCase
 
     public function testLoadAll()
     {
-        $sql          = 'SELECT ug.identifier AS v0, pc.identifier AS v1 FROM user_groups_page_categories AS ugpc INNER JOIN page_categories AS pc ON ugpc.page_category_id = pc.id AND pc.deleted_at IS NULL INNER JOIN user_groups AS ug ON ugpc.user_group_id = ug.id AND ug.deleted_at IS NULL'; // phpcs:ignore
+        $sql0         = 'SELECT ug.identifier AS v0, pc.identifier AS v1 FROM user_groups_page_categories AS ugpc INNER JOIN page_categories AS pc ON ugpc.page_category_id = pc.id AND pc.deleted_at IS NULL INNER JOIN user_groups AS ug ON ugpc.user_group_id = ug.id AND ug.deleted_at IS NULL'; // phpcs:ignore
         $valuesToBind = [];
         $returnValue  = [
             ['v0' => 'foo', 'v1' => 'bar'],
             ['v0' => 'foo', 'v1' => 'baz'],
             ['v0' => 'qux', 'v1' => 'quux'],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $valuesToBind, $returnValue);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $valuesToBind, $returnValue);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->loadAll();
 
@@ -39,15 +44,20 @@ class PageCategoryAuthLoaderTest extends QueryTestCase
 
     public function testLoadAllThrowsExceptionIfQueryFails()
     {
-        $errorInfo   = ['FOO123', 1, 'near AS v0, ar.identifier: hello'];
+        $errorInfo = ['FOO123', 1, 'near AS v0, ar.identifier: hello'];
 
         $this->expectException(Database::class);
         $this->expectExceptionCode($errorInfo[1]);
 
-        $sql          = 'SELECT ug.identifier AS v0, pc.identifier AS v1 FROM user_groups_page_categories AS ugpc INNER JOIN page_categories AS pc ON ugpc.page_category_id = pc.id AND pc.deleted_at IS NULL INNER JOIN user_groups AS ug ON ugpc.user_group_id = ug.id AND ug.deleted_at IS NULL'; // phpcs:ignore
+        $sql0         = 'SELECT ug.identifier AS v0, pc.identifier AS v1 FROM user_groups_page_categories AS ugpc INNER JOIN page_categories AS pc ON ugpc.page_category_id = pc.id AND pc.deleted_at IS NULL INNER JOIN user_groups AS ug ON ugpc.user_group_id = ug.id AND ug.deleted_at IS NULL'; // phpcs:ignore
         $valuesToBind = [];
-        $statement    = MockStatementFactory::createErrorStatement($this, $valuesToBind, $errorInfo);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createErrorStatement($this, $valuesToBind, $errorInfo);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $this->sut->loadAll();
     }

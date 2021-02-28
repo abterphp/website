@@ -31,7 +31,7 @@ class Page extends ValidatorFactory
             ->required();
 
         $validator
-            ->field('lead');
+            ->field('lede');
 
         $validator
             ->field('body');

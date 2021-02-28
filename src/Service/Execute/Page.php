@@ -19,6 +19,7 @@ use Cocur\Slugify\Slugify;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Http\Requests\UploadedFile;
 use Opulence\Orm\IUnitOfWork;
+use Opulence\Orm\OrmException;
 use Opulence\Sessions\ISession;
 
 class Page extends RepoServiceAbstract
@@ -96,7 +97,7 @@ class Page extends RepoServiceAbstract
         $identifier = $this->slugify->slugify($identifier);
 
         $classes = $postData['classes'] ?? '';
-        $lead    = $postData['lead'];
+        $lede    = $postData['lede'];
         $body    = $postData['body'];
 
         $isDraft = !empty($postData['is_draft']);
@@ -120,7 +121,7 @@ class Page extends RepoServiceAbstract
             ->setIdentifier($identifier)
             ->setTitle($title)
             ->setClasses($classes)
-            ->setLead($lead)
+            ->setLede($lede)
             ->setBody($body)
             ->setIsDraft($isDraft)
             ->setCategory($category)
@@ -219,13 +220,19 @@ class Page extends RepoServiceAbstract
      * @param string $entityId
      *
      * @return IStringerEntity
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function retrieveEntityWithLayout(string $entityId): IStringerEntity
     {
         $entity = $this->repo->getById($entityId);
 
         $entity = $this->repo->getWithLayout($entity->getIdentifier());
+
+        if ($entity === null) {
+            throw new OrmException(
+                sprintf('page with layout could not be returned, though page was found: "%s"', $entityId)
+            );
+        }
 
         return $entity;
     }

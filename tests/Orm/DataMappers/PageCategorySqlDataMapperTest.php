@@ -31,10 +31,16 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql       = 'INSERT INTO page_categories (id, name, identifier) VALUES (?, ?, ?)'; // phpcs:ignore
-        $values    = [[$nextId, \PDO::PARAM_STR], [$name, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR]];
-        $statement = MockStatementFactory::createWriteStatement($this, $values);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+        $sql0       = 'INSERT INTO page_categories (id, name, identifier) VALUES (?, ?, ?)'; // phpcs:ignore
+        $values     = [[$nextId, \PDO::PARAM_STR], [$name, \PDO::PARAM_STR], [$identifier, \PDO::PARAM_STR]];
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values);
+
+        $this->writeConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
+
         $entity = new PageCategory($nextId, $name, $identifier);
 
         $this->sut->add($entity);
@@ -51,12 +57,16 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $sql0       = 'UPDATE page_categories AS page_categories SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
         $values0    = [[$id, \PDO::PARAM_STR]];
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
         $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
         $values1    = [[$id, \PDO::PARAM_STR]];
         $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
+
+        $this->writeConnectionMock
+            ->expects($this->exactly(2))
+            ->method('prepare')
+            ->withConsecutive([$sql0], [$sql1])
+            ->willReturnOnConsecutiveCalls($statement0, $statement1);
 
         $entity = new PageCategory($id, $name, $identifier);
 
@@ -69,7 +79,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id'; // phpcs:ignore
+        $sql0         = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -78,8 +88,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'identifier' => $identifier,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getAll();
 
@@ -92,7 +107,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id ORDER BY pc.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) GROUP BY pc.id ORDER BY pc.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -101,8 +116,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'identifier' => $identifier,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
@@ -118,7 +138,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $orders     = ['pc.identifier ASC'];
         $conditions = ['pc.identifier LIKE \'abc%\'', 'pc.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.identifier LIKE \'abc%\') AND (pc.identifier LIKE \'%bca\') GROUP BY pc.id ORDER BY pc.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.identifier LIKE \'abc%\') AND (pc.identifier LIKE \'%bca\') GROUP BY pc.id ORDER BY pc.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -127,8 +147,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'identifier' => $identifier,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
 
@@ -141,7 +166,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
+        $sql0         = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -150,8 +175,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'identifier' => $identifier,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getById($id);
 
@@ -167,7 +197,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $ugId0 = '92dcb09a-eb3b-49b8-96c2-1a37818c780c';
         $ugId1 = '2f962fe9-7e5b-4e06-a02f-bcd68152a83c';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
+        $sql0         = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (pc.id = :category_id) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['category_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -177,8 +207,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'user_group_ids' => "$ugId0,$ugId1",
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getById($id);
 
@@ -191,7 +226,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $name       = 'bar';
 
-        $sql          = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (identifier = :identifier) GROUP BY pc.id'; // phpcs:ignore
+        $sql0         = 'SELECT pc.id, pc.name, pc.identifier, GROUP_CONCAT(ugpc.user_group_id) AS user_group_ids FROM page_categories AS pc LEFT JOIN user_groups_page_categories AS ugpc ON ugpc.page_category_id = pc.id WHERE (pc.deleted_at IS NULL) AND (identifier = :identifier) GROUP BY pc.id'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
@@ -200,8 +235,13 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
                 'identifier' => $identifier,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 
@@ -221,14 +261,18 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
             [$id, \PDO::PARAM_STR],
         ];
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
         $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
         $values1    = [
             [$id, \PDO::PARAM_STR],
         ];
         $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
+
+        $this->writeConnectionMock
+            ->expects($this->exactly(2))
+            ->method('prepare')
+            ->withConsecutive([$sql0], [$sql1])
+            ->willReturnOnConsecutiveCalls($statement0, $statement1);
 
         $entity = new PageCategory($id, $name, $identifier);
 
@@ -237,7 +281,7 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
 
     public function testUpdateWithUserGroup()
     {
-        $id         = 'a441487b-0bee-4137-8f76-c2a2b8d8c058';
+        $pcId       = 'a441487b-0bee-4137-8f76-c2a2b8d8c058';
         $identifier = 'bar';
         $name       = 'foo';
         $ugpc0      = '6ac51550-d682-44b3-906e-0a8dac6f555f';
@@ -253,37 +297,39 @@ class PageCategorySqlDataMapperTest extends DataMapperTestCase
         $values0    = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
-            [$id, \PDO::PARAM_STR],
+            [$pcId, \PDO::PARAM_STR],
         ];
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
         $sql1       = 'DELETE FROM user_groups_page_categories WHERE (page_category_id = ?)'; // phpcs:ignore
         $values1    = [
-            [$id, \PDO::PARAM_STR],
+            [$pcId, \PDO::PARAM_STR],
         ];
         $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
 
         $sql2       = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
         $values2    = [
             [$ugpc0, \PDO::PARAM_STR],
             [$userGroups[0]->getId(), \PDO::PARAM_STR],
-            [$id, \PDO::PARAM_STR],
+            [$pcId, \PDO::PARAM_STR],
         ];
         $statement2 = MockStatementFactory::createWriteStatement($this, $values2);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql2, $statement2, 2);
 
         $sql3       = 'INSERT INTO user_groups_page_categories (id, user_group_id, page_category_id) VALUES (?, ?, ?)'; // phpcs:ignore
         $values3    = [
             [$ugpc1, \PDO::PARAM_STR],
             [$userGroups[1]->getId(), \PDO::PARAM_STR],
-            [$id, \PDO::PARAM_STR],
+            [$pcId, \PDO::PARAM_STR],
         ];
         $statement3 = MockStatementFactory::createWriteStatement($this, $values3);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql3, $statement3, 3);
 
-        $entity = new PageCategory($id, $name, $identifier, $userGroups);
+        $this->writeConnectionMock
+            ->expects($this->exactly(4))
+            ->method('prepare')
+            ->withConsecutive([$sql0], [$sql1], [$sql2], [$sql3])
+            ->willReturnOnConsecutiveCalls($statement0, $statement1, $statement2, $statement3);
+
+        $entity = new PageCategory($pcId, $name, $identifier, $userGroups);
 
         $this->sut->update($entity);
     }

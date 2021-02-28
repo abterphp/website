@@ -23,7 +23,7 @@ class Detailed implements IBuilder
 
     const MORE_BTN_CONTAINER_CLASS = 'more-btn-container';
 
-    const CLASS_LEAD = 'detailed-lead';
+    const CLASS_LEDE = 'detailed-lede';
 
     /** @var IEventDispatcher */
     protected $dispatcher;
@@ -128,7 +128,7 @@ class Detailed implements IBuilder
         $url = $this->urlGenerator->createFromName(Route::FALLBACK, $page->getIdentifier());
 
         $item[] = $this->buildPageTitle($page, $url);
-        $item[] = $this->buildPageLead($page);
+        $item[] = $this->buildPageLede($page);
         $item[] = $this->buildPageButtons($url);
 
         return $item;
@@ -152,18 +152,18 @@ class Detailed implements IBuilder
      *
      * @return Component
      */
-    protected function buildPageLead(Entity $page): Component
+    protected function buildPageLede(Entity $page): Component
     {
-        $lead = new Component(null, [], [Html5::ATTR_CLASS => static::CLASS_LEAD], Html5::TAG_DIV);
-        foreach (explode("\n", $page->getLead()) as $paragraph) {
+        $lede = new Component(null, [], [Html5::ATTR_CLASS => static::CLASS_LEDE], Html5::TAG_DIV);
+        foreach (explode("\n", $page->getLede()) as $paragraph) {
             if (trim($paragraph) === '') {
                 continue;
             }
 
-            $lead[] = new Component($paragraph, [], [], Html5::TAG_P);
+            $lede[] = new Component($paragraph, [], [], Html5::TAG_P);
         }
 
-        return $lead;
+        return $lede;
     }
 
     /**

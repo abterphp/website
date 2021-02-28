@@ -79,15 +79,15 @@ class DetailedTest extends TestCase
         $this->assertStringContainsString($pageTitle, $body);
     }
 
-    public function testBuildOnePageCanBuildLead()
+    public function testBuildOnePageCanBuildLede()
     {
         $categoryIdentifier = 'foo';
         $pageIdentifier     = 'bar';
         $pageTitle          = 'Bar';
-        $lead               = "foo\nbar\n";
+        $lede               = "foo\nbar\n";
 
         $category = new PageCategory('', '', $categoryIdentifier);
-        $page     = new Page('', $pageIdentifier, $pageTitle, $lead, '', '', false, $category);
+        $page     = new Page('', $pageIdentifier, $pageTitle, $lede, '', '', false, $category);
 
         $actualResult = $this->sut->build([$page]);
 
@@ -100,7 +100,7 @@ class DetailedTest extends TestCase
 
         $body = $templates['body'];
 
-        $this->assertStringContainsString('class="detailed-lead"', $body);
+        $this->assertStringContainsString('class="detailed-lede"', $body);
     }
 
     public function testGetIdentifier()

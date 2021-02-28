@@ -68,7 +68,7 @@ class BlockLayout extends RepoServiceAbstract
         assert($entity instanceof Entity, new \InvalidArgumentException());
 
         $name = $postData['name'];
-        
+
         $identifier = $postData['identifier'] ?? $entity->getIdentifier();
         $identifier = $identifier ?: $name;
         $identifier = $this->slugify->slugify($identifier);

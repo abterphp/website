@@ -34,7 +34,7 @@ class PageTest extends TestCase
         $this->assertStringContainsString('<div class="hidable">', $html);
         $this->assertStringContainsString('filter-identifier', $html);
         $this->assertStringContainsString('filter-title', $html);
-        $this->assertStringContainsString('filter-lead', $html);
+        $this->assertStringContainsString('filter-lede', $html);
         $this->assertStringContainsString('filter-body', $html);
     }
 }

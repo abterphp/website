@@ -107,7 +107,7 @@ class BlockTest extends TestCase
             new BlockLayout('11325e40-1b6b-4820-8d4b-548a572acd02', 'BL 129', 'bl-129', 'BL 129 B'),
         ];
 
-        $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
+        $this->enforcerMock->expects($this->once())->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
         /** @var Entity|MockObject $entityMock */

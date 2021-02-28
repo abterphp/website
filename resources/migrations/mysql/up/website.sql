@@ -195,7 +195,7 @@ CREATE TABLE `pages`
     `meta_og_title`       varchar(255)        NOT NULL,
     `meta_og_image`       varchar(255)        NOT NULL,
     `meta_og_description` mediumtext          NOT NULL,
-    `lead`                mediumtext          NOT NULL,
+    `lede`                mediumtext          NOT NULL,
     `body`                mediumtext          NOT NULL,
     `is_draft`            tinyint(1) unsigned NOT NULL,
     `category_id`         char(36)            NULL,
@@ -220,7 +220,7 @@ CREATE TABLE `pages`
 
 INSERT INTO `pages` (id, identifier, classes, title, meta_description, meta_robots, meta_author, meta_copyright,
                      meta_keywords,
-                     meta_og_title, meta_og_image, meta_og_description, `lead`, body, category_id, layout_id, layout,
+                     meta_og_title, meta_og_image, meta_og_description, lede, body, category_id, layout_id, layout,
                      header, footer, css_files, js_files, is_draft)
 VALUES (UUID(), 'index', '', 'New AbterCMS installation',
         'AbterCMS is a security first, simple and flexible open source content management system for both educational and commercial usecases.',

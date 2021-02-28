@@ -226,7 +226,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             'identifier'  => [$entity->getIdentifier(), \PDO::PARAM_STR],
             'title'       => [$entity->getTitle(), \PDO::PARAM_STR],
             'classes'     => [$entity->getClasses(), \PDO::PARAM_STR],
-            'lead'        => [$entity->getLead(), \PDO::PARAM_STR],
+            'lede'        => [$entity->getLede(), \PDO::PARAM_STR],
             'body'        => [$entity->getBody(), \PDO::PARAM_STR],
             'is_draft'    => [$entity->isDraft(), \PDO::PARAM_BOOL],
             'category_id' => [$categoryId, $categoryIdType],
@@ -301,7 +301,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
     {
         $meta     = $this->loadMeta($hash);
         $assets   = $this->loadAssets($hash);
-        $lead     = $hash['lead'] ?? '';
+        $lede     = $hash['lede'] ?? '';
         $body     = $hash['body'] ?? '';
         $classes  = $hash['classes'] ?? '';
         $category = $this->loadCategory($hash);
@@ -313,7 +313,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
             $hash['identifier'],
             $hash['title'],
             $classes,
-            $lead,
+            $lede,
             $body,
             (bool)$hash['is_draft'],
             $category,
@@ -454,7 +454,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.id',
                 'pages.identifier',
                 'pages.title',
-                'pages.lead',
+                'pages.lede',
                 'pages.is_draft',
                 'page_categories.id AS category_id',
                 'page_categories.identifier AS category_identifier',
@@ -503,7 +503,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.identifier',
                 'pages.title',
                 'pages.classes',
-                'pages.lead',
+                'pages.lede',
                 'pages.body',
                 'pages.is_draft',
                 'pages.category_id',
@@ -540,7 +540,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
                 'pages.identifier',
                 'pages.title',
                 "CONCAT(layouts.classes, ' ', pages.classes) AS classes",
-                'pages.lead',
+                'pages.lede',
                 'pages.body',
                 'pages.is_draft',
                 'pages.category_id',

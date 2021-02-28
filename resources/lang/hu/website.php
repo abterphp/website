@@ -93,8 +93,8 @@ return [
     'pageKeywordsHelp'      => 'Jelszóval elválasztott kifejezések listája. A Google teljesen figyelmen kívül hagyja az itt megadottakat, más keresőmotorok néha használják. (pl. Baidu)',
     'pageLayoutLabel'       => 'Egyedi szerkezet',
     'pageLayoutIdLabel'     => 'Létező szerkezet',
-    'pageLead'              => 'Lead (bevezető)',
-    'pageLeadHelp'          => 'Megjelenik a lista oldalakon, az RSS feedben és a tartalom előtt is, vastaggal szedve.',
+    'pageLede'              => 'Lead (bevezető)', // This is not a typo, Lead is a reserved word in MySQL therefore we avoid using it where possible
+    'pageLedeHelp'          => 'Megjelenik a lista oldalakon, az RSS feedben és a tartalom előtt is, vastaggal szedve.',
     'pageMetaBtn'           => 'Meta adatok',
     'pageOGDescription'     => 'OG leírás',
     'pageOGDescriptionHelp' => 'Leírás a közösségi oldalakon való megosztáshoz.',

@@ -114,7 +114,7 @@ class Page extends Base
             ->addIdentifier($entity)
             ->addDescription($entity)
             ->addMeta($entity)
-            ->addLead($entity)
+            ->addLede($entity)
             ->addBody($entity)
             ->addCategoryId($entity)
             ->addLayoutId($entity, $advancedAllowed)
@@ -211,12 +211,12 @@ class Page extends Base
      *
      * @return $this
      */
-    protected function addLead(Entity $entity): Page
+    protected function addLede(Entity $entity): Page
     {
         $attribs = [Html5::ATTR_ROWS => '10'];
-        $input   = new Textarea('lead', 'lead', $entity->getLead(), [], $attribs);
-        $label   = new Label('lead', 'website:pageLead');
-        $help    = new Help('website:pageLeadHelp');
+        $input   = new Textarea('lede', 'lede', $entity->getLede(), [], $attribs);
+        $label   = new Label('lede', 'website:pageLede');
+        $help    = new Help('website:pageLedeHelp');
 
         $this->form[] = new FormGroup($input, $label, $help);
 

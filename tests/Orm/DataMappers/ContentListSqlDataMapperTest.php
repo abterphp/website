@@ -36,8 +36,8 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $withHtml      = false;
         $withClasses   = false;
 
-        $sql       = 'INSERT INTO lists (id, name, identifier, classes, protected, with_links, with_label_links, with_html, with_images, with_classes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values    = [
+        $sql0       = 'INSERT INTO lists (id, name, identifier, classes, protected, with_links, with_label_links, with_html, with_images, with_classes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values     = [
             [$nextId, \PDO::PARAM_STR],
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
@@ -49,8 +49,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
             [$withImages, \PDO::PARAM_BOOL],
             [$withClasses, \PDO::PARAM_BOOL],
         ];
-        $statement = MockStatementFactory::createWriteStatement($this, $values);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values);
+
+        $this->writeConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $entity = new Entity(
             $nextId,
@@ -77,12 +82,16 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $sql0       = 'UPDATE lists AS lists SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
         $values0    = [[$id, \PDO::PARAM_STR]];
         $statement0 = MockStatementFactory::createWriteStatement($this, $values0);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql0, $statement0, 0);
 
         $sql1       = 'UPDATE list_items AS list_items SET deleted_at = NOW() WHERE (list_id = ?) AND (deleted_at IS NOT NULL)'; // phpcs:ignore
         $values1    = [[$id, \PDO::PARAM_STR]];
         $statement1 = MockStatementFactory::createWriteStatement($this, $values1);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql1, $statement1, 1);
+
+        $this->writeConnectionMock
+            ->expects($this->exactly(2))
+            ->method('prepare')
+            ->withConsecutive([$sql0], [$sql1])
+            ->willReturnOnConsecutiveCalls($statement0, $statement1);
 
         $entity = new Entity($id, '', '', '', false, false, false, false, false, false);
 
@@ -102,7 +111,7 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $withHtml      = false;
         $withClasses   = false;
 
-        $sql          = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL)'; // phpcs:ignore
+        $sql0         = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -118,8 +127,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
                 'with_classes'     => $withClasses,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getAll();
 
@@ -139,7 +153,7 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $withHtml      = false;
         $withClasses   = false;
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) ORDER BY name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) ORDER BY name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -155,8 +169,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
                 'with_classes'     => $withClasses,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
@@ -179,7 +198,7 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['lists.identifier ASC'];
         $conditions = ['lists.identifier LIKE \'abc%\'', 'lists.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.identifier LIKE \'abc%\') AND (lists.identifier LIKE \'%bca\') ORDER BY lists.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.identifier LIKE \'abc%\') AND (lists.identifier LIKE \'%bca\') ORDER BY lists.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -195,8 +214,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
                 'with_classes'     => $withClasses,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
 
@@ -216,7 +240,7 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $withHtml      = false;
         $withClasses   = false;
 
-        $sql          = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.id = :id)'; // phpcs:ignore
+        $sql0         = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.id = :id)'; // phpcs:ignore
         $values       = ['id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -232,8 +256,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
                 'with_classes'     => $withClasses,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getById($id);
 
@@ -253,7 +282,7 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
         $withHtml      = false;
         $withClasses   = false;
 
-        $sql          = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.identifier = :identifier)'; // phpcs:ignore
+        $sql0         = 'SELECT lists.id, lists.name, lists.identifier, lists.classes, lists.protected, lists.with_links, lists.with_label_links, lists.with_html, lists.with_images, lists.with_classes FROM lists WHERE (lists.deleted_at IS NULL) AND (lists.identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => [$identifier, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -269,8 +298,13 @@ class ContentListSqlDataMapperTest extends DataMapperTestCase
                 'with_classes'     => $withClasses,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 

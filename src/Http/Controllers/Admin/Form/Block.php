@@ -14,6 +14,7 @@ use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Domain\Entities\Block as Entity;
 use AbterPhp\Website\Form\Factory\Block as FormFactory;
 use AbterPhp\Website\Orm\BlockRepo as Repo;
+use League\Flysystem\FilesystemException;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
@@ -96,7 +97,7 @@ class Block extends FormAbstract
     /**
      * @param IStringerEntity|null $entity
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemException
      */
     protected function addCustomAssets(?IStringerEntity $entity = null)
     {

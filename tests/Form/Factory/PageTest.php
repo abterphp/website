@@ -7,8 +7,8 @@ namespace AbterPhp\Website\Form\Factory;
 use AbterPhp\Framework\Html\INode;
 use AbterPhp\Framework\I18n\ITranslator;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
-use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Domain\Entities\PageCategory;
+use AbterPhp\Website\Domain\Entities\PageLayout;
 use AbterPhp\Website\Form\Factory\Page\Assets as AssetsFactory;
 use AbterPhp\Website\Form\Factory\Page\Meta as MetaFactory;
 use AbterPhp\Website\Orm\PageCategoryRepo;
@@ -56,13 +56,13 @@ class PageTest extends TestCase
         $this->translatorMock = $this->createMock(ITranslator::class);
         $this->translatorMock->expects($this->any())->method('translate')->willReturnArgument(0);
 
-        $categories = [new PageCategory('', '', '')];
+        $categories             = [new PageCategory('', '', '')];
         $this->categoryRepoMock = $this->createMock(PageCategoryRepo::class);
         $this->categoryRepoMock->expects($this->any())->method('getAll')->willReturn($categories);
 
         $this->layoutRepoMock = $this->createMock(PageLayoutRepo::class);
 
-        $metaNodes = [$this->createMock(INode::class)];
+        $metaNodes             = [$this->createMock(INode::class)];
         $this->metaFactoryMock = $this->createMock(MetaFactory::class);
         $this->metaFactoryMock->expects($this->any())->method('create')->willReturn($metaNodes);
 
@@ -131,7 +131,7 @@ class PageTest extends TestCase
         $identifier  = 'blah';
         $title       = 'Blah!';
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
-        $lead        = "blah tldr;";
+        $lede        = "blah tldr;";
         $body        = "Blah!\n\n...and more blah...";
         $isDraft     = false;
         $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
@@ -144,7 +144,7 @@ class PageTest extends TestCase
             new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'BL 129', 'bl-129', '', 'BL 129 B', null),
         ];
 
-        $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
+        $this->enforcerMock->expects($this->once())->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
         /** @var Entity|MockObject $entityMock */
@@ -153,7 +153,7 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
-        $entityMock->expects($this->any())->method('getLead')->willReturn($lead);
+        $entityMock->expects($this->any())->method('getLede')->willReturn($lede);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
         $entityMock->expects($this->any())->method('isDraft')->willReturn($isDraft);
         $entityMock->expects($this->any())->method('getCategory')->willReturn($category);
@@ -188,7 +188,7 @@ class PageTest extends TestCase
         $identifier  = 'blah';
         $title       = 'Blah!';
         $description = 'Blah and blah and more blah, but only reasonable amount of blah';
-        $lead        = "blah tldr;";
+        $lede        = "blah tldr;";
         $body        = "Blah!\n\n...and more blah...";
         $isDraft     = true;
         $category    = new PageCategory('bb031692-7cb2-468b-9cfd-2a40136c5165', '', '');
@@ -201,7 +201,7 @@ class PageTest extends TestCase
             new PageLayout('bcd75cae-8837-4717-96fb-db09cab39ef4', 'BL 129', 'bl-129', '', 'BL 129 B', null),
         ];
 
-        $this->enforcerMock->expects($this->at(0))->method('enforce')->willReturn($advancedAllowed);
+        $this->enforcerMock->expects($this->once())->method('enforce')->willReturn($advancedAllowed);
         $this->layoutRepoMock->expects($this->any())->method('getAll')->willReturn($layouts);
 
         $this->assetsFactoryMock->expects($this->any())->method('create')->willReturn([]);
@@ -212,7 +212,7 @@ class PageTest extends TestCase
         $entityMock->expects($this->any())->method('getId')->willReturn($entityId);
         $entityMock->expects($this->any())->method('getIdentifier')->willReturn($identifier);
         $entityMock->expects($this->any())->method('getTitle')->willReturn($title);
-        $entityMock->expects($this->any())->method('getLead')->willReturn($lead);
+        $entityMock->expects($this->any())->method('getLede')->willReturn($lede);
         $entityMock->expects($this->any())->method('getBody')->willReturn($body);
         $entityMock->expects($this->any())->method('isDraft')->willReturn($isDraft);
         $entityMock->expects($this->any())->method('getCategory')->willReturn($category);

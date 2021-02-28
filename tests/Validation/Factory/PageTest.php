@@ -50,7 +50,7 @@ class PageTest extends TestCase
                 [
                     'identifier'  => 'foo',
                     'title'       => 'Foo',
-                    'lead'        => 'bar',
+                    'lede'        => 'bar',
                     'body'        => 'baz',
                     'is_draft'    => '1',
                     'category_id' => '5c032f90-bf10-4a77-81aa-b0b1254a8f66',

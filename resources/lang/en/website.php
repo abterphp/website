@@ -93,8 +93,8 @@ return [
     'pageKeywordsHelp'      => 'Comma separated expressions. Google ignores this option completely. Other search engines might still use it.',
     'pageLayoutLabel'       => 'Custom Layout',
     'pageLayoutIdLabel'     => 'Existing Layout',
-    'pageLead'              => 'Lead',
-    'pageLeadHelp'          => 'It\'s displayed on list pages, in RSS feeds and before the body in bold.',
+    'pageLede'              => 'Lead', // This is not a typo, Lead is a reserved word in MySQL therefore we avoid using it where possible
+    'pageLedeHelp'          => 'It\'s displayed on list pages, in RSS feeds and before the body in bold.',
     'pageMetaBtn'           => 'Show Advanced Options',
     'pageOGDescription'     => 'OG Description',
     'pageOGDescriptionHelp' => 'Description used when sharing the page in various social media sites.',

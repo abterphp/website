@@ -63,6 +63,8 @@ class Index
             return null;
         }
 
+        assert($page instanceof Entity);
+
         $pageEvent = new PageViewed($page, $userGroupIdentifiers);
 
         $this->eventDispatcher->dispatch(Event::PAGE_VIEWED, $pageEvent);
@@ -71,12 +73,12 @@ class Index
         }
 
         $page      = $pageEvent->getPage();
-        $leadLines = StringHelper::wrapByLines($page->getLead(), Html5::TAG_P);
-        $lead      = StringHelper::wrapInTag($leadLines, Html5::TAG_DIV, [Html5::ATTR_CLASS => 'lead']);
+        $ledeLines = StringHelper::wrapByLines($page->getLede(), Html5::TAG_P);
+        $lede      = StringHelper::wrapInTag($ledeLines, Html5::TAG_DIV, [Html5::ATTR_CLASS => 'lede']);
 
         $vars      = [
             'title' => $page->getTitle(),
-            'lead'  => $lead,
+            'lede'  => $lede,
         ];
         $templates = [
             'body'   => $page->getBody(),

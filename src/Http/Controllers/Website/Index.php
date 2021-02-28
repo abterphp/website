@@ -15,6 +15,7 @@ use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use AbterPhp\Website\Service\Website\Index as IndexService;
+use League\Flysystem\FilesystemException;
 use Opulence\Http\Responses\Response;
 use Opulence\Http\Responses\ResponseHeaders;
 use Opulence\Routing\Urls\UrlGenerator;
@@ -148,7 +149,7 @@ class Index extends ControllerAbstract
     /**
      * @param Assets|null $assets
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemException
      */
     protected function setAssetsVars(?Assets $assets)
     {
@@ -180,7 +181,7 @@ class Index extends ControllerAbstract
     /**
      * @param LayoutAssets|null $assets
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemException
      */
     protected function setLayoutAssetsVars(?LayoutAssets $assets)
     {

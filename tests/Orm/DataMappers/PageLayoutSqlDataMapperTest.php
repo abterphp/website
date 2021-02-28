@@ -31,16 +31,21 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $classes    = 'tsa';
         $body       = 'bar';
 
-        $sql       = 'INSERT INTO page_layouts (id, name, identifier, classes, body) VALUES (?, ?, ?, ?, ?)'; // phpcs:ignore
-        $values    = [
+        $sql0       = 'INSERT INTO page_layouts (id, name, identifier, classes, body) VALUES (?, ?, ?, ?, ?)'; // phpcs:ignore
+        $values     = [
             [$nextId, \PDO::PARAM_STR],
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$classes, \PDO::PARAM_STR],
             [$body, \PDO::PARAM_STR],
         ];
-        $statement = MockStatementFactory::createWriteStatement($this, $values);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values);
+
+        $this->writeConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $entity = new PageLayout($nextId, $name, $identifier, $classes, $body, null);
 
@@ -56,10 +61,15 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $identifier = 'foo';
         $body       = 'bar';
 
-        $sql       = 'UPDATE page_layouts AS page_layouts SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
-        $values    = [[$id, \PDO::PARAM_STR]];
-        $statement = MockStatementFactory::createWriteStatement($this, $values);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+        $sql0       = 'UPDATE page_layouts AS page_layouts SET deleted_at = NOW() WHERE (id = ?)'; // phpcs:ignore
+        $values     = [[$id, \PDO::PARAM_STR]];
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values);
+
+        $this->writeConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $entity = new PageLayout($id, $name, $identifier, '', $body, null);
 
@@ -78,7 +88,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL)'; // phpcs:ignore
+        $sql0         = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL)'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -93,8 +103,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getAll();
 
@@ -113,7 +128,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) ORDER BY page_layouts.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) ORDER BY page_layouts.name ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -128,8 +143,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, [], [], []);
 
@@ -151,7 +171,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $orders     = ['page_layouts.identifier ASC'];
         $conditions = ['page_layouts.identifier LIKE \'abc%\'', 'page_layouts.identifier LIKE \'%bca\''];
 
-        $sql          = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
+        $sql0         = 'SELECT SQL_CALC_FOUND_ROWS page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.identifier LIKE \'abc%\') AND (page_layouts.identifier LIKE \'%bca\') ORDER BY page_layouts.identifier ASC LIMIT 10 OFFSET 0'; // phpcs:ignore
         $values       = [];
         $expectedData = [
             [
@@ -166,8 +186,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getPage(0, 10, $orders, $conditions, []);
 
@@ -186,7 +211,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
+        $sql0         = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (page_layouts.id = :layout_id)'; // phpcs:ignore
         $values       = ['layout_id' => [$id, \PDO::PARAM_STR]];
         $expectedData = [
             [
@@ -201,8 +226,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getById($id);
 
@@ -221,7 +251,7 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql          = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
+        $sql0         = 'SELECT page_layouts.id, page_layouts.name, page_layouts.identifier, page_layouts.classes, page_layouts.body, page_layouts.header, page_layouts.footer, page_layouts.css_files, page_layouts.js_files FROM page_layouts WHERE (page_layouts.deleted_at IS NULL) AND (identifier = :identifier)'; // phpcs:ignore
         $values       = ['identifier' => $identifier];
         $expectedData = [
             [
@@ -236,8 +266,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
                 'js_files'   => $jsFiles,
             ],
         ];
-        $statement    = MockStatementFactory::createReadStatement($this, $values, $expectedData);
-        MockStatementFactory::prepare($this, $this->readConnectionMock, $sql, $statement);
+        $statement0   = MockStatementFactory::createReadStatement($this, $values, $expectedData);
+
+        $this->readConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $actualResult = $this->sut->getByIdentifier($identifier);
 
@@ -256,8 +291,8 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
         $cssFiles   = 'zar';
         $jsFiles    = 'boi';
 
-        $sql       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, classes = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
-        $values    = [
+        $sql0       = 'UPDATE page_layouts AS page_layouts SET name = ?, identifier = ?, classes = ?, body = ?, header = ?, footer = ?, css_files = ?, js_files = ? WHERE (id = ?) AND (deleted_at IS NULL)'; // phpcs:ignore
+        $values     = [
             [$name, \PDO::PARAM_STR],
             [$identifier, \PDO::PARAM_STR],
             [$classes, \PDO::PARAM_STR],
@@ -268,8 +303,13 @@ class PageLayoutSqlDataMapperTest extends DataMapperTestCase
             [$jsFiles, \PDO::PARAM_STR],
             [$id, \PDO::PARAM_STR],
         ];
-        $statement = MockStatementFactory::createWriteStatement($this, $values);
-        MockStatementFactory::prepare($this, $this->writeConnectionMock, $sql, $statement);
+        $statement0 = MockStatementFactory::createWriteStatement($this, $values);
+
+        $this->writeConnectionMock
+            ->expects($this->once())
+            ->method('prepare')
+            ->with($sql0)
+            ->willReturn($statement0);
 
         $assets = new PageLayout\Assets($identifier, $header, $footer, (array)$cssFiles, (array)$jsFiles);
         $entity = new PageLayout($id, $name, $identifier, $classes, $body, $assets);

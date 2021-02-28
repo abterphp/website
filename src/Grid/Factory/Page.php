@@ -145,7 +145,7 @@ class Page extends BaseFactory
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @return callable[]
      */
@@ -153,9 +153,9 @@ class Page extends BaseFactory
     {
         $urlGenerator = $this->urlGenerator;
 
-        // @phan-suppress-next-line PhanUnusedVariable
+        // @suppress PhanUnusedVariable
         $hrefClosure = function ($attribute, Entity $entity) use ($urlGenerator) {
-            // @phan-suppress-next-line PhanTypeMismatchArgument
+            // @suppress PhanTypeMismatchArgument
             return $urlGenerator->createFromName(Route::FALLBACK, $entity->getIdentifier());
         };
 

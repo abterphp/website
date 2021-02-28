@@ -12,6 +12,7 @@ use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Domain\Entities\PageCategory as Entity;
 use AbterPhp\Website\Form\Factory\PageCategory as FormFactory;
 use AbterPhp\Website\Orm\PageCategoryRepo as Repo;
+use League\Flysystem\FilesystemException;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
@@ -84,7 +85,7 @@ class PageCategory extends FormAbstract
     /**
      * @param IStringerEntity|null $entity
      *
-     * @throws \League\Flysystem\FileNotFoundException
+     * @throws FilesystemException
      */
     protected function addCustomAssets(?IStringerEntity $entity = null)
     {

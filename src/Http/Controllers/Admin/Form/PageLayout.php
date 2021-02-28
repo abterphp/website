@@ -12,6 +12,7 @@ use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Domain\Entities\PageLayout as Entity;
 use AbterPhp\Website\Form\Factory\PageLayout as FormFactory;
 use AbterPhp\Website\Orm\PageLayoutRepo as Repo;
+use League\Flysystem\FilesystemException;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
@@ -83,6 +84,8 @@ class PageLayout extends FormAbstract
 
     /**
      * @param IStringerEntity|null $entity
+     *
+     * @throws FilesystemException
      */
     protected function addCustomAssets(?IStringerEntity $entity = null)
     {
