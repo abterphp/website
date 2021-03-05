@@ -33,10 +33,10 @@
     {{! $header !}}
     {{! $postHeader !}}
 
-    <% if ($layoutCss) %>
+    <% if ($layout) %>
     {{! assetCss($layout) !}}
     <% endif %>
-    <% if ($pageCss) %>
+    <% if ($page) %>
     {{! assetCss($page) !}}
     <% endif %>
 </head>
@@ -49,10 +49,10 @@
     {{! $postFooter !}}
 
     <!-- Scripts Starts -->
-    <% if ($layoutJs) %>
+    <% if ($layout) %>
     {{! assetJs($layout) !}}
     <% endif %>
-    <% if ($pageJs) %>
+    <% if ($page) %>
     {{! assetJs($page) !}}
     <% endif %>
     <!-- Scripts Ends -->
