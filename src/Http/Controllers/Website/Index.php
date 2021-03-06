@@ -11,18 +11,25 @@ use AbterPhp\Framework\Http\Controllers\ControllerAbstract;
 use AbterPhp\Framework\Session\FlashService;
 use AbterPhp\Website\Constant\Env;
 use AbterPhp\Website\Constant\Route;
+use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Domain\Entities\Page\Assets;
 use AbterPhp\Website\Domain\Entities\Page\Meta;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use AbterPhp\Website\Service\Website\Index as IndexService;
+use Casbin\Exceptions\CasbinException;
 use League\Flysystem\FilesystemException;
 use Opulence\Http\Responses\Response;
 use Opulence\Http\Responses\ResponseHeaders;
+use Opulence\Orm\OrmException;
 use Opulence\Routing\Urls\UrlGenerator;
 use Opulence\Sessions\ISession;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Index extends ControllerAbstract
 {
+    const ERROR = 'error';
+
     /** @var ISession */
     protected $session;
 
@@ -45,6 +52,7 @@ class Index extends ControllerAbstract
      * Index constructor.
      *
      * @param FlashService $flashService
+     * @param LoggerInterface $logger
      * @param ISession     $session
      * @param IndexService $indexService
      * @param UrlGenerator $urlGenerator
@@ -53,6 +61,7 @@ class Index extends ControllerAbstract
      */
     public function __construct(
         FlashService $flashService,
+        LoggerInterface $logger,
         ISession $session,
         IndexService $indexService,
         UrlGenerator $urlGenerator,
@@ -67,15 +76,14 @@ class Index extends ControllerAbstract
         $this->baseUrl   = $envReader->get(Env::WEBSITE_BASE_URL);
         $this->siteTitle = $envReader->get(Env::WEBSITE_SITE_TITLE);
 
-        parent::__construct($flashService);
+        parent::__construct($flashService, $logger);
     }
 
     /**
      * Shows the homepage
      *
      * @return Response
-     * @throws \Opulence\Routing\Urls\URLException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -88,16 +96,28 @@ class Index extends ControllerAbstract
      * @param string $identifier
      *
      * @return Response
-     * @throws \Opulence\Routing\Urls\URLException
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function fallback(string $identifier): Response
     {
         $this->view = $this->viewFactory->createView('contents/frontend/page');
 
-        $page = $this->indexService->getRenderedPage($identifier, $this->getUserGroupIdentifiers());
-        if (null === $page) {
-            return $this->notFound();
+        try {
+            $page = $this->indexService->getRenderedPage($identifier, $this->getUserGroupIdentifiers());
+        } catch (OrmException $e) {
+            $this->logger->error($e->getMessage(), $e->getTrace());
+        } catch (CasbinException $e) {
+            $this->logger->info($e->getMessage(), $e->getTrace());
+        } catch (\Exception $e) {
+            $this->logger->critical($e->getMessage(), $e->getTrace());
+        }
+
+        if (empty($page)) {
+            if ($identifier == static::ERROR) {
+                return $this->fallback(static::ERROR);
+            }
+
+            $page = new Page('', '', '', '', '', '', false);
         }
 
         // @phan-suppress-next-line PhanTypeMismatchArgument

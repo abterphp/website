@@ -12,6 +12,7 @@ use AbterPhp\Website\Constant\Event;
 use AbterPhp\Website\Domain\Entities\Page as Entity;
 use AbterPhp\Website\Events\PageViewed;
 use AbterPhp\Website\Orm\PageRepo;
+use Casbin\Exceptions\CasbinException;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Orm\OrmException;
 
@@ -53,14 +54,16 @@ class Index
      * @param string   $identifier
      * @param string[] $userGroupIdentifiers
      *
-     * @return Entity|null
+     * @return Entity
+     * @throws OrmException
+     * @throws CasbinException
      */
-    public function getRenderedPage(string $identifier, array $userGroupIdentifiers): ?Entity
+    public function getRenderedPage(string $identifier, array $userGroupIdentifiers): Entity
     {
-        try {
-            $page = $this->pageRepo->getWithLayout($identifier);
-        } catch (OrmException $exc) {
-            return null;
+        $page = $this->pageRepo->getWithLayout($identifier);
+
+        if ($page === null) {
+            throw new OrmException('page not found: ' . $identifier);
         }
 
         assert($page instanceof Entity);
@@ -69,7 +72,7 @@ class Index
 
         $this->eventDispatcher->dispatch(Event::PAGE_VIEWED, $pageEvent);
         if (!$pageEvent->isAllowed()) {
-            return null;
+            throw new CasbinException(sprintf('viewing page not allowed" %s', $pageEvent->getPage()->getId()));
         }
 
         $page      = $pageEvent->getPage();

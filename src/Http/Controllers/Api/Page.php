@@ -9,6 +9,7 @@ use AbterPhp\Framework\Config\EnvReader;
 use AbterPhp\Framework\Databases\Queries\FoundRows;
 use AbterPhp\Website\Service\Execute\Page as RepoService;
 use AbterPhp\Website\Service\Website\Index as IndexService;
+use Casbin\Exceptions\CasbinException;
 use Opulence\Http\Responses\Response;
 use Opulence\Orm\OrmException;
 use Psr\Log\LoggerInterface;
@@ -67,23 +68,24 @@ class Page extends ApiAbstract
             $userGroupIdentifiers = $this->indexService->getUserGroupIdentifiers($this->getUserIdentifier());
 
             $entity = $this->indexService->getRenderedPage($entityId, $userGroupIdentifiers);
+
+            return $this->handleGetSuccess($entity);
+        } catch (CasbinException $e) {
+            return $this->handleUnauthorized();
+        } catch (OrmException $e) {
+            try {
+                $this->repoService->retrieveEntity($entityId);
+            } catch (OrmException $e) {
+                return $this->handleNotFound();
+            }
+            $msg = sprintf(static::LOG_MSG_GET_FAILURE, static::ENTITY_SINGULAR, $entityId);
+
+            return $this->handleException($msg, $e);
         } catch (\Exception $e) {
             $msg = sprintf(static::LOG_MSG_GET_FAILURE, static::ENTITY_SINGULAR, $entityId);
 
             return $this->handleException($msg, $e);
         }
-
-        if ($entity) {
-            return $this->handleGetSuccess($entity);
-        }
-
-        try {
-            $this->repoService->retrieveEntity($entityId);
-        } catch (OrmException $e) {
-            return $this->handleNotFound();
-        }
-
-        return $this->handleUnauthorized();
     }
 
     /**

@@ -10,6 +10,7 @@ use AbterPhp\Website\Domain\Entities\Page\Assets as PageAssets;
 use AbterPhp\Website\Domain\Entities\PageCategory;
 use AbterPhp\Website\Domain\Entities\PageLayout\Assets as LayoutAssets;
 use Opulence\Orm\DataMappers\SqlDataMapper;
+use Opulence\Orm\OrmException;
 use Opulence\QueryBuilders\Conditions\ConditionFactory;
 use Opulence\QueryBuilders\Expression;
 use Opulence\QueryBuilders\MySql\QueryBuilder;
@@ -60,7 +61,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
 
     /**
      * @return Entity[]
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getAll(): array
     {
@@ -79,7 +80,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param array    $params
      *
      * @return Entity[]
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getPage(int $limitFrom, int $pageSize, array $orders, array $conditions, array $params): array
     {
@@ -110,7 +111,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param int|string $id
      *
      * @return Entity|null
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getById($id)
     {
@@ -128,7 +129,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param string $identifier
      *
      * @return Entity|null
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getByIdentifier(string $identifier): ?Entity
     {
@@ -146,7 +147,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param string[] $identifiers
      *
      * @return array
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getByCategoryIdentifiers(array $identifiers): array
     {
@@ -169,7 +170,7 @@ class PageSqlDataMapper extends SqlDataMapper implements IPageDataMapper
      * @param string $identifier
      *
      * @return Entity|null
-     * @throws \Opulence\Orm\OrmException
+     * @throws OrmException
      */
     public function getWithLayout(string $identifier): ?Entity
     {

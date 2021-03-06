@@ -11,6 +11,7 @@ use AbterPhp\Admin\Orm\UserRepo;
 use AbterPhp\Framework\Template\Engine;
 use AbterPhp\Website\Domain\Entities\Page;
 use AbterPhp\Website\Orm\PageRepo;
+use Casbin\Exceptions\CasbinException;
 use Opulence\Events\Dispatchers\IEventDispatcher;
 use Opulence\Orm\OrmException;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -48,20 +49,22 @@ class IndexTest extends TestCase
         );
     }
 
-    public function testGetRenderedPageReturnsNullIfEntityIsNotFound()
+    public function testGetRenderedPageThrowsOrmExceptionIfEntityIsNotFound()
     {
+        $this->expectException(OrmException::class);
+
         $identifier           = 'foo';
         $userGroupIdentifiers = [];
 
         $this->pageRepoMock->expects($this->any())->method('getWithLayout')->willThrowException(new OrmException());
 
-        $actualResult = $this->sut->getRenderedPage($identifier, $userGroupIdentifiers);
-
-        $this->assertNull($actualResult);
+        $this->sut->getRenderedPage($identifier, $userGroupIdentifiers);
     }
 
     public function testGetRenderedPageReturnsNullByDefaultIfPageIsDraft()
     {
+        $this->expectException(CasbinException::class);
+
         $identifier           = 'foo';
         $userGroupIdentifiers = [];
 
@@ -69,9 +72,7 @@ class IndexTest extends TestCase
 
         $this->pageRepoMock->expects($this->any())->method('getWithLayout')->willReturn($entity);
 
-        $actualResult = $this->sut->getRenderedPage($identifier, $userGroupIdentifiers);
-
-        $this->assertNull($actualResult);
+        $this->sut->getRenderedPage($identifier, $userGroupIdentifiers);
     }
 
     public function testGetRenderedPageRendersPageIfPageIsVisible()
