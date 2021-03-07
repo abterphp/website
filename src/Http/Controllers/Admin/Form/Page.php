@@ -46,9 +46,9 @@ class Page extends FormAbstract
      * Page constructor.
      *
      * @param FlashService     $flashService
+     * @param LoggerInterface  $logger
      * @param ITranslator      $translator
      * @param UrlGenerator     $urlGenerator
-     * @param LoggerInterface  $logger
      * @param Repo             $repo
      * @param ISession         $session
      * @param FormFactory      $formFactory
@@ -58,9 +58,9 @@ class Page extends FormAbstract
      */
     public function __construct(
         FlashService $flashService,
+        LoggerInterface $logger,
         ITranslator $translator,
         UrlGenerator $urlGenerator,
-        LoggerInterface $logger,
         Repo $repo,
         ISession $session,
         FormFactory $formFactory,
@@ -70,9 +70,9 @@ class Page extends FormAbstract
     ) {
         parent::__construct(
             $flashService,
+            $logger,
             $translator,
             $urlGenerator,
-            $logger,
             $repo,
             $session,
             $formFactory,

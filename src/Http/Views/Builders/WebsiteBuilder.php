@@ -37,7 +37,7 @@ class WebsiteBuilder implements IViewBuilder
         $view->setVar('title', '');
         $view->setVar('metaKeywords', []);
         $view->setVar('metaDescription', '');
-        $view->setVar('metaAuthor', '');
+        $view->setVar('authorName', '');
         $view->setVar('metaCopyright', '');
         $view->setVar('metaRobots', '');
         $view->setVar('metaOGImage', '');
