@@ -159,7 +159,7 @@ class Index extends ControllerAbstract
         $this->view->setVar('metaDescription', $meta->getDescription());
         $this->view->setVar('metaKeywords', explode(',', $meta->getKeywords()));
         $this->view->setVar('metaCopyright', $meta->getCopyright());
-        $this->view->setVar('metaAuthor', $meta->getAuthor());
+        $this->view->setVar('authorName', $meta->getAuthor());
         $this->view->setVar('metaRobots', $meta->getRobots());
         $this->view->setVar('metaOGDescription', $meta->getOGDescription());
         $this->view->setVar('metaOGTitle', $meta->getOGTitle());

@@ -10,7 +10,7 @@
     {{! meta('description', $metaDescription) !}}
     {{! metaKeywords($metaKeywords) !}}
     {{! favicon('/favicon.png') !}}
-    {{! author($metaAuthor) !}}
+    {{! authorName($authorName) !}}
 
     {{! meta('copyright', $metaCopyright) !}}
     {{! meta('robots', $metaRobots) !}}
